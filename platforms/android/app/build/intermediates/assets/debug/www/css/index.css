@@ -1,0 +1,121 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ */
+:root {
+    --main-bg-color: #26a69a;
+    --modal-bg-color: #C5E1A5;
+    --hilite-color: #1A237E;
+}
+
+html {
+    font-size: 16px;
+    background-color: var(--main-bg-color);
+    background-size: cover;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
+    height: 100%;
+    width: 100%;
+}
+
+.navstyles{
+    padding-top: 4px;
+    font-size: 2rem;
+    background-color: var(--main-bg-color);
+}
+
+/* Material Icon Fonts ***********************/
+/*********************************************/
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Material Icons'),
+        local('MaterialIcons-Regular'),
+        url(../fonts/MaterialIcons-Regular.woff2) format('woff2'),
+        url(../fonts/MaterialIcons-Regular.woff) format('woff'),
+        url(../fonts/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+.help-icon {
+    background: var(--main-bg-color);
+    color: #006064;
+    display: block;
+    text-align: right;
+}
+
+/*************************************************/
+/* Modal MessageBox Styles */
+/* The Modal (background) */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 10;
+    /* Sit on top */
+    padding-top: 54vh;
+    /* Location of the box */
+    /*padding-left: 10vw;*/
+    left: 0;
+    top: 0;
+    width: 100vw;
+    min-height: 100vh;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: transparent;
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: var(--modal-bg-color);
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    color: black;
+    margin: auto;
+    padding: 10px;
+    width: 80%;
+}
+
+.modal-button {
+    background-color: var(--main-bg-color);
+    border: .2rem solid black;
+    color: black;
+    padding: 15px 25px;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+}
