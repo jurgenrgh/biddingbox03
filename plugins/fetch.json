@@ -82,7 +82,7 @@
   "cordova-plugin-file-transfer": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-file-transfer@~1.5.0"
+      "id": "cordova-plugin-file-transfer@^1.5.1"
     },
     "is_top_level": true,
     "variables": {}
@@ -155,6 +155,14 @@
     "source": {
       "type": "registry",
       "id": "cordova-plugin-whitelist@~1.2.1"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-networking-bluetooth": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-networking-bluetooth"
     },
     "is_top_level": true,
     "variables": {}

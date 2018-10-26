@@ -13,5 +13,14 @@
     ],
     "author": "Jürgen Rennenkampff",
     "license": "Apache-2.0",
-    "displayName": "BiddingBox03"
+    "displayName": "BiddingBox03",
+    "dependencies": {
+        "cordova-plugin-file-transfer": "^1.7.1",
+        "cordova-plugin-networking-bluetooth": "^1.0.3"
+    },
+    "cordova": {
+        "plugins": {
+            "cordova-plugin-file-transfer": {}
+        }
+    }
 }

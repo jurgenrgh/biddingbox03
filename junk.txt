@@ -1,0 +1,13 @@
+<div class="row kill-vmargin">
+                <div class="col s4 section-title top-alignment">Server</div>
+                <div class="input-field col s4">
+                    <select id="server-tablet-name" name="server-tablet-name" onchange="handleServerChange(this, 'north')">
+                        <option value="" disabled selected>Change Server</option>
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="3">Option 3</option>
+                        <option value="4">Option 4</option>
+                    </select>
+                </div>
+                <div class="col s4 section-title"></div>
+            </div>

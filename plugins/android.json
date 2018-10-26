@@ -30,6 +30,12 @@
     },
     "cordova-plugin-dialogs": {
       "PACKAGE_NAME": "com.phonegap.basetemplate"
+    },
+    "cordova-plugin-file-transfer": {
+      "PACKAGE_NAME": "com.phonegap.biddingbox03"
+    },
+    "cordova-plugin-networking-bluetooth": {
+      "PACKAGE_NAME": "com.phonegap.biddingbox03"
     }
   },
   "dependent_plugins": {

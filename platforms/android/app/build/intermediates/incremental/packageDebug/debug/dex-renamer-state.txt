@@ -1,4 +1,4 @@
-#Sat Oct 20 11:35:44 CEST 2018
-base.0=J\:\\PhoneGapApps\\BT06\\basetemplate\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
+#Sat Oct 27 00:46:44 CEST 2018
+base.0=J\:\\PhoneGapApps\\BiddingBox03\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
 renamed.0=classes.dex
-file.0=J\:\\PhoneGapApps\\BT06\\basetemplate\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0\\classes.dex
+file.0=J\:\\PhoneGapApps\\BiddingBox03\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0\\classes.dex

@@ -9,7 +9,7 @@
 }
 
 html {
-    font-size: 16px;
+    font-size: 10px;
     background-color: var(--main-bg-color);
     background-size: cover;
 }
@@ -24,8 +24,17 @@ body {
 
 .navstyles{
     padding-top: 4px;
+    padding-left: 8px;
     font-size: 2rem;
     background-color: var(--main-bg-color);
+}
+
+nav{
+    margin-bottom: 8px;
+}
+
+.page{
+    display:none;
 }
 
 /* Material Icon Fonts ***********************/

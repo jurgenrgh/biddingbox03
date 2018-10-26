@@ -12,9 +12,10 @@
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, width=device-width" />
     <link rel="stylesheet" type="text/css" href="css/materialize.min.css" media="screen,projection" />
     <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <link rel="stylesheet" type="text/css" href="css/gridlayout.css" />
     <!--Additional Add-on: Material Icons in the form of fonts -->
     <!--located in www/fonts/  -->
-    <title>Phonegap Template</title>
+    <title>Bidding Box</title>
 </head>
 
 <body>
@@ -36,39 +37,375 @@
         </div>
     </div>
 
-    <nav>
-        <div class="nav-wrapper navstyles">
-            <a href="#!" class="brand-logo black-text" style="font-size:1.5rem;">PhoneGap Template</a>
-            <a href="#" class="sidenav-trigger black-text" data-target="mobile-nav">
-                <i class="material-icons">menu</i>
-            </a>
-            <ul class="right hide-on-med-and-down">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
+    <!-------------------------------------------------------------->
+    <!--Bidding Box Page-------------------------------------------->
+    <!-------------------------------------------------------------->
+    <div id="biddingBox" style="display:block;">
+        <!-- Dropdown Structure -->
+        <ul id="dropdown1" class="dropdown-content">
+            <li><a href="#!">Bidding Box</a></li>
+            <li><a href="#!" onclick="showPage('directorSettings')">Director Settings</a></li>
+            <li><a href="#!" onclick="showPage('playerSettings')">Player Settings</a></li>
+            <li><a href="#!" onclick="showPage('bluetoothSettings')">Bluetooth Settings</a></li>
+        </ul>
+
+        <nav>
+            <div class="nav-wrapper navstyles">
+                <a href="#!" class="brand-logo black-text center" style="font-size:2.0rem;">Bidding Box</a>
+                <a class="dropdown-trigger" href="#!" data-target="dropdown1"><i class="material-icons left black-text">menu</i></a>
+            </div>
+        </nav>
+
+        <div class="container">
+            <h3>Page 1: Bidding Box Page</h3>
         </div>
 
-        <ul class="sidenav" id="mobile-nav">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
-    </nav>
-
-
-    <div 
-       
     </div>
+    <!--End biddingBox Page-->
+
+    <!-------------------------------------------------------------------->
+    <!--Director Settings Page-------------------------------------------->
+    <!-------------------------------------------------------------------->
+    <div id="directorSettings" style="display:none;">
+        <ul id="dropdown2" class="dropdown-content">
+            <li><a href="#!" onclick="showPage('biddingBox')">Bidding Box</a></li>
+            <li><a href="#!">Director Settings</a></li>
+            <li><a href="#!" onclick="showPage('playerSettings')">Player Settings</a></li>
+            <li><a href="#!" onclick="showPage('bluetoothSettings')">Bluetooth Settings</a></li>
+        </ul>
+
+        <nav>
+            <div class="nav-wrapper navstyles">
+                <a href="#!" class="brand-logo black-text center" style="font-size:2.0rem;">Director Settings</a>
+                <a class="dropdown-trigger" href="#!" data-target="dropdown2"><i class="material-icons left black-text">menu</i></a>
+            </div>
+        </nav>
+
+        <div class="container">
+            <h3>Page 2: Director's Settings</h3>
+        </div>
+    </div>
+    <!--End directorSettings Page-->
+
+    <!-------------------------------------------------------------------->
+    <!--Player Settings Page---------------------------------------------->
+    <!-------------------------------------------------------------------->
+    <div id="playerSettings" style="display:none;">
+        <ul id="dropdown3" class="dropdown-content">
+            <li><a href="#!" onclick="showPage('biddingBox')">Bidding Box</a></li>
+            <li><a href="#!" onclick="showPage('directorSettings')">Director Settings</a></li>
+            <li><a href="#!">Player Settings</a></li>
+            <li><a href="#!" onclick="showPage('bluetoothSettings')">Bluetooth Settings</a></li>
+        </ul>
+
+        <nav>
+            <div class="nav-wrapper navstyles">
+                <a href="#!" class="brand-logo black-text center" style="font-size:2.0rem;">Player Settings</a>
+                <a class="dropdown-trigger" href="#!" data-target="dropdown3"><i class="material-icons left black-text">menu</i></a>
+            </div>
+        </nav>
+
+        <div class="container">
+            <h3>Page 3: Player's Settings</h3>
+        </div>
+
+    </div>
+    <!--End playerSettings Page-->
+
+    <!-------------------------------------------------------------------->
+    <!--Bluetooth Settings Page------------------------------------------->
+    <!-------------------------------------------------------------------->
+    <div id="bluetoothSettings" style="display:none;">
+        <ul id="dropdown4" class="dropdown-content">
+            <li><a href="#!" onclick="showPage('biddingBox')">Bidding Box</a></li>
+            <li><a href="#!" onclick="showPage('directorSettings')">Director Settings</a></li>
+            <li><a href="#!" onclick="showPage('playerSettings')">Player Settings</a></li>
+            <li><a href="#!">Bluetooth Settings</a></li>
+        </ul>
+
+        <nav>
+            <div class="nav-wrapper navstyles">
+                <a href="#!" class="brand-logo black-text center" style="font-size:2.0rem;">Bluetooth Settings</a>
+                <a class="dropdown-trigger" href="#!" data-target="dropdown4"><i class="material-icons left black-text">menu</i></a>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="row">
+                <div class="col s4 section-title">This Tablet</div>
+                <div class="col s4 item-blank" id="this-tablet-name"></div>
+                <div class="col s4 section-title"></div>
+            </div>
+            <div class="row">
+                <div class="col s4 section-title">Server Tablet</div>
+                <div class="col s4 item-blank" id="server-tablet-name"></div>
+                <div class="col s4 section-title"></div>
+            </div>
+            <div class="row">
+                <div class="col s4 section-title">Client 1</div>
+                <div class="col s4 item-blank" id="client1-tablet-name"></div>
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client1-connection" fill="red" stroke="black" stroke-width="10"
+                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="col s3 section-title"></div>
+            </div>
+            <div class="row">
+                <div class="col s4 section-title">Client 2</div>
+                <div class="col s4 item-blank" id="client2-tablet-name"></div>
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client2-dis" fill="red" stroke="black" stroke-width="10" stroke-miterlimit="10"
+                                cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="col s3 section-title"></div>
+            </div>
+            <div class="row">
+                <div class="col s4 section-title">Client 3</div>
+                <div class="col s4 item-blank" id="client3-tablet-name"></div>
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client3-dis" fill="red" stroke="black" stroke-width="10" stroke-miterlimit="10"
+                                cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="col s3 section-title"></div>
+            </div>
+
+            <div class="row kill-vmargin">
+                <div class="col s4 section-title top-alignment">This Seat</div>
+                <div class="input-field col s4">
+                    <select id="this-tablet-seat" name="this-tablet-seat" onchange="handleTabletSeatChange(this)">
+                        <option value="North" selected>North</option>
+                        <option value="East">East</option>
+                        <option value="South">South</option>
+                        <option value="West">West</option>
+                    </select>
+                </div>
+                <div class="col s4 section-title"></div>
+            </div>
+
+            <div class="row">
+                <div class="col s12"></div>
+            </div>
+            <div class="divider black"></div>
+            <div class="row">
+                <div class="col s12"></div>
+            </div>
+            <div class="row">
+                <div class="col s4 section-title">Connections</div>
+                <div class="col s1 section-title center-align">C1</div>
+                <div class="col s1 section-title center-align">C2</div>
+                <div class="col s1 section-title center-align">C3</div>
+                <div class="col s5"></div>
+            </div>
+
+            <div class="row">
+                <div class="col s4 item-title top-alignment">Disconnected</div>
+
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client1-dis" fill="red" stroke="black" stroke-width="10" stroke-miterlimit="10"
+                                cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client2-dis" fill="red" stroke="black" stroke-width="10" stroke-miterlimit="10"
+                                cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client3-dis" fill="red" stroke="black" stroke-width="10" stroke-miterlimit="10"
+                                cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="col s5"></div>
+            </div>
+
+            <div class="row">
+                <div class="col s4 item-title top-alignment">Waiting</div>
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client1-wait" fill="transparent" stroke="black" stroke-width="10"
+                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client2-wait" fill="transparent" stroke="black" stroke-width="10"
+                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client3-wait" fill="transparent" stroke="black" stroke-width="10"
+                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s4 item-title top-alignment">Connected</div>
+
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client1-connect" fill="transparent" stroke="black" stroke-width="10"
+                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client2-connect" fill="transparent" stroke="black" stroke-width="10"
+                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client3-connect" fill="transparent" stroke="black" stroke-width="10"
+                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="divider black"></div>
+            <div class="row">
+                <div class="col s12"></div>
+            </div>
+            <div class="row">
+                <div class="col s3 section-title">Messages</div>
+                <div class="col s9 section-title"></div>
+            </div>
+
+            <div class="row">
+                <div class="col s3 section-title">Ping</div>
+                <div class="col s2">
+                    <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600;" onclick="">N</a>
+                </div>
+                <div class="col s2">
+                    <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600;" onclick="">E</a>
+                </div>
+                <div class="col s2">
+                    <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="">S</a>
+                </div>
+                <div class="col s2">
+                    <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="">W</a>
+                </div>
+                <div class="col s1"></div>
+            </div>
+
+            <div class="row">
+                <div class="col s3 section-title">Pong</div>
+                <div class="col s2">
+                    <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600;" onclick="">N</a>
+                </div>
+                <div class="col s2">
+                    <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600;" onclick="">E</a>
+                </div>
+                <div class="col s2">
+                    <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="">S</a>
+                </div>
+                <div class="col s2">
+                    <a class="btn waves-effect black-text standard-btn" onclick="">W</a>
+                </div>
+                <div class="col s1"></div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col s3 section-title"></div>
+                <div class="col s4">
+                    <a class="btn waves-effect black-text" style="display:block;font-weight:600" onclick="makeConnections">Connect</a>
+                </div>
+                <div class="col s4">
+                    <a class="btn waves-effect black-text" style="display:block;font-weight:600" onclick="">Reset</a>
+                </div>
+                <div class="col s1"></div>
+            </div>
+
+            <div class="row">
+                <div class="col s3"></div>
+                <div class="col s4">
+                    <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="sortBtNames()">Sort</a>
+                </div>
+                <div class="col s4">
+                    <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="">Test
+                        4</a>
+                </div>
+                <div class="col s1"></div>
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+    <!--End bluetoothSettings Page-->
+
     <!--JavaScript at end of body for optimized loading-->
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="js/materialize.min.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/bluetooth.js"></script>
     <script type="text/javascript" src="js/ModalDialog.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            //Materialize Initializations
+            $('.sidenav').sidenav();
+            var elems = document.querySelectorAll('.modal');
+            var instances = M.Modal.init(elems, {
+                inDuration: 0,
+                outDuration: 0,
+                startingTop: 0,
+                endingTop: 0
+            });
+            var dropdowns = document.querySelectorAll('.dropdown-trigger');
+            for (var i = 0; i < dropdowns.length; i++) {
+                M.Dropdown.init(dropdowns[i], {
+                    constrainWidth: false
+                });
+            }
+            elems = document.querySelectorAll('select');
+            instances = M.FormSelect.init(elems);
+            $('select').formSelect();
+        });
+    </script>
 
     <!--This must stay at the very bottom to assure that everything is loaded before to any js action-->
     <script type="text/javascript">
+        console.log("Calling Init");
         app.initialize();
     </script>
 </body>

@@ -1,0 +1,301 @@
+<!--------------------------------------------------------------------------->
+<!-- Bluetooth Messaging Control Page --------------------------------------->
+<!--------------------------------------------------------------------------->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, width=device-width" />
+    <link rel="stylesheet" type="text/css" href="css/materialize.min.css" media="screen,projection" />
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <link rel="stylesheet" type="text/css" href="css/gridlayout.css" />
+    <!--Additional Add-on: Material Icons in the form of fonts -->
+    <!--located in www/fonts/  -->
+    <title>Bluetooth Settings</title>
+</head>
+
+<body>
+    <!--------------------------------------------------------------------------->
+    <!--Modal Dialog Version 2, using Materialize-------------------------------->
+    <!--------------------------------------------------------------------------->
+
+    <!-- Modal Structure -->
+    <div id="modalDialog" class="modal">
+        <div class="modal-content">
+            <h3 id="dialog-header" class="left-align">Modal Header</h3>
+            <p id="dialog-text" class="left-align flow-text">A bunch of text</p>
+            <a id="ok-button" href="javascript:void(0);" class="modal-close waves-effect waves-green btn-large" onclick="okModalClicked();"><span
+                    id="ok-span">OK</span></a>
+            <a id="yes-button" href="javascript:void(0);" class="modal-close waves-effect waves-green btn-large"
+                onclick="yesModalClicked();"><span id="yes-span">Yes</span></a>
+            <a id="no-button" href="javascript:void(0);" class="modal-close waves-effect waves-green btn-large" onclick="noModalClicked();"><span
+                    id="no-span">No</span></a>
+        </div>
+    </div>
+
+    <!--------------------------------------------------------------------------->
+    <!-- Beginning of Messaging Control Page ------------------------------------>
+    <!--------------------------------------------------------------------------->
+
+    <!-- Dropdown Structure -->
+    <ul id="dropdown11" class="dropdown-content">
+        <li><a href="index.html">Bidding Box</a></li>
+        <li><a href="pages/DirectorSettings.html">Director Settings</a></li>
+        <li><a href="pages/PlayerSettings.html">Player Settings</a></li>
+        <li><a href="#!">Bluetooth Settings</a></li>
+    </ul>
+
+    <nav>
+        <div class="nav-wrapper navstyles">
+            <a href="#!" class="brand-logo black-text center" style="font-size:2.5rem;">Bluetooth Settings</a>
+            <a class="dropdown-trigger" href="#!" data-target="dropdown11"><i class="material-icons left black-text">menu</i></a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col s3 section-title">Tablet ID</div>
+            <div class="col s4 item-blank" id="this-tablet-name"></div>
+            <div class="col s5"></div>
+        </div>
+        <div class="row">
+            <div class="col s3 section-title">Seat</div>
+            <div class="col s4 section-title">Tablet</div>
+            <div class="col s1 section-title center-align">N</div>
+            <div class="col s1 section-title center-align">E</div>
+            <div class="col s1 section-title center-align">S</div>
+            <div class="col s1 section-title center-align">W</div>
+            <div class="col s1"></div>
+        </div>
+        <div class="row kill-vmargin">
+            <div class="col s3 section-title top-alignment">North</div>
+            <div class="input-field col s4">
+                <select id="north-tablet-name" name="north-tablet-name" onchange="handleTabletNameChange(this, 'north')">
+                    <option value="" disabled selected>Choose North</option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                </select>
+                <!--<label>NORTH</label>-->
+            </div>
+            <div class="col s1 center-align">
+                <div class="svg-container">
+                    <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                        <circle id="nn" fill="black" stroke="black" stroke-width="10" stroke-miterlimit="10" cx="250"
+                            cy="250" r="200" />
+                    </svg>
+                </div>
+            </div>
+            <div class="col s1 center-align">
+                <div class="svg-container">
+                    <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                        <circle id="ne" fill="red" stroke="black" stroke-width="10" stroke-miterlimit="10" cx="250" cy="250"
+                            r="200" />
+                    </svg>
+                </div>
+            </div>
+            <div class="col s1 center-align">
+                <div class="svg-container">
+                    <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                        <circle id="ns" fill="yellow" stroke="black" stroke-width="10" stroke-miterlimit="10" cx="250"
+                            cy="250" r="200" />
+                    </svg>
+                </div>
+            </div>
+            <div class="col s1 center-align">
+                <div class="svg-container">
+                    <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                        <circle id="nw" fill="green" stroke="black" stroke-width="10" stroke-miterlimit="10" cx="250"
+                            cy="250" r="200" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <div class="row kill-vmargin">
+            <div class="col s3 section-title top-alignment">East</div>
+            <div class="input-field col s4">
+                <select id="east-tablet-name" name="east-tablet-name" onchange="handleTabletNameChange(this, 'east')">
+                    <option value="" disabled selected>Choose East</option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                </select>
+                <!--<label>EAST</label>--->
+            </div>
+            <div class="col s1 center-align">
+                <div class="svg-container">
+                    <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                        <circle id="en" fill="green" stroke="black" stroke-width="10" stroke-miterlimit="10" cx="250"
+                            cy="250" r="200" />
+                    </svg>
+                </div>
+            </div>
+            <div class="col s1 center-align">
+                <div class="svg-container">
+                    <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                        <circle id="ee" fill="black" stroke="black" stroke-width="10" stroke-miterlimit="10" cx="250"
+                            cy="250" r="200" />
+                    </svg>
+                </div>
+            </div>
+            <div class="col s1 center-align">
+                <div class="svg-container">
+                    <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                        <circle id="es" fill="red" stroke="black" stroke-width="10" stroke-miterlimit="10" cx="250" cy="250"
+                            r="200" />
+                    </svg>
+                </div>
+            </div>
+            <div class="col s1 center-align">
+                <div class="svg-container">
+                    <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                        <circle id="ew" fill="yellow" stroke="black" stroke-width="10" stroke-miterlimit="10" cx="250"
+                            cy="250" r="200" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <div class="row kill-vmargin">
+            <div class="col s3 section-title top-alignment">South</div>
+            <div class="input-field col s4">
+                <select id="south-tablet-name" name="south-tablet-name" onchange="handleTabletNameChange(this, 'south')">
+                    <option value="" disabled selected>Choose South</option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                </select>
+                <!--<label>SOUTH</label>-->
+            </div>
+            <div class="col s1 center-align">
+                <div class="svg-container">
+                    <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                        <circle id="sn" fill="yellow" stroke="black" stroke-width="10" stroke-miterlimit="10" cx="250"
+                            cy="250" r="200" />
+                    </svg>
+                </div>
+            </div>
+            <div class="col s1 center-align">
+                <div class="svg-container">
+                    <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                        <circle id="se" fill="green" stroke="black" stroke-width="10" stroke-miterlimit="10" cx="250"
+                            cy="250" r="200" />
+                    </svg>
+                </div>
+            </div>
+            <div class="col s1 center-align">
+                <div class="svg-container">
+                    <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                        <circle id="ss" fill="black" stroke="black" stroke-width="10" stroke-miterlimit="10" cx="250"
+                            cy="250" r="200" />
+                    </svg>
+                </div>
+            </div>
+            <div class="col s1 center-align">
+                <div class="svg-container">
+                    <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                        <circle id="sw" fill="red" stroke="black" stroke-width="10" stroke-miterlimit="10" cx="250" cy="250"
+                            r="200" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="row kill-vmargin">
+            <div class="col s3 section-title top-alignment">West</div>
+            <div class="input-field col s4">
+                <select id="west-tablet-name" name="west-tablet-name" onchange="handleTabletNameChange(this, 'west')">
+                    <option value="" disabled selected>Choose West</option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                </select>
+                <!--<label>WEST</label>-->
+            </div>
+
+            <div class="col s1 center-align">
+                <div class="svg-container">
+                    <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                        <circle id="wn" fill="red" stroke="black" stroke-width="10" stroke-miterlimit="10" cx="250" cy="250"
+                            r="200" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="col s1 center-align">
+                <div class="svg-container">
+                    <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                        <circle id="we" fill="yellow" stroke="black" stroke-width="10" stroke-miterlimit="10" cx="250"
+                            cy="250" r="200" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="col s1 center-align">
+                <div class="svg-container">
+                    <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                        <circle id="ws" fill="green" stroke="black" stroke-width="10" stroke-miterlimit="10" cx="250"
+                            cy="250" r="200" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="col s1 center-align">
+                <div class="svg-container">
+                    <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                        <circle id="ww" fill="black" stroke="black" stroke-width="10" stroke-miterlimit="10" cx="250"
+                            cy="250" r="200" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="row kill-vmargin">
+            <div class="col s3"> <a class="waves-effect waves-light btn" onclick="sortBtNames()">Sort Names</a> </div>
+            <div class="col s3"> <a class="waves-effect waves-light btn">Test2</a> </div>
+            <div class="col s3"> <a class="waves-effect waves-light btn">Test3</a> </div>
+            <div class="col s3"> <a class="waves-effect waves-light btn">Test4</a> </div>
+        </div>
+    </div>
+
+    <!--JavaScript at end of body for optimized loading-->
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="js/bluetooth.js"></script>
+    <script type="text/javascript" src="js/ModalDialog.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            //--Materialize Initializations--//
+            $('.sidenav').sidenav();
+            var elems = document.querySelectorAll('.modal');
+            var instances = M.Modal.init(elems, {
+                inDuration: 0,
+                outDuration: 0,
+                startingTop: 0,
+                endingTop: 0
+            });
+            var dropdowns = document.querySelectorAll('.dropdown-trigger');
+            for (var i = 0; i < dropdowns.length; i++) {
+                M.Dropdown.init(dropdowns[i], {
+                    constrainWidth: false
+                });
+            }
+            elems = document.querySelectorAll('select');
+            instances = M.FormSelect.init(elems);
+
+
+        });
+        
+    </script>
+
+    <!--This must stay at the very bottom to assure that everything is loaded before to any js action-->
+    <script type="text/javascript">
+        console.log("Calling Init");
+        app.initialize();
+    </script>
+</body>
+
+</html>
