@@ -27,14 +27,13 @@ platforms/ios/www/
 platforms/ios/cordova/console.log
 *.xcuserdatad
 
-# Android Platform
-platforms/android/.gradle
-platforms/android/build
-platforms/android/assets/www
-platforms/android/local.properties
-platforms/android/CordovaLib/build
-platforms/android/CordovaLib/gen
-platforms/android/CordovaLib/local.properties
+# Node
+npm-debug.log
+/node_modules
+
+# Cordova
+/platforms
+/plugins
 
 # wp8
 platforms/wp8/bin
@@ -54,5 +53,8 @@ platforms/browser/www
 
 # res
 resources/signing
+jsconfig.json
+.vscode/
+typings/
 
-node_modules/
+
