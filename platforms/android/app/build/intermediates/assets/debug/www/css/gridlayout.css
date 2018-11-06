@@ -50,8 +50,8 @@
   .svg-container { 
 	display: inline-block;
 	position: relative;
-    width: 75%;
-    height: 75%;
+    width: 2rem;
+    height: 2rem;
     padding-bottom: 25%; 
 	vertical-align: bottom; 
 }
@@ -66,6 +66,7 @@
 .standard-btn{
   width:100%;
   font-weight:600;
+  font-size: 1.25rem;
   align-items: center;
   justify-content: center;
   padding: 0px;
@@ -106,5 +107,56 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 select option{
   direction: rtl;
+}
+
+.dot-connected{
+  color: #388e3c;
+}
+.dot-disconnected{
+  color: #e53935;
+}
+.dot-waiting{
+  color: #fdd835;
+}
+.dot-unset{
+  color: var(--main-bg-color);
+}
+
+.input-field input[type=text] {
+  border-bottom: 1px solid #000;
+  text-align: left;
+}
+
+/* label color */
+.input-field label {
+  color: black;
+}
+
+
+#msg-rcvd {
+  border-bottom: 1px solid black;
+}
+
+#msg-rcvd:focus {
+  border-bottom: 2px solid black;
+  box-shadow: 0 1px 0 0 black;
+}
+
+#msg-rcvd:focus+label {
+  color: black;
+}
+
+#msg-send {
+  border-bottom: 1px solid black;
+
+}
+
+#msg-send:focus {
+  border-bottom: 2px solid black;
+  box-shadow: 0 1px 0 0 black;
+}
+
+#msg-send:focus+label {
+  color: black;
 }
 

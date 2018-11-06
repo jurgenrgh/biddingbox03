@@ -133,64 +133,31 @@
         <div class="container">
             <div class="row">
                 <div class="col s4 section-title">This Tablet</div>
-                <div class="col s4 item-blank" id="this-tablet-name"></div>
-                <div class="col s4 section-title"></div>
+                <div class="col s3 item-blank" id="this-tablet-name"></div>
+                <div class="col s5 section-title"></div>
             </div>
             <div class="row">
                 <div class="col s4 section-title">Server Tablet</div>
-                <div class="col s4 item-blank" id="server-tablet-name"></div>
+                <div class="col s3 item-blank" id="server-tablet-name"></div>
+                <div class="col s1"><i id="server-connection" class="material-icons dot-disconnected">brightness_1</i></div>
                 <div class="col s4 section-title"></div>
             </div>
             <div class="row">
                 <div class="col s4 section-title">Client 1</div>
-                <div class="col s4 item-blank" id="client1-tablet-name"></div>
-                <div class="col s1 center-align">
-                    <div class="svg-container">
-                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
-                            <circle id="client1-connection" fill="red" stroke="black" stroke-width="10"
-                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="col s3 section-title"></div>
+                <div class="col s3 item-blank" id="client1-tablet-name"></div>
+                <div class="col s1"><i id="client1-connection" class="material-icons dot-disconnected">brightness_1</i></div>
+                <div class="col s4 section-title"></div>
             </div>
             <div class="row">
                 <div class="col s4 section-title">Client 2</div>
-                <div class="col s4 item-blank" id="client2-tablet-name"></div>
-                <div class="col s1 center-align">
-                    <div class="svg-container">
-                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
-                            <circle id="client2-dis" fill="red" stroke="black" stroke-width="10" stroke-miterlimit="10"
-                                cx="250" cy="250" r="200" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="col s3 section-title"></div>
+                <div class="col s3 item-blank" id="client2-tablet-name"></div>
+                <div class="col s1"><i id="client2-connection" class="material-icons dot-disconnected">brightness_1</i></div>
+                <div class="col s4 section-title"></div>
             </div>
             <div class="row">
                 <div class="col s4 section-title">Client 3</div>
-                <div class="col s4 item-blank" id="client3-tablet-name"></div>
-                <div class="col s1 center-align">
-                    <div class="svg-container">
-                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
-                            <circle id="client3-dis" fill="red" stroke="black" stroke-width="10" stroke-miterlimit="10"
-                                cx="250" cy="250" r="200" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="col s3 section-title"></div>
-            </div>
-
-            <div class="row kill-vmargin">
-                <div class="col s4 section-title top-alignment">This Seat</div>
-                <div class="input-field col s4">
-                    <select id="this-tablet-seat" name="this-tablet-seat" onchange="handleTabletSeatChange(this)">
-                        <option value="North" selected>North</option>
-                        <option value="East">East</option>
-                        <option value="South">South</option>
-                        <option value="West">West</option>
-                    </select>
-                </div>
+                <div class="col s3 item-blank" id="client3-tablet-name"></div>
+                <div class="col s1"><i id="client3-connection" class="material-icons dot-disconnected">brightness_1</i></div>
                 <div class="col s4 section-title"></div>
             </div>
 
@@ -201,125 +168,40 @@
             <div class="row">
                 <div class="col s12"></div>
             </div>
-            <div class="row">
-                <div class="col s4 section-title">Connections</div>
-                <div class="col s1 section-title center-align">C1</div>
-                <div class="col s1 section-title center-align">C2</div>
-                <div class="col s1 section-title center-align">C3</div>
-                <div class="col s5"></div>
-            </div>
 
-            <div class="row">
-                <div class="col s4 item-title top-alignment">Disconnected</div>
-
-                <div class="col s1 center-align">
-                    <div class="svg-container">
-                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
-                            <circle id="client1-dis" fill="red" stroke="black" stroke-width="10" stroke-miterlimit="10"
-                                cx="250" cy="250" r="200" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="col s1 center-align">
-                    <div class="svg-container">
-                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
-                            <circle id="client2-dis" fill="red" stroke="black" stroke-width="10" stroke-miterlimit="10"
-                                cx="250" cy="250" r="200" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="col s1 center-align">
-                    <div class="svg-container">
-                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
-                            <circle id="client3-dis" fill="red" stroke="black" stroke-width="10" stroke-miterlimit="10"
-                                cx="250" cy="250" r="200" />
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="col s5"></div>
-            </div>
-
-            <div class="row">
-                <div class="col s4 item-title top-alignment">Waiting</div>
-                <div class="col s1 center-align">
-                    <div class="svg-container">
-                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
-                            <circle id="client1-wait" fill="transparent" stroke="black" stroke-width="10"
-                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="col s1 center-align">
-                    <div class="svg-container">
-                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
-                            <circle id="client2-wait" fill="transparent" stroke="black" stroke-width="10"
-                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="col s1 center-align">
-                    <div class="svg-container">
-                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
-                            <circle id="client3-wait" fill="transparent" stroke="black" stroke-width="10"
-                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col s4 item-title top-alignment">Connected</div>
-
-                <div class="col s1 center-align">
-                    <div class="svg-container">
-                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
-                            <circle id="client1-connect" fill="transparent" stroke="black" stroke-width="10"
-                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="col s1 center-align">
-                    <div class="svg-container">
-                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
-                            <circle id="client2-connect" fill="transparent" stroke="black" stroke-width="10"
-                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="col s1 center-align">
-                    <div class="svg-container">
-                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
-                            <circle id="client3-connect" fill="transparent" stroke="black" stroke-width="10"
-                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
-                        </svg>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="divider black"></div>
-            <div class="row">
-                <div class="col s12"></div>
-            </div>
             <div class="row">
                 <div class="col s3 section-title">Messages</div>
                 <div class="col s9 section-title"></div>
             </div>
 
+            <!-------------------------------------------------------------------------->
+            <!--Outgoing Message Box-->
+            <div class="row kill-vmargin">
+                <div class="input-field col s12">
+                    <label class="active" for="msg-send">Outgoing Message</label>
+                    <textarea id="msg-send" class="materialize-textarea"></textarea>
+                </div>
+            </div>
+            <div class="row" kill-vmargin">
+                <div class="input-field col s12">
+                    <label class="active" for="msg-rcvd">Incoming Message</label>
+                    <textarea id="msg-rcvd" class="materialize-textarea"></textarea>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col s3 section-title">Ping</div>
                 <div class="col s2">
-                    <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600;" onclick="">N</a>
+                    <a href="javascript:void(0);" class="btn waves-effect black-text standard-btn" onclick="pping('server');">Server</a>
                 </div>
                 <div class="col s2">
-                    <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600;" onclick="">E</a>
+                    <a class="btn waves-effect black-text  standard-btn" onclick="pping('client1');">Client1</a>
                 </div>
                 <div class="col s2">
-                    <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="">S</a>
+                    <a class="btn waves-effect black-text standard-btn" onclick="pping('client2');">Client2</a>
                 </div>
                 <div class="col s2">
-                    <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="">W</a>
+                    <a class="btn waves-effect black-text standard-btn" onclick="pping('client3');">Client3</a>
                 </div>
                 <div class="col s1"></div>
             </div>
@@ -327,46 +209,43 @@
             <div class="row">
                 <div class="col s3 section-title">Pong</div>
                 <div class="col s2">
-                    <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600;" onclick="">N</a>
+                    <a href="javascript:void(0);" class="btn waves-effect black-text standard-btn" onclick="pong('server');">Server</a>
                 </div>
                 <div class="col s2">
-                    <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600;" onclick="">E</a>
+                    <a class="btn waves-effect black-text standard-btn" onclick="ppong('client1');">Client1</a>
                 </div>
                 <div class="col s2">
-                    <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="">S</a>
+                    <a class="btn waves-effect black-text standard-btn" onclick="ppong('client2');">Client2</a>
                 </div>
                 <div class="col s2">
-                    <a class="btn waves-effect black-text standard-btn" onclick="">W</a>
-                </div>
-                <div class="col s1"></div>
-            </div>
-
-
-
-            <div class="row">
-                <div class="col s3 section-title"></div>
-                <div class="col s4">
-                    <a class="btn waves-effect black-text" style="display:block;font-weight:600" onclick="makeConnections">Connect</a>
-                </div>
-                <div class="col s4">
-                    <a class="btn waves-effect black-text" style="display:block;font-weight:600" onclick="">Reset</a>
+                    <a class="btn waves-effect black-text standard-btn" onclick="ppong('client3');">Client3</a>
                 </div>
                 <div class="col s1"></div>
             </div>
 
             <div class="row">
-                <div class="col s3"></div>
-                <div class="col s4">
-                    <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="sortBtNames()">Sort</a>
+                <div class="col s12"></div>
+            </div>
+            <div class="divider black"></div>
+            <div class="row">
+                <div class="col s12"></div>
+            </div>
+
+            <div class="row">
+                <div class="col s3">
+                    <a class="btn waves-effect black-text standard-btn" onclick="makeConnection()">Connect</a>
                 </div>
-                <div class="col s4">
-                    <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="">Test
-                        4</a>
+                <div class="col s3">
+                    <a class="btn waves-effect black-text standard-btn" onclick="generalReset()">Reset</a>
                 </div>
-                <div class="col s1"></div>
+                <div class="col s3">
+                    <a class="btn waves-effect black-text standard-btn" onclick="testObject()">Test Object</a>
+                </div>
+                <div class="col s3">
+                    <a class="btn waves-effect black-text standard-btn" onclick="testGlobals()">Test Globals</a>
+                </div>
             </div>
         </div>
-
     </div>
 
     </div>
@@ -376,6 +255,7 @@
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="js/globals.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/bluetooth.js"></script>
     <script type="text/javascript" src="js/ModalDialog.js"></script>

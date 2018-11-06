@@ -11,3 +11,294 @@
                 </div>
                 <div class="col s4 section-title"></div>
             </div>
+
+            <div class="row">
+                <div class="col s4 section-title">Connections</div>
+                <div class="col s1 section-title center-align">C1</div>
+                <div class="col s1 section-title center-align">C2</div>
+                <div class="col s1 section-title center-align">C3</div>
+                <div class="col s5"></div>
+            </div>
+
+            <div class="row">
+                <div class="col s4 item-title top-alignment">Disconnected</div>
+
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client1-dis" fill="red" stroke="black" stroke-width="10" stroke-miterlimit="10"
+                                cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client2-dis" fill="red" stroke="black" stroke-width="10" stroke-miterlimit="10"
+                                cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client3-dis" fill="red" stroke="black" stroke-width="10" stroke-miterlimit="10"
+                                cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="col s5"></div>
+            </div>
+
+            <div class="row">
+                <div class="col s4 item-title top-alignment">Waiting</div>
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client1-wait" fill="transparent" stroke="black" stroke-width="10"
+                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client2-wait" fill="transparent" stroke="black" stroke-width="10"
+                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client3-wait" fill="transparent" stroke="black" stroke-width="10"
+                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s4 item-title top-alignment">Connected</div>
+
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client1-connect" fill="transparent" stroke="black" stroke-width="10"
+                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client2-connect" fill="transparent" stroke="black" stroke-width="10"
+                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client3-connect" fill="transparent" stroke="black" stroke-width="10"
+                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+
+            </div>
+
+// Sets color of the directed connection between two players
+// source, sink = "N", "E", "S", "W"
+// status = "disconnected", "waiting", "connected", "nocomm"
+function setConnectionStatus(source, sink, status) {
+    var c = noCommunicationColor;
+
+    if (status == "disconnected") {
+        c = disconnectedColor;
+    }
+    if (status == "waiting") {
+        c = waitingColor;
+    }
+    if (status == "connected") {
+        c = connectedColor;
+    }
+
+    if (source == "N") {
+        if (sink == "N") {
+            el = document.getElementById("nn");
+        }
+        if (sink == "E") {
+            el = document.getElementById("ne");
+        }
+        if (sink == "S") {
+            el = document.getElementById("ns");
+        }
+        if (sink == "W") {
+            el = document.getElementById("nw");
+        }
+    }
+    if (source == "E") {
+        if (sink == "N") {
+            el = document.getElementById("en");
+        }
+        if (sink == "E") {
+            el = document.getElementById("ee");
+        }
+        if (sink == "S") {
+            el = document.getElementById("es");
+        }
+        if (sink == "W") {
+            el = document.getElementById("ew");
+        }
+    }
+    if (source == "S") {
+        if (sink == "N") {
+            el = document.getElementById("sn");
+        }
+        if (sink == "E") {
+            el = document.getElementById("se");
+        }
+        if (sink == "S") {
+            el = document.getElementById("ss");
+        }
+        if (sink == "W") {
+            el = document.getElementById("sw");
+        }
+    }
+    if (source == "W") {
+        if (sink == "N") {
+            el = document.getElementById("wn");
+        }
+        if (sink == "E") {
+            el = document.getElementById("we");
+        }
+        if (sink == "S") {
+            el = document.getElementById("ws");
+        }
+        if (sink == "W") {
+            el = document.getElementById("ww");
+        }
+    }
+
+    el.setAttribute("fill", c);
+}
+
+
+//////////////////// seat /////////////////////////////
+<div class="row kill-vmargin">
+                <div class="col s4 section-title top-alignment">This Seat</div>
+                <div class="input-field col s4">
+                    <select id="this-tablet-seat" name="this-tablet-seat" onchange="handleTabletSeatChange(this)">
+                        <option value="North" selected>North</option>
+                        <option value="East">East</option>
+                        <option value="South">South</option>
+                        <option value="West">West</option>
+                    </select>
+                </div>
+                <div class="col s4 section-title"></div>
+            </div>
+
+            // The seat is assigned provisionally and can be changed 
+// at will. The assignment is made according to the
+// alphobetical order of the tablet names.
+function assignSeat() {
+    var s = ["North", "East", "South", "West"];
+    for (var i = 0; i < 4; i++) {
+        tabletSeat[i] = s[i];
+        if (thisTabletBtName == pairedBtNames[i]) {
+            thisTabletSeat = s[i];
+        }
+    }
+}
+
+assignSeat();
+
+    el = document.getElementById("this-tablet-seat");
+    el.value = thisTabletSeat;
+    M.FormSelect.init(el);
+    M.updateTextFields();
+    M.textareaAutoResize(el);
+
+    console.log("seat", thisTabletSeat);
+
+    function handleTabletSeatChange(el) {
+    console.log("Call handleTabletSeatChange");
+}
+    //////////////////// seat /////////////////////////////
+
+    ///////////////////svg circle ////////////////////////
+    <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="server-connection" fill="red" stroke="black" stroke-width="10"
+                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client1-connection" fill="red" stroke="black" stroke-width="10"
+                                stroke-miterlimit="10" cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client2-connection" fill="red" stroke="black" stroke-width="10" stroke-miterlimit="10"
+                                cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="col s1 center-align">
+                    <div class="svg-container">
+                        <svg version="1.1" viewBox="0 0 500 500" class="svg-content">
+                            <circle id="client3-connection" fill="red" stroke="black" stroke-width="10" stroke-miterlimit="10"
+                                cx="250" cy="250" r="200" />
+                        </svg>
+                    </div>
+                </div>
+    ///////////////////////////////////////////////////////////////////            
+
+    class tabletObject {
+    constructor(type, name, address, socket) {
+        this._type = type;
+        this._name = name;
+        this._address = address;
+        this._socket = socket;
+    }
+    ///// Getters //////////
+    get type() {
+        return this._type;
+    }
+    get name() {
+        return this._name;
+    }
+    get address() {
+        return this._address;
+    }
+    get socket() {
+        return this._socket;
+    }
+    //// Setters ////////////////
+    set type(val) {
+        this._type = val;
+    }
+    set name(val) {
+        this._name = val;
+    }
+    set address(val) {
+        this._address = val;
+    }
+    set socket(val) {
+        this._socket = val;
+    }
+}
+
+////////////////////////////////////////////
