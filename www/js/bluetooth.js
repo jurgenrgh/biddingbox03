@@ -21,6 +21,12 @@ function initBtSettingsPage() {
     el = document.getElementById("client3-tablet-name");
     el.innerHTML = tablet[3].name;
 
+    el = document.getElementById("this-tablet-rank");
+    if (thisTabletIx == serverTabletIx) {
+        el.innerHTML = "Server";
+    } else {
+        el.innerHTML = "Client";
+    }
     //storeAllBtGlobals();
 }
 
@@ -43,8 +49,11 @@ function getBtDevices() {
             thisTabletBtName = adapterInfo.name; // Our Bluetooth name
             //!!!! After Android 6 the local MAC address is no longer accessible !!!!
             // So the addr is always 02:00:00:00:00:00
+            if(adapterInfo.enabled == false){
+                popupBox("Bluetooth Adapter is not enabled", "Check Android Bluetooth Settings and restart", "", "OK", "", "");
+            }
             thisTabletBtAddress = adapterInfo.address; // Our BT address
-            console.log('Adapter ' + adapterInfo.address + ': ' + adapterInfo.name);
+            console.log('Adapter ', adapterInfo.address, adapterInfo.name);
             //storeAllBtGlobals();
         },
         function (errorMessage) {
@@ -56,7 +65,7 @@ function getBtDevices() {
     networking.bluetooth.getDevices(function (devices) {
         var pairedBtNames = [];
         var pairedBtAddresses = [];
-        
+
         for (var i = 0; i < devices.length; i++) {
             // The deviceInfo object has the following properties:
             // address: String --> The address of the device, in the format 'XX:XX:XX:XX:XX:XX'.
@@ -68,92 +77,80 @@ function getBtDevices() {
             pairedBtAddresses[i] = devices[i].address;
         }
         assignBtFunction(pairedBtNames, pairedBtAddresses); // adds thisTablet if necessary and sorts alphabetically
-        
+
     });
 }
 
 //Sort the tablet names (including this tablet)
 //reorder the paired..[] arrays accordingly
 // 
-function assignBtFunction( names, addresses) {
-    var btN = [];
-    var btA = [];
-    var i;
-    var j;
-    var len;
-    var thisFlag = false;
-
-    console.log("sort", names, addresses);
-
-    len = names.length;
-    for (i = 0; i < len; i++) {
-        if (names[i] == thisTabletBtName) {
-            thisFlag = true;
-        }
+function assignBtFunction(names, addresses) {
+    var jx = 0;
+    //if this is a client
+    if (names.length == 1) {
+        tablet[0] = {
+            type: "server",
+            name: names[0],
+            address: addresses[0],
+            socket: -1
+        };
+        tablet[1] = {
+            type: "client",
+            name: thisTabletBtName,
+            address: thisTabletBtAddress,
+            socket: -1
+        };
+        tablet[2] = {
+            type: "client",
+            name: "undefined",
+            address: "undefined",
+            socket: -1
+        };
+        tablet[3] = {
+            type: "client",
+            name: "undefined",
+            address: "undefined",
+            socket: -1
+        };
+        serverTabletIx = 0;
+        thisTabletIx = 1;
+    }
+    //else this is the server
+    else {
+        tablet[0] = {
+            type: "server",
+            name: thisTabletBtName,
+            address: thisTabletBtAddress,
+            socket: -1
+        };
+        jx = 1 + getIndex(names, 0);
+        tablet[jx] = {
+            type: "client" + jx,
+            name: names[0],
+            address: addresses[0],
+            socket: -1
+        };
+        jx = 1 + getIndex(names, 1);
+        tablet[jx] = {
+            type: "client" + jx,
+            name: names[1],
+            address: addresses[1],
+            socket: -1
+        };
+        jx = 1 + getIndex(names, 2);
+        tablet[jx] = {
+            type: "client" + jx,
+            name: names[2],
+            address: addresses[2],
+            socket: -1
+        };
+        serverTabletIx = 0;
+        thisTabletIx = 0;
     }
 
-    if (thisFlag == false) {
-        names[len] = thisTabletBtName;
-        addresses[len] = thisTabletBtAddress;
-    }
-
-    len = names.length;
-    for (i = 0; i < len; i++) {
-        btN[i] = names[i];
-        btA[i] = addresses[i];
-    }
-
-    btN.sort();
-    for (i = 0; i < names.length; i++) {
-        for (j = 0; j < names.length; j++) {
-            if (btN[i] == names[j]) {
-                btA[i] = addresses[j];
-            }
-        }
-    }
-
-    for (i = 0; i < names.length; i++) {
-        names[i] = btN[i];
-        addresses[i] = btA[i];
-    }
-
-    len = names.length;
-    for (i = 0; i < len; i++) {
-        if (names[i] == thisTabletBtName) {
-            thisTabletIx = i;
-        }
-    }
-    // The server is the first entry in the sorted list
-    serverTabletBtName = names[0];
-    serverTabletBtAddress = addresses[0];
-    serverTabletIx = 0;
-
-    tablet[0] = {
-        type: "server",
-        name: names[0],
-        address: addresses[0],
-        socket: -1
-    };
-    tablet[1] = {
-        type: "client1",
-        name: names[1],
-        address: addresses[1],
-        socket: -1
-    };
-    tablet[2] = {
-        type: "client2",
-        name: names[2],
-        address: addresses[2],
-        socket: -1
-    };
-    tablet[3] = {
-        type: "client3",
-        name: names[3],
-        address: addresses[3],
-        socket: -1
-    };
+    console.log("tablet array:", tablet);
 }
-
+//////////////////////////////////////////////////////////////////
 // Bluetooth Connection //////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 //If this is the server - start listening
@@ -162,25 +159,26 @@ function assignBtFunction( names, addresses) {
 //in the paired list.
 function makeConnection() {
     var client = "";
-    if (thisTabletBtName == serverTabletBtName) { //this is the server
-        //console.log("start listening", thisTabletBtName);
+    logBtGlobals();
+    if (thisTabletIx == serverTabletIx) { //this is the server
+        console.log("start listening", tablet[serverTabletIx]);
         setConnectionState("server", "waiting");
         startBtListening();
     } else { //this is a client
-        //console.log("start calling", thisTabletBtName);
-        if (thisTabletBtName == tablet[1].name) {
+        console.log("start calling", tablet[thisTabletIx]);
+        if (thisTabletIx == 1) {
             client = "client1";
             setConnectionState("client1", "waiting");
             setConnectionState("client2", "unset");
             setConnectionState("client3", "unset");
         }
-        if (thisTabletBtName == tablet[2].name) {
+        if (thisTabletIx == 2) {
             client = "client2";
             setConnectionState("client1", "unset");
             setConnectionState("client2", "waiting");
             setConnectionState("client3", "unset");
         }
-        if (thisTabletBtName == tablet[3].name) {
+        if (thisTabletIx == 3) {
             client = "client3";
             setConnectionState("client1", "unset");
             setConnectionState("client2", "unset");
@@ -235,9 +233,9 @@ function startBtListening() {
 // client = "client1", "client2", "client3"
 function startCalling(client) {
     var deviceAddress;
-
-    if (tablet[thisTabletIx].socket < 0 ) { //if not connected
-        deviceAddress = serverTabletBtAddress;
+    console.log("start calling", client);
+    if (tablet[thisTabletIx].socket < 0) { //if not connected
+        deviceAddress = tablet[serverTabletIx].address;
         networking.bluetooth.connect(deviceAddress, uuid, function (socketId) {
             thisClientSocketId = socketId;
             tablet[thisTabletIx].socket = socketId;
@@ -245,9 +243,9 @@ function startCalling(client) {
             setConnectionState(client, "connected");
             setConnectionState("server", "connected");
             //Notify Server who the Client is.
-            sendMessage("this", "server", "confirmConnection", thisTabletBtName);
+            sendMessage("this", "server", "confirmConnection", tablet[thisTabletIx].name);
         }, function (errorMessage) {
-            console.log("error from Calling", serverTabletBtAddress, serverTabletBtName, thisClientSocketId);
+            console.log("error Calling", "server: ", tablet[serverTabletIx], "this: ", tablet[thisTabletIx], "socket: ", thisClientSocketId);
             console.error(errorMessage);
             popupBox("Bluetooth Caller Error", errorMessage, "btCallerError", "OK", "", "");
         });
@@ -262,20 +260,20 @@ function startCalling(client) {
 // The function changes the class of the corresponding element
 // in order to display the  red, yellow or green symbol
 //
-function setConnectionState(tablet, state) {
+function setConnectionState(tab, state) {
     var el;
-    //console.log("setConnectionState", tablet, state);
+    console.log("setConnectionState", tab, state);
 
-    if (tablet == "server") {
+    if (tab == "server") {
         el = document.getElementById("server-connection");
     }
-    if (tablet == "client1") {
+    if (tab == "client1") {
         el = document.getElementById("client1-connection");
     }
-    if (tablet == "client2") {
+    if (tab == "client2") {
         el = document.getElementById("client2-connection");
     }
-    if (tablet == "client3") {
+    if (tab == "client3") {
         el = document.getElementById("client3-connection");
     }
     el.classList.remove("dot-disconnected");
@@ -297,97 +295,47 @@ function setConnectionState(tablet, state) {
     }
 }
 
-// Send Message, text directly given
-// msgText: Any string but may have functional content interpreted
-// by receiving side.
-//
-// source: "this" when this is the originator
-// source: "client1", "client2", "client3"  when this is the server relaying a msg
-// recipient: "server", "client1", "client2", "client3"
-// type: a tag that determines what is to be done with the text
-// msgText: the actual message; format corresponds to type
-// If msgText = "" the text from the "outgoing message" field is sent
-//
-/////////////////////////////////
-function sendMessage(source, recipient, type, msgText) {
-    var senderSocketId;
-    var strContent;
-    var objContent = {};
-    var buf;
+// This clears everything and starts over
+// To make the same connections as before
+// use "reconnect"; but you must do the same for the neighbors 
+function generalBtReset() {
 
-    console.log("sendMessage: ", source, recipient, type, msgText);
-    if( tablet[thisTabletIx].type == recipient){
-        popupBox("Local Message", "not handled", "id", "OK", "", "");
-        return;
-    }
-
-    if (source == "this") {
-        senderSocketId = tablet[thisTabletIx].socket;
-        objContent.from = tablet[thisTabletIx].type;
-    }
-    else {
-        if (recipient == "client1") {
-            senderSocketId = tablet[1].socket;
-        }
-        if (recipient == "client2") {
-            senderSocketId = tablet[2].socket;
-        }
-        if (recipient == "client3") {
-            senderSocketId = tablet[3].socket;
-        }
-        objContent.from = source;
-    }
-    objContent.to = recipient;
-    objContent.type = type;
-    objContent.text = msgText;
-
-    console.log("sendMessage content", objContent);
-    console.log("sendMessage socket", senderSocket);
-
-    strContent = JSON.stringify(objContent);
-    buf = arrayBufferFromString(strContent);
-
-    if (senderSocketId > 0 ) { 
-        networking.bluetooth.send(senderSocketId, buf, function (bytes_sent) {
-            console.log('Sent nbr of bytes: ', bytes_sent, 'Socket: ', senderSocketId);
-            console.log("Message: ", strContent);
-        }, function (errorMessage) {
-            console.log('Send failed: ', errorMessage, 'Message: ', strContent, 'Socket: ', senderSocketId);
-            console.log(strContent);
-            popupBox("Send Message Error " + senderSocketId, errorMessage, "id", "OK", "", "");
-        });
-    } else {
-        console.log("Server not connected, message not sent");
-        popupBox("Send Message Error " + senderSocketId, "Socket not connected", "id", "OK", "", "");
-    }
+    popupBox("Do you want to Reset the Bluetooth Connections?",
+        "This will break all Bluetooth connections to this Tablet only.", "reset", "", "YES", "CANCEL");
 }
 
-////////////////////////////////////////////////////////////////////////
-// Received Message
-// Called in response to onReceive Event, i.e. when a Bluetooth
-// message has arrived.
-// 
-// If not, this is considered an error
-// If yes, the data is read and displayed in the inbox
-//  
-function onBtReceiveHandler(receiveInfo) {
-    var socketId = receiveInfo.socketId;
-    var strReceived = stringFromArrayBuffer(receiveInfo.data);
-    var objReceived = {};
+function doReset() {
+    console.log("Starting doReset");
+    // Clear the sockets
+    if (serverSocketId > -1) {
+        networking.bluetooth.close(serverSocketId);
+    }
+    
+    listeningForConnectionRequest = false;
+    serverSocketId = -1;
 
-    var textField = document.getElementById("msg-rcvd");
-    textField.value = "";
+    for(i=0; i<tablet.length;i++ ){
+        if( tablet[i].socket > -1 ){
+            networking.bluetooth.close(tablet[i].socket);
+        }
+    }
+    thisClientSocketId = -1;
+    nbrConnectedClients = 0;
 
-    console.log("Data received: ", strReceived);
-    objReceived = JSON.parse(strReceived);
-    console.log("Obj received: ", objReceived);
+    // Clear the displayed Connections
+    setConnectionState("server", "disconnected");
+    setConnectionState("client1", "disconnected");
+    setConnectionState("client2", "disconnected");
+    setConnectionState("client3", "disconnected");
 
-    // Message into Inbox
-    textField.value = strReceived;
-    M.updateTextFields();
-    M.textareaAutoResize(textField);
+    initAllBtGlobals();
 
-    msgInterpreter(socketId, strReceived);
+    logBtGlobals();
+
+    getBtDevices();
+    logBtGlobals();
+    initBtSettingsPage();
+    logBtGlobals();
 }
 
 function testGlobals() {
@@ -400,103 +348,14 @@ function testGlobals() {
 }
 
 function testObject() {
-    var str = [];
-    var org = [];
-
-    for (i = 0; i < 4; i++) {
-        str[i] = JSON.stringify(tablet[i]);
-        org[i] = JSON.parse(str[i]);
-        console.log("tablet: ", i, org[i]);
-    }
-}
-
-
-// This clears everything and starts over
-// To make the same connections as before
-// use "reconnect"; but you must do the same for the neighbors 
-function generalReset() {
-
-    // To Reset
-    // thisTabletBtName, thisTabletBtAddress
-
-    // Clear the sockets
-    if (serverSocketId > -1) {
-        networking.bluetooth.close(serverSocketId);
-    }
-    listeningForConnectionRequest = false;
-    serverSocketId = -1;
-
-    if (thisClientSocketId > -1) {
-        networking.bluetooth.close(thisClientSocketId);
-    }
-    thisClientSocketId = -1;
-    nbrConnectedClients = 0;
-
-    // Clear the displayed Connections
-    setConnectionState("server", "disconnected");
-    setConnectionState("client1", "disconnected");
-    setConnectionState("client2", "disconnected");
-    setConnectionState("client3", "disconnected");
-
-    networking.bluetooth.disable();
-    setTimeout(enableBT, 3000);
-}
-
-function enableBT(){
-    networking.bluetooth.enable();
-    getBtDevices();
-    initBtSettingsPage();
-}
-
-// Some incoming messages require action
-// An example is the msg that communicates client name
-// allowing the server to associate it with a socket. 
-// The content element "type" determines what to do.
-
-function msgInterpreter(socketId, strMsg) {
-    var objMsg = JSON.parse(strMsg);
-
-    console.log("Msg Interpreter: ", socketId, strMsg);
-    console.log("Msg Interpreter: ", objMsg);
-
-    if (objMsg.type == "confirmConnection") {
-        //Put the socketId in the right target[] object
-        for (i = 0; i < tablet.length; i++) {
-            if (tablet[i].name == objMsg.text) {
-                tablet[i].socket = socketId;
-                console.log("socket set", socketId, tablet[i].name, tablet[i].type, objMsg.text, objMsg.from);
-                setConnectionState(objMsg.from, "connected");
-            }
-        }
+    if (testFlag) {
+        document.getElementById("client3-div").style.display = 'none';
+        testFlag = false;
         return;
     }
-
-    //If msg not for this tablet - Relay 
-    if(tablet[thisTabletIx].type != objMsg.to){
-        sendMessage(objMsg.from, objMsg.to, objMsg.type, strMsg);
-        console.log("Relay: ", objMsg);
+    if (!testFlag) {
+        document.getElementById("client3-div").style.display = 'block';
+        testFlag = true;
         return;
     }
-
-    if(objMsg.type == "ping"){
-        var text = "from " + objMsg.from;
-        console.log(objMsg);
-        popupBox("Ping Received", text, "id", "OK", "", "");
-    }
-}
-
-// Ping causes a message of type "ping" to be sent to the receiver
-// recipient = "server", "client1", "client2", "client3"
-// the message text, if any, comes from the msg input field
-// the recipient replies by sending a message containing the
-// same text but with type "pong" 
-function pping( recipient ){
-    var val = document.getElementById("msg-send").value;
-    var txt = "Ping: " + val;
-    sendMessage( "this", recipient, "ping", txt);
-}
-
-function pong( recipient, text ){
-    var txt = "Pong: " + text;
-    sendMessage( "this", recipient, "pong", txt);
 }

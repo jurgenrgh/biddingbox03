@@ -73,11 +73,17 @@ function hidePopupBox(){
 function okModalClicked(){
     console.log("okModal ID= " + currentModalId);
 }
+
 function yesModalClicked(){
-    console.log("yesModal ID= " + currentModalId);
+    if(currentModalId == "reset"){
+        console.log("calling doReset");
+        doReset();
+    }
 }
 function noModalClicked(){
-    console.log("noModal ID= " + currentModalId);
+    if(currentModalId == "reset"){
+        return;
+    }
 }
 
 

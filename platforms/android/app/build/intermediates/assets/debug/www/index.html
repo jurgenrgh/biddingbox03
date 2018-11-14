@@ -51,8 +51,9 @@
 
         <nav>
             <div class="nav-wrapper navstyles">
-                <a href="#!" class="brand-logo black-text center" style="font-size:2.0rem;">Bidding Box</a>
-                <a class="dropdown-trigger" href="#!" data-target="dropdown1"><i class="material-icons left black-text">menu</i></a>
+                <a href="#!" class="brand-logo black-text center" style="font-size:3.0rem;">Bidding Box</a>
+                <a class="dropdown-trigger" href="#!" data-target="dropdown1"><i class="material-icons left black-text"
+                        style="font-size:3.0rem;">menu</i></a>
             </div>
         </nav>
 
@@ -76,13 +77,76 @@
 
         <nav>
             <div class="nav-wrapper navstyles">
-                <a href="#!" class="brand-logo black-text center" style="font-size:2.0rem;">Director Settings</a>
-                <a class="dropdown-trigger" href="#!" data-target="dropdown2"><i class="material-icons left black-text">menu</i></a>
+                <a href="#!" class="brand-logo black-text center" style="font-size:3.0rem;">Director Settings</a>
+                <a class="dropdown-trigger" href="#!" data-target="dropdown2"><i class="material-icons left black-text"
+                        style="font-size:3.0rem;">menu</i></a>
             </div>
         </nav>
 
         <div class="container">
-            <h3>Page 2: Director's Settings</h3>
+            <div class="row">
+                <div class="col s5 section-title">This Tablet</div>
+                <div class="col s3 item-blank" id="dir-this-tablet-name"></div>
+                <div class="col s3 item-blank" id="dir-this-tablet-rank"></div>
+            </div>
+
+            <div class="row">
+                <div class="col s5 section-title">Seat</div>
+                <div class="col s2 input-field ">
+                    <select>
+                        <option value="N">North</option>
+                        <option value="E">East</option>
+                        <option value="S">South</option>
+                        <option value="W">West</option>
+                    </select>
+                    <label>Choose Seat</label>
+                </div>
+                <div class="col s3 section-title"></div>
+            </div>
+
+            <div class="row">
+                <div class="col s5 section-title">Table Number</div>
+                <div class="col s2 l1">
+                    <input class="console-number-input" type="number" id="input-table-number" name="input-table-number"
+                        min="1" max="999">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s5 section-title">Section</div>
+                <div class="col s2 l1">
+                    <input class="console-text-input" type="text" id="input-section-letter" name="input-section-letter">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s5 section-title">First Board</div>
+                <div class="col s2 l1">
+                    <input class="console-number-input" type="number" id="input-first-board" name="input-first-board"
+                        min="1" max="36">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s5 section-title">Last Board</div>
+                <div class="col s2 l1">
+                    <input class="console-number-input" type="number" id="input-last-board" name="input-last-board" min="1"
+                        max="36">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s5 section-title">Minutes per Hand</div>
+                <div class="col s2 l1">
+                    <input class="console-number-input" type="number" id="input-hand-minutes" name="input-hand-minutes"
+                        min="1" max="20">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s5 section-title">Minutes per Session:</div>
+                <div class="col s2 l1">
+                    <input class="console-number-input" type="number" id="input-session-minutes" name="input-session-minutes"
+                        min="1" max="200">
+                </div>
+            </div>
         </div>
     </div>
     <!--End directorSettings Page-->
@@ -100,8 +164,9 @@
 
         <nav>
             <div class="nav-wrapper navstyles">
-                <a href="#!" class="brand-logo black-text center" style="font-size:2.0rem;">Player Settings</a>
-                <a class="dropdown-trigger" href="#!" data-target="dropdown3"><i class="material-icons left black-text">menu</i></a>
+                <a href="#!" class="brand-logo black-text center" style="font-size:3.0rem;">Player Settings</a>
+                <a class="dropdown-trigger" href="#!" data-target="dropdown3"><i class="material-icons left black-text"
+                        style="font-size:3.0rem;">menu</i></a>
             </div>
         </nav>
 
@@ -125,8 +190,9 @@
 
         <nav>
             <div class="nav-wrapper navstyles">
-                <a href="#!" class="brand-logo black-text center" style="font-size:2.0rem;">Bluetooth Settings</a>
-                <a class="dropdown-trigger" href="#!" data-target="dropdown4"><i class="material-icons left black-text">menu</i></a>
+                <a href="#!" class="brand-logo black-text center" style="font-size:3.0rem;">Bluetooth Settings</a>
+                <a class="dropdown-trigger" href="#!" data-target="dropdown4"><i class="material-icons left black-text"
+                        style="font-size:3.0rem;">menu</i></a>
             </div>
         </nav>
 
@@ -134,7 +200,8 @@
             <div class="row">
                 <div class="col s4 section-title">This Tablet</div>
                 <div class="col s3 item-blank" id="this-tablet-name"></div>
-                <div class="col s5 section-title"></div>
+                <div class="col s3 item-blank" id="this-tablet-rank"></div>
+                <div class="col s2 section-title"></div>
             </div>
             <div class="row">
                 <div class="col s4 section-title">Server Tablet</div>
@@ -142,19 +209,19 @@
                 <div class="col s1"><i id="server-connection" class="material-icons dot-disconnected">brightness_1</i></div>
                 <div class="col s4 section-title"></div>
             </div>
-            <div class="row">
+            <div id="client1-div" class="row">
                 <div class="col s4 section-title">Client 1</div>
                 <div class="col s3 item-blank" id="client1-tablet-name"></div>
                 <div class="col s1"><i id="client1-connection" class="material-icons dot-disconnected">brightness_1</i></div>
                 <div class="col s4 section-title"></div>
             </div>
-            <div class="row">
+            <div id="client2-div" class="row">
                 <div class="col s4 section-title">Client 2</div>
                 <div class="col s3 item-blank" id="client2-tablet-name"></div>
                 <div class="col s1"><i id="client2-connection" class="material-icons dot-disconnected">brightness_1</i></div>
                 <div class="col s4 section-title"></div>
             </div>
-            <div class="row">
+            <div id="client3-div" class="row">
                 <div class="col s4 section-title">Client 3</div>
                 <div class="col s3 item-blank" id="client3-tablet-name"></div>
                 <div class="col s1"><i id="client3-connection" class="material-icons dot-disconnected">brightness_1</i></div>
@@ -207,23 +274,6 @@
             </div>
 
             <div class="row">
-                <div class="col s3 section-title">Pong</div>
-                <div class="col s2">
-                    <a href="javascript:void(0);" class="btn waves-effect black-text standard-btn" onclick="pong('server');">Server</a>
-                </div>
-                <div class="col s2">
-                    <a class="btn waves-effect black-text standard-btn" onclick="ppong('client1');">Client1</a>
-                </div>
-                <div class="col s2">
-                    <a class="btn waves-effect black-text standard-btn" onclick="ppong('client2');">Client2</a>
-                </div>
-                <div class="col s2">
-                    <a class="btn waves-effect black-text standard-btn" onclick="ppong('client3');">Client3</a>
-                </div>
-                <div class="col s1"></div>
-            </div>
-
-            <div class="row">
                 <div class="col s12"></div>
             </div>
             <div class="divider black"></div>
@@ -232,19 +282,23 @@
             </div>
 
             <div class="row">
-                <div class="col s3">
+                <div class="col s6">
                     <a class="btn waves-effect black-text standard-btn" onclick="makeConnection()">Connect</a>
                 </div>
-                <div class="col s3">
-                    <a class="btn waves-effect black-text standard-btn" onclick="generalReset()">Reset</a>
-                </div>
-                <div class="col s3">
-                    <a class="btn waves-effect black-text standard-btn" onclick="testObject()">Test Object</a>
-                </div>
-                <div class="col s3">
-                    <a class="btn waves-effect black-text standard-btn" onclick="testGlobals()">Test Globals</a>
+                <div class="col s6">
+                    <a class="btn waves-effect black-text standard-btn" onclick="generalBtReset()">Reset</a>
                 </div>
             </div>
+            <!-- <div class="row">
+                <div class="col s3 section-title"></div>
+                <div class="col s4">
+                    <a class="btn waves-effect black-text standard-btn" onclick="testObject()">Test Visible</a>
+                </div>
+                <div class="col s4">
+                    <a class="btn waves-effect black-text standard-btn" onclick="testGlobals()">Test Globals</a>
+                </div>
+                <div class="col s1"></div>
+            </div> -->
         </div>
     </div>
 
@@ -258,6 +312,8 @@
     <script type="text/javascript" src="js/globals.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/bluetooth.js"></script>
+    <script type="text/javascript" src="js/messaging.js"></script>
+    <script type="text/javascript" src="js/director.js"></script>
     <script type="text/javascript" src="js/ModalDialog.js"></script>
 
     <script>
@@ -280,6 +336,10 @@
             elems = document.querySelectorAll('select');
             instances = M.FormSelect.init(elems);
             $('select').formSelect();
+
+            elems = document.querySelectorAll('.timepicker');
+            instances = M.Timepicker.init(elems);
+
         });
     </script>
 

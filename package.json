@@ -22,5 +22,9 @@
         "plugins": {
             "cordova-plugin-file-transfer": {}
         }
+    },
+    "devDependencies": {
+        "gulp-sass": "^4.0.2",
+        "node-sass": "^4.10.0"
     }
 }

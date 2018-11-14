@@ -7,6 +7,8 @@ var connectedColor = "green";
 var waitingColor = "yellow";
 var unsetColor = "transparent";
 
+var testFlag = true;
+
 //The Tablet Object 
 /////////////////////////////////////
 // type: "server", "client1", "client2", "client3"
@@ -28,10 +30,6 @@ var thisTabletIx = 0; //index in  tablet[] objects
 var thisTabletBtName = "void";
 var thisTabletBtAddress = "void";
 var serverTabletIx = 0;
-var serverTabletBtName = "void";
-var serverTabletBtAddress = "void";
-
-
 
 // UUID must be the same on all connected devices
 var uuid = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
@@ -53,17 +51,35 @@ var relayRepCount = 32;
 // 
 function initAllBtGlobals() {
 
-    tablet[0] = {type: "void", name: "void", address: "void", socket: -1};
-    tablet[1] = {type: "void", name: "void", address: "void", socket: -1};
-    tablet[2] = {type: "void", name: "void", address: "void", socket: -1};
-    tablet[3] = {type: "void", name: "void", address: "void", socket: -1};
+    tablet[0] = {
+        type: "void",
+        name: "void",
+        address: "void",
+        socket: -1
+    };
+    tablet[1] = {
+        type: "void",
+        name: "void",
+        address: "void",
+        socket: -1
+    };
+    tablet[2] = {
+        type: "void",
+        name: "void",
+        address: "void",
+        socket: -1
+    };
+    tablet[3] = {
+        type: "void",
+        name: "void",
+        address: "void",
+        socket: -1
+    };
 
     thisTabletIx = 0;
     thisTabletBtName = "void";
     thisTabletBtAddress = "void";
     serverTabletIx = 0;
-    serverTabletBtName = "void";
-    serverTabletBtAddress = "void";
 
     // UUID must be the same on all connected devices
     uuid = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
@@ -91,17 +107,35 @@ function initAllBtGlobals() {
 // 
 function restoreAllBtGlobals() {
 
-    tablet[0] = initObject("tablet0", {type: "void", name: "void", address: "void", socket: -1});
-    tablet[1] = initObject("tablet1", {type: "void", name: "void", address: "void", socket: -1});
-    tablet[2] = initObject("tablet2", {type: "void", name: "void", address: "void", socket: -1});
-    tablet[3] = initObject("tablet3", {type: "void", name: "void", address: "void", socket: -1});
-    
+    tablet[0] = initObject("tablet0", {
+        type: "void",
+        name: "void",
+        address: "void",
+        socket: -1
+    });
+    tablet[1] = initObject("tablet1", {
+        type: "void",
+        name: "void",
+        address: "void",
+        socket: -1
+    });
+    tablet[2] = initObject("tablet2", {
+        type: "void",
+        name: "void",
+        address: "void",
+        socket: -1
+    });
+    tablet[3] = initObject("tablet3", {
+        type: "void",
+        name: "void",
+        address: "void",
+        socket: -1
+    });
+
     thisTabletIx = initVariable("thisTabletIx", 0);
     thisTabletBtName = initVariable("thisTabletBtName", "void");
     thisTabletBtAddress = initVariable("thisTabletBtAddress", "void");
     serverTabletIx = initVariable("serverTabletIx", 0);
-    serverTabletBtName = initVariable("serverTabletBtName", "void");
-    serverTabletBtAddress = initVariable("serverTabletBtAddress", "void");
 
     // UUID must be the same on all connected devices
     uuid = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
@@ -140,8 +174,6 @@ function storeAllBtGlobals() {
     localStorage.setItem("thisTabletBtName", thisTabletBtName);
     localStorage.setItem("thisTabletBtAddress", thisTabletBtAddress);
     localStorage.setItem("serverTabletIx", serverTabletIx);
-    localStorage.setItem("serverTabletBtName", serverTabletBtName);
-    localStorage.setItem("serverTabletBtAddress", serverTabletBtAddress);
 
     localStorage.setItem("uuid", '94f39d29-7d6d-437d-973b-fba39e49d4ee');
 
@@ -176,8 +208,6 @@ function logBtGlobals() {
     console.log("thisTabletBtName", thisTabletBtName);
     console.log("thisTabletBtAddress", thisTabletBtAddress);
     console.log("serverTabletIx", serverTabletIx);
-    console.log("serverTabletBtName", serverTabletBtName);
-    console.log("serverTabletBtAddress", serverTabletBtAddress);
 
     console.log("uuid", '94f39d29-7d6d-437d-973b-fba39e49d4ee');
 
@@ -220,13 +250,25 @@ function initVariable(strName, value) {
 }
 
 // When the stored value is a stringified object
-function initObject(strName, obj){
+function initObject(strName, obj) {
     var restoredValue = obj;
     var vstr;
 
-    if(localStorage.getItem(strName) != null){
+    if (localStorage.getItem(strName) != null) {
         vstr = localStorage.getItem(strName);
         restoredValue = JSON.parse(vstr);
     }
     return restoredValue;
+}
+
+//arr: array of strings
+//Return index of ix-th element in alphabetical order
+function getIndex(arr, ix) {
+    var k = 0;
+    for (j = 0; j < arr.length; j++) {
+        if (arr[j] < arr[ix]) {
+            k++;
+        }
+    }
+    return k;
 }

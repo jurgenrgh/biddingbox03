@@ -1,71 +1,77 @@
 .section-title {
-    background: var(--main-bg-color);
-    color: black;
-    font-size: 1.75rem;
-    font-weight: bold;
-    
-    /*display: flex;*/
-    /*align-items: center;*/
-    /*justify-content: left;*/
-  }
-
-  .top-alignment{
-      margin-top: 12px;
-  } 
-
-  .kill-vmargin{
-      margin-top: 0px;
-      margin-bottom: 0px;
-  }
-
-  .item-title {
-    background: var(--main-bg-color);
-    color: black;
-    font-size: 1.5rem;
-    /*display: flex;*/
-    align-items: center;
-    justify-content: left;
-    padding-left: 8px;
-  }
-
-  .item-blank {
-    background: var(--main-bg-color);
-    color: black;
-    font-size: 1.75rem;
-    display: flex;
-    align-items: bottom;
-    justify-content: left;
-  }
-
-  .input-field input[type=text] {
-    border-bottom: 1px solid #000;
-    text-align: left;
-  }
-  
-  /* label color */
-  .input-field label {
-    color: black;
-  }
-
-  .svg-container { 
-	display: inline-block;
-	position: relative;
-    width: 2rem;
-    height: 2rem;
-    padding-bottom: 25%; 
-	vertical-align: bottom; 
+  background: var(--main-bg-color);
+  color: black;
+  font-size: 1.75rem;
+  font-weight: bold;
 }
 
-.svg-content { 
-	display: inline-block;
-	position: absolute;
-	top: 0;
-	left: 0;
+.item-title {
+  background: var(--main-bg-color);
+  color: black;
+  font-size: 1.5rem;
+  align-items: center;
+  justify-content: left;
+  padding-left: 8px;
 }
 
-.standard-btn{
-  width:100%;
-  font-weight:600;
+.item-blank {
+  background: var(--main-bg-color);
+  color: black;
+  font-size: 1.75rem;
+  align-items: bottom;
+  justify-content: left;
+}
+
+.item-frame {
+  background: var(--main-bg-color);
+  color: black;
+  font-size: 1.5rem;
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+.top-alignment {
+  margin-top: 12px;
+}
+
+.kill-vmargin {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.input-field input[type=text] {
+  border-bottom: 1px solid #000;
+  text-align: left;
+}
+
+/* label color */
+.input-field label {
+  color: black;
+}
+
+.svg-container {
+  display: inline-block;
+  position: relative;
+  width: 2rem;
+  height: 2rem;
+  padding-bottom: 25%;
+  vertical-align: bottom;
+}
+
+.svg-content {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.standard-btn {
+  width: 100%;
+  font-weight: 600;
   font-size: 1.25rem;
   align-items: center;
   justify-content: center;
@@ -82,8 +88,18 @@ input[type="number"] {
   margin-top: 4px;
   cursor: pointer;
   text-align: center;
-  width: 66px;
-  height: 48px;
+}
+
+input.console-number-input[type="number"] {
+  display: block;
+  background-color: var(--main-bg-color);
+  border: 1px solid black;
+  font-size: 2rem;
+  font-weight: bold;
+  color: black;
+  margin-top: 0;
+  cursor: pointer;
+  text-align: center;
 }
 
 input[type="text"] {
@@ -96,29 +112,62 @@ input[type="text"] {
   margin-top: 4px;
   cursor: pointer;
   text-align: center;
-  /*width: 66px;*/
- /* height: 48px;*/
+}
+
+input.console-text-input[type="text"] {
+  display: block;
+  background-color: var(--main-bg-color);
+  border: 1px solid black;
+  font-size: 2rem;
+  font-weight: bold;
+  color: black;
+  margin-top: 0;
+  cursor: pointer;
+  text-align: center;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
-   opacity: 0.3;
-   height: 48px;
+  opacity: 0.3;
+  height: 48px;
 }
-select option{
+
+#input-table-number:focus{
+  border-bottom: 1px solid black;
+}
+#input-section-letter:focus{
+  border-bottom: 1px solid black;
+}
+#input-first-board:focus{
+  border-bottom: 1px solid black;
+}
+#input-last-board:focus{
+  border-bottom: 1px solid black;
+}
+#input-hand-minutes:focus{
+  border-bottom: 1px solid black;
+}
+#input-session-minutes:focus{
+  border-bottom: 1px solid black;
+}
+
+select option {
   direction: rtl;
 }
 
-.dot-connected{
+.dot-connected {
   color: #388e3c;
 }
-.dot-disconnected{
+
+.dot-disconnected {
   color: #e53935;
 }
-.dot-waiting{
+
+.dot-waiting {
   color: #fdd835;
 }
-.dot-unset{
+
+.dot-unset {
   color: var(--main-bg-color);
 }
 
@@ -131,7 +180,6 @@ select option{
 .input-field label {
   color: black;
 }
-
 
 #msg-rcvd {
   border-bottom: 1px solid black;
@@ -159,4 +207,3 @@ select option{
 #msg-send:focus+label {
   color: black;
 }
-

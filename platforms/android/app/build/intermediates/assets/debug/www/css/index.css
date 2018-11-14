@@ -128,3 +128,24 @@ nav{
     font-weight: bold;
     cursor: pointer;
 }
+
+#rcorners1 {
+    border-radius: 50%;
+    background: #F44336;
+    padding: 10px;
+}
+#rcorners2 {
+    border-radius: 50%;
+    background: #2E7D32;
+    padding: 10px;
+}
+#rcorners3 {
+    border-radius: 50%;
+    background: #FF9800;
+    padding: 10px;
+}
+#rcorners4 {
+    border-radius: 0%;
+    background: #2196F3;
+    padding: 3px;
+}

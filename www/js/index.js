@@ -53,6 +53,9 @@ function showPage(pageName) {
   if (pageName == "bluetoothSettings") {
     initBtSettingsPage();
   }
+  if (pageName == "directorSettings") {
+    initDirSettingsPage();
+  }
 }
 
 ///////////////////////////////////////////////////////////////////
