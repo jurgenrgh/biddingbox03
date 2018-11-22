@@ -1,51 +1,4 @@
 //////////////////////////////////////////////////////////////
-// Bluetooth Names and addresses - BT global variables
-//////////////////////////////////////////////////////////////
-//
-var disconnectedColor = "red";
-var connectedColor = "green";
-var waitingColor = "yellow";
-var unsetColor = "transparent";
-
-var testFlag = true;
-
-//The Tablet Object 
-/////////////////////////////////////
-// type: "server", "client1", "client2", "client3"
-// name: client or server BtName
-// address: client or server BtAddress
-// socket: socketId
-// NB on a client tablet only the "this" socket is relevant
-// On the server all 3 client sockets are set
-//
-// There is always an array of 4 of these objects
-// Initialization after discovery of paired devices, see GetBtDevices()
-// Server and clients are assigned according to alphabetical order of the names
-// Socket set when connection made
-// The server cannot know which client belongs to which socket until
-// the confirmation message is received
-var tablet = []; //each entry an object   
-
-var thisTabletIx = 0; //index in  tablet[] objects
-var thisTabletBtName = "void";
-var thisTabletBtAddress = "void";
-var serverTabletIx = 0;
-
-// UUID must be the same on all connected devices
-var uuid = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
-
-var listeningForConnectionRequest = false;
-
-var serverSocketId = -1;
-var thisClientSocketId = -1;
-var nbrConnectedClients = 0;
-var clientSocketId = [];
-
-
-var relaySecDelay = 3;
-var relayRepCount = 32;
-
-//////////////////////////////////////////////////////////////
 // Bluetooth Names and addresses - and all the global variables
 // are initialized.
 // 
@@ -55,24 +8,28 @@ function initAllBtGlobals() {
         type: "void",
         name: "void",
         address: "void",
+        seat: "void",
         socket: -1
     };
     tablet[1] = {
         type: "void",
         name: "void",
         address: "void",
+        seat: "void",
         socket: -1
     };
     tablet[2] = {
         type: "void",
         name: "void",
         address: "void",
+        seat: "void",
         socket: -1
     };
     tablet[3] = {
         type: "void",
         name: "void",
         address: "void",
+        seat: "void",
         socket: -1
     };
 
@@ -111,24 +68,28 @@ function restoreAllBtGlobals() {
         type: "void",
         name: "void",
         address: "void",
+        seat: "void",
         socket: -1
     });
     tablet[1] = initObject("tablet1", {
         type: "void",
         name: "void",
         address: "void",
+        seat: "void",
         socket: -1
     });
     tablet[2] = initObject("tablet2", {
         type: "void",
         name: "void",
         address: "void",
+        seat: "void",
         socket: -1
     });
     tablet[3] = initObject("tablet3", {
         type: "void",
         name: "void",
         address: "void",
+        seat: "void",
         socket: -1
     });
 
@@ -271,4 +232,75 @@ function getIndex(arr, ix) {
         }
     }
     return k;
+}
+
+// Given h, m, s numerically, get string HH:MM:SS
+// Leading zeros included
+// hTruncate = true -> no leading zero hours
+// mTruncate = true -> no leading zero minutes
+//
+function getHMS(hours, minutes, seconds, hTruncate, mTruncate) {
+    var totSecs = 3600 * hours + 60 * minutes + seconds;
+
+    var h = Math.floor(totSecs / 3600);
+    var m = Math.floor((totSecs - (h * 3600)) / 60);
+    var s = Math.floor(totSecs - (h * 3600) - (m * 60));
+    var timeTxt;
+
+    if (totSecs < 3600) {
+        h = '00';
+    } else {
+        if (h < 10) {
+            h = '0' + h;
+        }
+    }
+    if (totSecs < 60) {
+        m = '00';
+    } else {
+        if (m < 10) {
+            m = '0' + m;
+        }
+    }
+    if (totSecs < 1) {
+        s = '00';
+    } else {
+        if (s < 10) {
+            s = '0' + s;
+        }
+    }
+
+    timeTxt = h + ':' + m + ':' + s;
+    if ((totSecs < 3600) && hTruncate) {
+        timeTxt = m + ':' + s;
+    }
+    if ((totSecs < 60) && mTruncate) {
+        timeTxt = '' + s;
+    }
+
+    return timeTxt;
+}
+
+// Input hh:mm:ss string
+// Output total seconds
+//
+function hmsToSeconds(hms) {
+    var sep = hms.split(':');
+    var h, m, s;
+    var len = sep.length;
+    var seconds;
+
+    if (len == 2) {
+        m = parseInt(sep[0]);
+        s = parseInt(sep[1]);
+        seconds = s + 60*m;
+    } else {
+        h = parseInt(sep[0]);
+        m = parseInt(sep[1]);
+        s = parseInt(sep[2]);
+        seconds = s + 60 * m + 3600 * h;
+    }
+
+    
+
+    return (seconds);
 }

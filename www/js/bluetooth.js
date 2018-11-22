@@ -92,24 +92,28 @@ function assignBtFunction(names, addresses) {
             type: "server",
             name: names[0],
             address: addresses[0],
+            seat: "north",
             socket: -1
         };
         tablet[1] = {
             type: "client",
             name: thisTabletBtName,
             address: thisTabletBtAddress,
+            seat: "east",
             socket: -1
         };
         tablet[2] = {
             type: "client",
             name: "undefined",
             address: "undefined",
+            seat: "void",
             socket: -1
         };
         tablet[3] = {
             type: "client",
             name: "undefined",
             address: "undefined",
+            seat: "void",
             socket: -1
         };
         serverTabletIx = 0;
@@ -121,6 +125,7 @@ function assignBtFunction(names, addresses) {
             type: "server",
             name: thisTabletBtName,
             address: thisTabletBtAddress,
+            seat: "north",
             socket: -1
         };
         jx = 1 + getIndex(names, 0);
@@ -128,6 +133,7 @@ function assignBtFunction(names, addresses) {
             type: "client" + jx,
             name: names[0],
             address: addresses[0],
+            seat: "east",
             socket: -1
         };
         jx = 1 + getIndex(names, 1);
@@ -135,6 +141,7 @@ function assignBtFunction(names, addresses) {
             type: "client" + jx,
             name: names[1],
             address: addresses[1],
+            seat: "south",
             socket: -1
         };
         jx = 1 + getIndex(names, 2);
@@ -142,6 +149,7 @@ function assignBtFunction(names, addresses) {
             type: "client" + jx,
             name: names[2],
             address: addresses[2],
+            seat: "west",
             socket: -1
         };
         serverTabletIx = 0;

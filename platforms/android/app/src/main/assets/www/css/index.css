@@ -22,19 +22,19 @@ body {
     width: 100%;
 }
 
-.navstyles{
+.navstyles {
     padding-top: 4px;
     padding-left: 8px;
     font-size: 2rem;
     background-color: var(--main-bg-color);
 }
 
-nav{
+nav {
     margin-bottom: 8px;
 }
 
-.page{
-    display:none;
+.page {
+    display: none;
 }
 
 /* Material Icon Fonts ***********************/
@@ -106,7 +106,8 @@ nav{
     background-color: transparent;
 }
 
-/* Modal Content */
+/********* Modal Content *****************************/
+/*****************************************************/
 .modal-content {
     background-color: var(--modal-bg-color);
     font-size: 2.5rem;
@@ -134,18 +135,150 @@ nav{
     background: #F44336;
     padding: 10px;
 }
+
 #rcorners2 {
     border-radius: 50%;
     background: #2E7D32;
     padding: 10px;
 }
+
 #rcorners3 {
     border-radius: 50%;
     background: #FF9800;
     padding: 10px;
 }
+
 #rcorners4 {
     border-radius: 0%;
     background: #2196F3;
     padding: 3px;
 }
+
+/********************* Table Styles ********************/
+/*******************************************************/
+thead {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}
+
+tbody {
+    display: block;
+    height: 58vh;
+    overflow-y: scroll;
+}
+
+tbody tr {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}
+
+table {
+    font-family: arial, sans-serif;
+    font-size: 2rem;
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+    margin: 0 auto 0 auto;
+}
+
+table,
+td,
+th {
+    border: 1px solid #546E7A;
+    text-align: center;
+    padding: 4px;
+}
+
+td {
+    height: 3rem;
+}
+
+/*Radio Buttons */
+.radio-buttons label {
+    color: black;
+    float: left;
+    margin: 0px;
+    background-color: var(--main-bg-color);
+}
+
+[type="radio"]:checked+span:after {
+    border: 2px solid #004D40;
+    background-color: #004D40;
+}
+
+[type="radio"]:not(:checked)+span,
+[type="radio"]:checked+span {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+[type="checkbox"].filled-in:checked+span:not(.lever):after {
+    top: 0;
+    border: 2px solid teal;
+    background-color: teal;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+[type="checkbox"]+span:not(.lever) {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+/*Clock Page ************************/
+.div-clock {
+    position: relative;
+    height: 16vh;
+    margin: 10px auto;
+    background-color: red;
+    border-style: solid;
+    border-width: 1px;
+}
+
+#bar-clock-session {
+    position: absolute;
+    height: 100%;
+    text-align: center;
+    font-size: 8rem;
+    background-color: #2E7D32;
+    width: 0;
+    color: #BDBDBD;
+    line-height: 100%;
+}
+
+#bar-clock-board {
+    position: absolute;
+    height: 100%;
+    text-align: center;
+    font-size: 8rem;
+    background-color: #2E7D32;
+    width: 0;
+    color: #BDBDBD;
+    line-height: 100%;
+}
+
+.bar-clock-overlay-time {
+    position: absolute;
+    width: 100%;
+    height: 80%;
+    text-align: center;
+    color: #BDBDBD;
+    font-size: 8rem;
+    padding: 3rem 10px 0rem;
+    z-index: 10;
+    line-height: 80%;
+}
+.bar-clock-overlay-label {
+    position: absolute;
+    width: 100%;
+    height: 20%;
+    margin-top: 8rem;
+    text-align: center;
+    color:  #BDBDBD;
+    font-size: 1.5rem;
+    padding: 3rem 10px 0rem;
+    z-index: 20;
+    line-height: 20%;
+  }

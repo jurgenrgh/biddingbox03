@@ -1,0 +1,114 @@
+kbd {
+    display: block;
+    font-size: 3rem;
+}
+
+.flex-tricks {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.tricks {
+    border: .2rem solid black;
+    border-radius: .5rem;
+    margin: 0.3rem;
+    font-size: 1.5rem;
+    padding: 1rem .5rem;
+    /*transition: all .07s ease;*/
+    width: 14vw;
+    text-align: center;
+    color: black;
+    background: rgba(1, 1, 1, 0);
+    box-sizing: border-box;
+}
+
+.flex-suits {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.suit {
+    border: .2rem solid black;
+    border-radius: .5rem;
+    margin: 0.3rem;
+    font-size: 1.5rem;
+    padding: 1rem .5rem;
+    /*transition: all .07s ease;*/
+    width: 19vw;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.clubs {
+    color: transparent;
+    text-shadow: 0 0 0 black;
+}
+
+.diams {
+    color: transparent;
+    text-shadow: 0 0 0 #d50000;
+}
+
+.hearts {
+    color: transparent;
+    text-shadow: 0 0 0 #d50000;
+}
+
+.spades {
+    color: transparent;
+    text-shadow: 0 0 0 black;
+}
+
+.nt {
+    color: black;
+}
+
+.flex-calls {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.call {
+    border: .2rem solid black;
+    border-radius: .5rem;
+    margin: 0.3rem;
+    font-size: 3rem;
+    color: white;
+    padding: 1rem .2rem .4rem;
+    /*transition: all .07s ease;*/
+    width: 19vw;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+
+#XX {
+    /*color: white;*/
+    background: #0288D1;
+}
+
+#Pass {
+    /*color: white;*/
+    background: #2e7d32;
+}
+
+#X {
+    /*color: white;*/
+    background: #d50000;
+}
+
+#Alert {
+    /*color: white;*/
+    background: #0288D1;
+}
+
+#Submit {
+    /*color: white;*/
+    background: #2e7d32;
+}

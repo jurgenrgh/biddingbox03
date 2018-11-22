@@ -13,9 +13,10 @@
     <link rel="stylesheet" type="text/css" href="css/materialize.min.css" media="screen,projection" />
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <link rel="stylesheet" type="text/css" href="css/gridlayout.css" />
+    <link rel="stylesheet" type="text/css" href="css/box.css" />
     <!--Additional Add-on: Material Icons in the form of fonts -->
     <!--located in www/fonts/  -->
-    <title>Bidding Box</title>
+    <title>BidBox03</title>
 </head>
 
 <body>
@@ -44,9 +45,10 @@
         <!-- Dropdown Structure -->
         <ul id="dropdown1" class="dropdown-content">
             <li><a href="#!">Bidding Box</a></li>
-            <li><a href="#!" onclick="showPage('directorSettings')">Director Settings</a></li>
-            <li><a href="#!" onclick="showPage('playerSettings')">Player Settings</a></li>
-            <li><a href="#!" onclick="showPage('bluetoothSettings')">Bluetooth Settings</a></li>
+            <li><a href="#!" onclick="showPage('directorSettings', 'biddingBox')">Director Settings</a></li>
+            <li><a href="#!" onclick="showPage('playerSettings', 'biddingBox')">Player Settings</a></li>
+            <li><a href="#!" onclick="showPage('bluetoothSettings', 'biddingBox')">Bluetooth Settings</a></li>
+            <li><a href="#!" onclick="showPage('clockScreen', 'biddingBox')">Clock Screen</a></li>
         </ul>
 
         <nav>
@@ -57,10 +59,174 @@
             </div>
         </nav>
 
-        <div class="container">
-            <h3>Page 1: Bidding Box Page</h3>
-        </div>
+        <div class="row">
+            <div class="col s4 item-blank">
+                <svg viewbox="0 0 120 150">
+                    <g>
+                        <rect x="0" y="0" width="120" height="30" style="fill-opacity: 0; stroke-width:1;stroke:black"
+                            id="svgRectTableNbr" />
+                        <text id="svgTextTableNbr" x="50%" y="17.5" font-size="2.0rem" alignment-baseline="middle"
+                            text-anchor="middle">Table 1N</text>
+                    </g>
+                    <g transform="translate(0,30)">
+                        <g>
+                            <rect x="30" y="30" width="60" height="60" style="fill-opacity: 0; stroke-width:0;stroke:black"
+                                id="svgRectBoardNbr" />
+                            <text id="svgTextBoardNbr" x="50%" y="62.5" font-size="3rem" alignment-baseline="middle"
+                                text-anchor="middle">1</text>
+                        </g>
+                        <g>
+                            <polygon points="0,0 120,0 90,30 30,30" style="fill:#2e7d32;stroke:black;stroke-width:0" id="svgRectNorth" />
+                            <text id="svgTextNorth" x="50%" y="17.5" font-size="2.0rem" alignment-baseline="middle"
+                                text-anchor="middle">Dealer</text>
+                        </g>
+                        <g>
+                            <polygon points="120,0 120,120 90,90 90,30" style="fill:#2e7d32;stroke:black;stroke-width:0"
+                                id="svgRectEast" />
+                            <text id="svgTextEast" x="87.5%" y="68" font-size="2rem" alignment-baseline="middle"
+                                text-anchor="middle" style="writing-mode: vertical-lr;">East</text>
 
+                        </g>
+                        <g>
+                            <polygon points="0,120 120,120 90,90 30,90" style="fill:#2e7d32;stroke:black;stroke-width:0"
+                                id="svgRectSouth" />
+                            <text id="svgTextSouth" x="50%" y="107.5" font-size="2rem" alignment-baseline="middle"
+                                text-anchor="middle">South</text>
+                        </g>
+                        <g>
+                            <polygon points="0,0 30,30 30,90 0,120" style="fill:#2e7d32;stroke:black;stroke-width:0" id="svgRectWest" />
+                            <text id="svgTextWest" x="12.5%" y="68" font-size="2rem" alignment-baseline="middle"
+                                text-anchor="middle" style="writing-mode: vertical-lr;text-orientation: sideways;">West</text>
+                        </g>
+                    </g>
+                </svg>
+                <div row>
+                    <div class="col s12">
+                        <a class="btn waves-effect black-text standard-btn" id="btn-setup" onclick="handleBoxReset();">Reset
+                            Box</a>
+                    </div>
+                </div>
+                <div row>
+                    <div class="col s12">
+                        <a class="btn waves-effect black-text standard-btn" id="btn-next-board" onclick="handleNextBoard();">Play
+                            Board +1</a>
+                    </div>
+                </div>
+
+                <div row>
+                    <div class="col s12">
+                        <a class="btn waves-effect black-text standard-btn" id="btn-selected-board" onclick="handleSelectedBoard();">Play
+                            Selected
+                            Board</a>
+                    </div>
+                </div>
+                <div row>
+                    <div class="col s4">
+                        <a class="btn waves-effect black-text standard-btn" id="btn-add" onclick="handleBoardNumberChange(1);"><i
+                                class="material-icons" style="font-size:1.5rem;">add</i></a>
+                    </div>
+                    <div class="col s4">
+                        <input class="console-number-input" type="number" id="input-board-number" name="input-board-number"
+                            min="1" max="36">
+                    </div>
+                    <div class="col s4">
+                        <a class="btn waves-effect black-text standard-btn" id="btn-subtract" onclick="handleBoardNumberChange(-1);"><i
+                                class="material-icons" style="font-size:1.5rem;">remove</i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col s8 item-blank">
+                <table id="auction">
+                    <thead>
+                        <tr>
+                            <th>W</th>
+                            <th>N</th>
+                            <th>E</th>
+                            <th>S</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row kill-vmargin">
+            <div class="col s12 item-blank">
+                <div class=flex-tricks>
+                    <div id="1" class="tricks" onClick="handleTricksBid(this.id)">
+                        <kbd>1</kbd>
+                    </div>
+                    <div id="2" class="tricks" onClick="handleTricksBid(this.id)">
+                        <kbd>2</kbd>
+                    </div>
+                    <div id="3" class="tricks" onClick="handleTricksBid(this.id)">
+                        <kbd>3</kbd>
+                    </div>
+                    <div id="4" class="tricks" onClick="handleTricksBid(this.id)">
+                        <kbd>4</kbd>
+                    </div>
+                    <div id="5" class="tricks" onClick="handleTricksBid(this.id)">
+                        <kbd>5</kbd>
+                    </div>
+                    <div id="6" class="tricks" onClick="handleTricksBid(this.id)">
+                        <kbd>6</kbd>
+                    </div>
+                    <div id="7" class="tricks" onClick="handleTricksBid(this.id)">
+                        <kbd>7</kbd>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row kill-vmargin">
+            <div class="col s12 item-blank">
+                <div class=flex-suits>
+                    <div id="Clubs" class="suit" onClick="handleSuitBid(this.id)">
+                        <kbd> <span class="clubs">&clubs;</span> </kbd>
+                    </div>
+                    <div id="Diams" class="suit" onClick="handleSuitBid(this.id)">
+                        <kbd> <span class="diams">&diams;</span> </kbd>
+                    </div>
+                    <div id="Hearts" class="suit" onClick="handleSuitBid(this.id)">
+                        <kbd> <span class="hearts">&hearts;</span> </kbd>
+                    </div>
+                    <div id="Spades" class="suit" onClick="handleSuitBid(this.id)">
+                        <kbd> <span class="spades">&spades;</span> </kbd>
+                    </div>
+                    <div id="NT" class="suit" onClick="handleSuitBid(this.id)">
+                        <kbd>NT</kbd>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row kill-vmargin">
+            <div class="col s12 item-blank">
+                <div class=flex-calls>
+                    <div id="XX" class="call" onClick="handleCalls(this.id)">
+                        <kbd>XX</kbd>
+                    </div>
+                    <div id="Pass" class="call" onClick="handleCalls(this.id)">
+                        <kbd>Pass</kbd>
+                    </div>
+                    <div id="X" class="call" onClick="handleCalls(this.id)">
+                        <kbd>X</kbd>
+                    </div>
+                    <div id="Alert" class="call" onClick="handleCalls(this.id)">
+                        <kbd>A!</kbd>
+                    </div>
+                    <div id="Submit" class="call" onClick="handleSubmitCall()">
+                        <!--<kbd><img src="img/check3.png" style='height: 50%; width: 50%; object-fit: contain'/> <img/></kbd>-->
+                        <kbd><i class="material-icons" style="font-size:4rem;">check</i></kbd>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <!--End biddingBox Page-->
 
@@ -69,10 +235,11 @@
     <!-------------------------------------------------------------------->
     <div id="directorSettings" style="display:none;">
         <ul id="dropdown2" class="dropdown-content">
-            <li><a href="#!" onclick="showPage('biddingBox')">Bidding Box</a></li>
+            <li><a href="#!" onclick="showPage('biddingBox', 'directorSettings')">Bidding Box</a></li>
             <li><a href="#!">Director Settings</a></li>
-            <li><a href="#!" onclick="showPage('playerSettings')">Player Settings</a></li>
-            <li><a href="#!" onclick="showPage('bluetoothSettings')">Bluetooth Settings</a></li>
+            <li><a href="#!" onclick="showPage('playerSettings', 'directorSettings')">Player Settings</a></li>
+            <li><a href="#!" onclick="showPage('bluetoothSettings', 'directorSettings')">Bluetooth Settings</a></li>
+            <li><a href="#!" onclick="showPage('clockScreen', 'directorSettings')">Clock Screen</a></li>
         </ul>
 
         <nav>
@@ -83,72 +250,171 @@
             </div>
         </nav>
 
-        <div class="container">
-            <div class="row">
-                <div class="col s5 section-title">This Tablet</div>
-                <div class="col s3 item-blank" id="dir-this-tablet-name"></div>
-                <div class="col s3 item-blank" id="dir-this-tablet-rank"></div>
-            </div>
 
-            <div class="row">
-                <div class="col s5 section-title">Seat</div>
-                <div class="col s2 input-field ">
-                    <select>
-                        <option value="N">North</option>
-                        <option value="E">East</option>
-                        <option value="S">South</option>
-                        <option value="W">West</option>
-                    </select>
-                    <label>Choose Seat</label>
-                </div>
-                <div class="col s3 section-title"></div>
-            </div>
+        <div class="row">
+            <div class="col s4 section-title">This Tablet</div>
+            <div class="col s3 item-title" id="dir-this-tablet-name"></div>
+            <div class="col s3 item-title" id="dir-this-tablet-rank"></div>
+            <div class="col s2 section-title"></div>
+        </div>
 
-            <div class="row">
-                <div class="col s5 section-title">Table Number</div>
-                <div class="col s2 l1">
-                    <input class="console-number-input" type="number" id="input-table-number" name="input-table-number"
-                        min="1" max="999">
+        <div class="row">
+            <div class="col s4 section-title">Seat</div>
+            <div class="radio-buttons">
+                <div class="col s3">
+                    <label>
+                        <input type="radio" name="radio-seat" id="radio-north" onClick="handleSeatChange('N')">
+                        <span class="radio-buttons">NORTH</span>
+                    </label>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col s5 section-title">Section</div>
-                <div class="col s2 l1">
-                    <input class="console-text-input" type="text" id="input-section-letter" name="input-section-letter">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col s5 section-title">First Board</div>
-                <div class="col s2 l1">
-                    <input class="console-number-input" type="number" id="input-first-board" name="input-first-board"
-                        min="1" max="36">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s5 section-title">Last Board</div>
-                <div class="col s2 l1">
-                    <input class="console-number-input" type="number" id="input-last-board" name="input-last-board" min="1"
-                        max="36">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s5 section-title">Minutes per Hand</div>
-                <div class="col s2 l1">
-                    <input class="console-number-input" type="number" id="input-hand-minutes" name="input-hand-minutes"
-                        min="1" max="20">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s5 section-title">Minutes per Session:</div>
-                <div class="col s2 l1">
-                    <input class="console-number-input" type="number" id="input-session-minutes" name="input-session-minutes"
-                        min="1" max="200">
+                <div class="col s3">
+                    <label>
+                        <input type="radio" name="radio-seat" id="radio-east" onClick="handleSeatChange('E')">
+                        <span class="radio-buttons">EAST</span>
+                    </label>
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col s4 section-title"></div>
+            <div class="radio-buttons">
+                <div class="col s3">
+                    <label>
+                        <input type="radio" name="radio-seat" id="radio-south" onClick="handleSeatChange('S')">
+                        <span>SOUTH</span>
+                    </label>
+                </div>
+                <div class="col s3">
+                    <label>
+                        <input type="radio" name="radio-seat" id="radio-west" onClick="handleSeatChange('W')">
+                        <span>WEST</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s4 section-title">Table Number</div>
+            <div class="col s1">
+                <input class="console-number-input" type="number" id="input-table-number" name="input-table-number" min="1"
+                    max="999">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s4 section-title">Section</div>
+            <div class="col s1">
+                <input class="console-text-input" type="text" id="input-section-letter" name="input-section-letter">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s4 section-title">First Board</div>
+            <div class="col s1">
+                <input class="console-number-input" type="number" id="input-first-board" name="input-first-board" min="1"
+                    max="36">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s4 section-title">Last Board</div>
+            <div class="col s1">
+                <input class="console-number-input" type="number" id="input-last-board" name="input-last-board" min="1"
+                    max="36">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s4 section-title">Minutes per Hand</div>
+
+            <div class="col s2 l1">
+                <input class="console-number-input" type="number" id="input-hand-minutes" name="input-hand-minutes" min="1"
+                    max="20">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s4 section-title">Minutes per Session</div>
+            <div class="col s2 l1">
+                <input class="console-number-input" type="number" id="input-session-minutes" name="input-session-minutes"
+                    min="1" max="200">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s4 section-title">Alert Bids</div>
+            <div class="radio-buttons">
+                <div class="col s3">
+                    <label>
+                        <input type="checkbox" class="filled-in" name="alert-own-bids" id="alert-own-bids">
+                        <span>Own</span>
+                    </label>
+                </div>
+                <div class="col s3">
+                    <label>
+                        <input type="checkbox" class="filled-in" name="alert-partner-bids" id="alert-partner-bids">
+                        <span>Partner's</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s4 section-title">Alert Opponents</div>
+            <div class="radio-buttons">
+                <div class="col s3">
+                    <label>
+                        <input type="checkbox" class="filled-in" name="alert-screenmate" id="alert-screenmate">
+                        <span>Screenmate</span>
+                    </label>
+                </div>
+                <div class="col s3">
+                    <label>
+                        <input type="checkbox" class="filled-in" name="alert-both-opps" id="alert-both-opps">
+                        <span>Both Opps</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s4 section-title">Tray Transfer</div>
+            <div class="radio-buttons">
+                <div class="col s3">
+                    <label>
+                        <input name="tray-transfer" type="radio" id="tray-ns" onClick="handleTrayTransferChange('ns')">
+                        <span>N&S</span>
+                    </label>
+                </div>
+                <div class="col s3">
+                    <label>
+                        <input name="tray-transfer" type="radio" id="tray-ew" onClick="handleTrayTransferChange('ew')">
+                        <span>E&W</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s4 section-title">Rotate Board</div>
+            <div class="radio-buttons">
+                <div class="col s3">
+                    <label>
+                        <input type="checkbox" class="filled-in" name="rotate-board" id="rotate-board">
+                        <span>Rotate 180&#176;</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s4"></div>
+            <div class="col s4">
+                <a class="btn waves-effect black-text standard-btn" onclick="showPage(previousPage, 'directorSettings')">Return</a>
+            </div>
+            <div class="col s4"></div>
+        </div>
     </div>
+
     <!--End directorSettings Page-->
 
     <!-------------------------------------------------------------------->
@@ -156,10 +422,11 @@
     <!-------------------------------------------------------------------->
     <div id="playerSettings" style="display:none;">
         <ul id="dropdown3" class="dropdown-content">
-            <li><a href="#!" onclick="showPage('biddingBox')">Bidding Box</a></li>
-            <li><a href="#!" onclick="showPage('directorSettings')">Director Settings</a></li>
+            <li><a href="#!" onclick="showPage('biddingBox', 'playerSettings')">Bidding Box</a></li>
+            <li><a href="#!" onclick="showPage('directorSettings', 'playerSettings')">Director Settings</a></li>
             <li><a href="#!">Player Settings</a></li>
-            <li><a href="#!" onclick="showPage('bluetoothSettings')">Bluetooth Settings</a></li>
+            <li><a href="#!" onclick="showPage('bluetoothSettings', 'playerSettings')">Bluetooth Settings</a></li>
+            <li><a href="#!" onclick="showPage('clockScreen', 'playerSettings')">Clock Screen</a></li>
         </ul>
 
         <nav>
@@ -171,7 +438,66 @@
         </nav>
 
         <div class="container">
-            <h3>Page 3: Player's Settings</h3>
+            <div class="row"></div> <!-- an empty line -->
+            <div class="row">
+                <div class="col s5 section-title">Reconfirm Bid</div>
+                <div class="radio-buttons">
+                    <div class="col s3">
+                        <label>
+                            <input type="radio" name="radio-reconfirm" id="radio-reconfirm-bid" onClick="handleBidReconfirmChange(true)">
+                            <span>YES</span>
+                        </label>
+                    </div>
+                    <div class="col s3">
+                        <label>
+                            <input type="radio" name="radio-reconfirm" id="radio-no-reconfirm-bid" onClick="handleBidReconfirmChange(false)">
+                            <span>NO</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s5 section-title">New Board Control</div>
+                <div class="radio-buttons">
+                    <div class="col s3">
+                        <label>
+                            <input type="radio" name="radio-next-control" id="next-control-north" onClick="handleNewBoardControlChange('north')">
+                            <span class="radio-buttons">NORTH</span>
+                        </label>
+                    </div>
+                    <div class="col s3">
+                        <label>
+                            <input type="radio" name="radio-next-control" id="next-control-east" onClick="handleNewBoardControlChange('east')">
+                            <span class="radio-buttons">EAST</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s5 section-title"></div>
+                <div class="radio-buttons">
+                    <div class="col s3">
+                        <label>
+                            <input type="radio" name="radio-next-control" id="next-control-south" onClick="handleNewBoardControlChange('south')">
+                            <span>SOUTH</span>
+                        </label>
+                    </div>
+                    <div class="col s3">
+                        <label>
+                            <input type="radio" name="radio-next-control" id="next-control-west" onClick="handleNewBoardControlChange('west')">
+                            <span>WEST</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s4"></div>
+                <div class="col s4">
+                    <a class="btn waves-effect black-text standard-btn" onclick="showPage(previousPage, 'playerSettings')">Return</a>
+                </div>
+                <div class="col s4"></div>
+            </div>
         </div>
 
     </div>
@@ -182,10 +508,11 @@
     <!-------------------------------------------------------------------->
     <div id="bluetoothSettings" style="display:none;">
         <ul id="dropdown4" class="dropdown-content">
-            <li><a href="#!" onclick="showPage('biddingBox')">Bidding Box</a></li>
-            <li><a href="#!" onclick="showPage('directorSettings')">Director Settings</a></li>
-            <li><a href="#!" onclick="showPage('playerSettings')">Player Settings</a></li>
+            <li><a href="#!" onclick="showPage('biddingBox', 'bluetoothSettings')">Bidding Box</a></li>
+            <li><a href="#!" onclick="showPage('directorSettings', 'bluetoothSettings')">Director Settings</a></li>
+            <li><a href="#!" onclick="showPage('playerSettings', 'bluetoothSettings')">Player Settings</a></li>
             <li><a href="#!">Bluetooth Settings</a></li>
+            <li><a href="#!" onclick="showPage('clockScreen', 'bluetoothSettings')">Clock Screen</a></li>
         </ul>
 
         <nav>
@@ -289,6 +616,14 @@
                     <a class="btn waves-effect black-text standard-btn" onclick="generalBtReset()">Reset</a>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col s4"></div>
+                <div class="col s4">
+                    <a class="btn waves-effect black-text standard-btn" onclick="showPage(previousPage, 'bluetoothSettings')">Return</a>
+                </div>
+                <div class="col s4"></div>
+            </div>
             <!-- <div class="row">
                 <div class="col s3 section-title"></div>
                 <div class="col s4">
@@ -305,16 +640,91 @@
     </div>
     <!--End bluetoothSettings Page-->
 
+    <!---------------------------------------------------------------->
+    <!--Clock Screen: Timers and Contract-------------------------------->
+    <!----------------------------------------------------------------->
+    <div id="clockScreen" style="display:none;">
+        <ul id="dropdown5" class="dropdown-content">
+            <li><a href="#!" onclick="showPage('biddingBox', 'clockScreen')">Bidding Box</a></li>
+            <li><a href="#!" onclick="showPage('directorSettings', 'clockScreen')">Director Settings</a></li>
+            <li><a href="#!" onclick="showPage('playerSettings', 'clockScreen')">Player Settings</a></li>
+            <li><a href="#!" onclick="showPage('bluetoothSettings', 'clockScreen')">Bluetooth Settings</a></li>
+            <li><a href="#!">Clock Screen</a></li>
+        </ul>
+
+        <nav>
+            <div class="nav-wrapper navstyles">
+                <a href="#!" class="brand-logo black-text center" style="font-size:3.0rem;">Time Left</a>
+                <a class="dropdown-trigger" href="#!" data-target="dropdown5"><i class="material-icons left black-text"
+                        style="font-size:3.0rem;">menu</i></a>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="row"></div>        
+            <div class="row">
+                <div class="col s1 item-blank"></div>
+                <div class="col s10">
+                    <div class="div-clock">
+                        <div id="bar-clock-board" style="width:100%;"></div>
+                        <div class="bar-clock-overlay-time" id="board-time">11:11</div>
+                        <div class="bar-clock-overlay-label">Board Timer</div>
+                    </div>
+                </div>
+                <div class="col s1 item-blank"></div>
+            </div>
+
+            <div class="row">
+                <div class="col s1 item-blank"></div>
+                <div class="col s10">
+                    <div class="div-clock">
+                        <div id="bar-clock-session" style="width:50%;"></div>
+                        <div class="bar-clock-overlay-time" id="session-time">10:10</div>
+                        <div class="bar-clock-overlay-label">Session Timer</div>
+                    </div>
+                </div>
+                <div class="col s1 item-blank"></div>
+            </div>
+
+            <div class="row">
+                <div class="col s12 item-blank"></div>
+            </div>
+
+            <div class="row">
+                <div class="col s2 item-blank"></div>
+                <div class="col s4">
+                    <a class="btn waves-effect black-text standard-btn" onclick="startClocks()">Start Clocks</a>
+                </div>
+                <div class="col s4">
+                    <a class="btn waves-effect black-text standard-btn" onclick="stopClocks()">Stop Clocks</a>
+                </div>
+                <div class="col s2 item-blank"></div>
+            </div>
+
+            <div class="row">
+                <div class="col s4"></div>
+                <div class="col s4">
+                    <a class="btn waves-effect black-text standard-btn" onclick="showPage(previousPage, 'clockScreen')">Return</a>
+                </div>
+                <div class="col s4"></div>
+            </div>
+        </div>
+    </div>
+
     <!--JavaScript at end of body for optimized loading-->
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="js/data.js"></script>
     <script type="text/javascript" src="js/globals.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/bluetooth.js"></script>
     <script type="text/javascript" src="js/messaging.js"></script>
     <script type="text/javascript" src="js/director.js"></script>
     <script type="text/javascript" src="js/ModalDialog.js"></script>
+    <script type="text/javascript" src="js/record.js"></script>
+    <script type="text/javascript" src="js/box.js"></script>
+    <script type="text/javascript" src="js/compass.js"></script>
 
     <script>
         $(document).ready(function () {

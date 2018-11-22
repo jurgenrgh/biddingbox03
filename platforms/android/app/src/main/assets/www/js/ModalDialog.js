@@ -12,10 +12,12 @@
 // noText : dito
 // 
 var currentModalId;
+var currentModalData;
+
 var textSample = "<strong>Lorem ipsum dolor sit amet,</strong> " +
- "consectetur adipiscing elit, sed do eiusmod " +
-  "tempor incididunt ut labore et dolore magna " +
-   "aliqua. Ut enim ad minim veniam, quis nostrud " +
+    "consectetur adipiscing elit, sed do eiusmod " +
+    "tempor incididunt ut labore et dolore magna " +
+    "aliqua. Ut enim ad minim veniam, quis nostrud " +
     "exercitation ullamco laboris nisi ut aliquip " +
     "ex ea commodo consequat. Duis aute irure dolor " +
     "in reprehenderit in voluptate velit esse cillum " +
@@ -24,7 +26,7 @@ var textSample = "<strong>Lorem ipsum dolor sit amet,</strong> " +
     "officia deserunt mollit <br/> anim <br/> id est laborum.";
 
 function popupBox(msgTitle, msgText, id, okText, yesText, noText) {
-    
+
     currentModalId = id;
 
     var head = document.getElementById("dialog-header");
@@ -64,27 +66,31 @@ function popupBox(msgTitle, msgText, id, okText, yesText, noText) {
     instance.open();
 }
 
-function hidePopupBox(){
+function hidePopupBox() {
     var el = document.getElementById("modalDialog");
     var instance = M.Modal.getInstance(el);
     instance.close();
 }
 
-function okModalClicked(){
+function okModalClicked() {
     console.log("okModal ID= " + currentModalId);
 }
 
-function yesModalClicked(){
-    if(currentModalId == "reset"){
-        console.log("calling doReset");
-        doReset();
+function yesModalClicked() {
+    if (currentModalId == "reset") {
+        console.log("calling resetBiddingBox");
+        resetBiddingBox();
     }
+    if (currentModalId == "new-seat") {
+        seatIx = seatOrder.indexOf(currentModalData);
+        tablet[thisTabletIx].seat = seatOrderWord[seatIx];
+        console.log("setting new seat = " + currentModalData, seatIx);
+    }
+    resetBiddingBox();
 }
-function noModalClicked(){
-    if(currentModalId == "reset"){
+
+function noModalClicked() {
+    if (currentModalId == "reset") {
         return;
     }
 }
-
-
-

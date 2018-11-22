@@ -30,9 +30,17 @@ var app = {
     console.log("screen width: ", screen.width, "screen height: ", screen.height);
     console.log("pixel ratio: ", window.devicePixelRatio);
     
+    screen.orientation.lock("portrait");
     
     //Listener for bluetooth message
     networking.bluetooth.onReceive.addListener(onBtReceiveHandler);
+
+    // Actual app Initialization /////////////////////////////////////////////
+    getCommonCssColors();
+    drawBiddingRecordTable(35);
+    drawCompass();
+    initBiddingBoxSettings();
+    initClockScreen();
     //restoreAllBtGlobals(); //Initializes those not stored
     //Get paired Bluetooth devices
     getBtDevices();
@@ -42,12 +50,14 @@ var app = {
 ////// End of Initializations ////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 //Show the selected page, hide the others
-function showPage(pageName) {
+function showPage(pageName, originPage) {
   console.log(pageName);
+  previousPage = originPage;
   document.getElementById("biddingBox").style.display = 'none';
   document.getElementById("playerSettings").style.display = 'none';
   document.getElementById("directorSettings").style.display = 'none';
   document.getElementById("bluetoothSettings").style.display = 'none';
+  document.getElementById("clockScreen").style.display = 'none';
   document.getElementById(pageName).style.display = 'block';
 
   if (pageName == "bluetoothSettings") {
@@ -55,6 +65,12 @@ function showPage(pageName) {
   }
   if (pageName == "directorSettings") {
     initDirSettingsPage();
+  }
+  if (pageName == "playerSettings") {
+    initDirSettingsPage();
+  }
+  if (pageName == "clockScreen") {
+    //initClockScreen();
   }
 }
 
@@ -81,3 +97,15 @@ function arrayBufferFromString(str) {
 function stringFromArrayBuffer(buf) {
   return String.fromCharCode.apply(null, new Uint8Array(buf));
 }
+
+// Hide keyboard on Enter (key 13)
+//Takes focus from currently hilited element,
+//which causes the keyboard to hide
+// 
+document.onkeypress =  function(e){
+  if( e.keyCode == 13 ){
+    //console.log("Enter pressed: ", e.keyCode);
+    document.activeElement.blur();
+  }    
+  //console.log("Key pressed: ", e.keyCode);
+};
