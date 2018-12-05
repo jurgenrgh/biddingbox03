@@ -50,24 +50,25 @@ function handleSuitBid(idSuit) {
 }
 //This sets the Board number field - nothing else for now
 function initBiddingBoxSettings() {
-    document.getElementById("input-board-number").value = boardIx + 1;
+    var boardNr = boardIx  + 1;
+    document.getElementById("input-board-number").value = boardNr;
+    document.getElementById("btn-selected-board").innerHTML = "Play Board " + boardNr;
+    console.log("inint box", boardNr);
 }
-
-document.getElementById("input-board-number").onchange = function () {
-    handleBoardNumberChange(0);
-};
 
 function handleBoardNumberChange(increment) {
     var x = document.getElementById("input-board-number");
     var bnbr = parseInt(x.value) + increment;
-    console.log("bnbr type: ", typeof(bnbr), "Value type: ", typeof(x.value), "Increment type: ", typeof(increment));
+    //console.log("bnbr type: ", typeof(bnbr), "Value type: ", typeof(x.value), "Increment type: ", typeof(increment));
     if (bnbr > 0) {
         x.value = bnbr;
         boardIx = bnbr - 1;
         dealerIx = boardIx % 4;
         vulIx = (Math.floor(boardIx / 4) + dealerIx) % 4;
-        console.log("New Board Number ", x.value);
+        //console.log("New Board Number ", x.value);
         drawCompass();
-        console.log("New Board Number ", boardIx + 1, dealerIx, vulIx);
+        //console.log("New Board Number ", boardIx + 1, dealerIx, vulIx);
     }
+    document.getElementById("btn-selected-board").innerHTML = "Play Board " + bnbr;
+    console.log("board nr change", bnbr);
 }

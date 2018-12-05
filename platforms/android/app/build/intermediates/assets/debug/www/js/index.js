@@ -37,7 +37,7 @@ var app = {
 
     // Actual app Initialization /////////////////////////////////////////////
     getCommonCssColors();
-    drawBiddingRecordTable(35);
+    drawBiddingRecordTable(36);
     drawCompass();
     initBiddingBoxSettings();
     initClockScreen();

@@ -9,12 +9,15 @@
 function drawBiddingRecordTable(nRows) {
     //popupBox("Draw Rows", nRows, "id", "OK", "", "");
     console.log("Bidding Record Table Rows:", nRows);
+    var cell;
     var table = document.getElementById("auction");
     for (var i = 1; i <= nRows; i++) {
-        var row = table.insertRow(i + 1);
+        var row = table.insertRow(i);
         for (var j = 0; j < 4; j++) {
-            var cell = row.insertCell(j);
-            cell.innerHTML = "&nbsp;" + i;
+            cell = row.insertCell(j);
+            if (j == 0) {
+                cell.innerHTML = "&nbsp;" + i;
+            }
         }
     }
 }

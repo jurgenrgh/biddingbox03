@@ -299,8 +299,5 @@ function hmsToSeconds(hms) {
         s = parseInt(sep[2]);
         seconds = s + 60 * m + 3600 * h;
     }
-
-    
-
     return (seconds);
 }
