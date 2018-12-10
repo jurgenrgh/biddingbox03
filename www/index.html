@@ -105,7 +105,7 @@
 
                 <div row>
                     <div class="col s12">
-                        <a class="btn waves-effect black-text standard-btn" id="btn-selected-board" onclick="handleSelectedBoard();">Play
+                        <a class="btn waves-effect black-text standard-btn" id="btn-selected-board" onclick="playSelectedBoard();">Play
                             Board 1</a>
                     </div>
                 </div>
@@ -463,13 +463,13 @@
                 <div class="radio-buttons">
                     <div class="col s3">
                         <label>
-                            <input type="radio" name="radio-next-control" id="next-control-north" onClick="handleNewBoardControlChange('north')">
+                            <input type="radio" name="radio-next-control" id="next-control-north" onClick="handleNewBoardControlChange('North')">
                             <span class="radio-buttons">NORTH</span>
                         </label>
                     </div>
                     <div class="col s3">
                         <label>
-                            <input type="radio" name="radio-next-control" id="next-control-east" onClick="handleNewBoardControlChange('east')">
+                            <input type="radio" name="radio-next-control" id="next-control-east" onClick="handleNewBoardControlChange('East')">
                             <span class="radio-buttons">EAST</span>
                         </label>
                     </div>
@@ -480,13 +480,13 @@
                 <div class="radio-buttons">
                     <div class="col s3">
                         <label>
-                            <input type="radio" name="radio-next-control" id="next-control-south" onClick="handleNewBoardControlChange('south')">
+                            <input type="radio" name="radio-next-control" id="next-control-south" onClick="handleNewBoardControlChange('South')">
                             <span>SOUTH</span>
                         </label>
                     </div>
                     <div class="col s3">
                         <label>
-                            <input type="radio" name="radio-next-control" id="next-control-west" onClick="handleNewBoardControlChange('west')">
+                            <input type="radio" name="radio-next-control" id="next-control-west" onClick="handleNewBoardControlChange('West')">
                             <span>WEST</span>
                         </label>
                     </div>
@@ -586,19 +586,22 @@
 
             <div class="row">
                 <div class="col s3 section-title">Ping</div>
-                <div class="col s2">
+                <div class="col s9 section-title"></div>
+            </div>
+            <div class="row">
+                
+                <div class="col s3">
                     <a href="javascript:void(0);" class="btn waves-effect black-text standard-btn" onclick="pping('server');">Server</a>
                 </div>
-                <div class="col s2">
+                <div class="col s3">
                     <a class="btn waves-effect black-text  standard-btn" onclick="pping('client1');">Client1</a>
                 </div>
-                <div class="col s2">
+                <div class="col s3">
                     <a class="btn waves-effect black-text standard-btn" onclick="pping('client2');">Client2</a>
                 </div>
-                <div class="col s2">
+                <div class="col s3">
                     <a class="btn waves-effect black-text standard-btn" onclick="pping('client3');">Client3</a>
                 </div>
-                <div class="col s1"></div>
             </div>
 
             <div class="row">
@@ -611,7 +614,7 @@
 
             <div class="row">
                 <div class="col s6">
-                    <a class="btn waves-effect black-text standard-btn" onclick="makeConnection()">Connect</a>
+                    <a class="btn waves-effect black-text standard-btn" onclick="makeBtConnection()">Connect</a>
                 </div>
                 <div class="col s6">
                     <a class="btn waves-effect black-text standard-btn" onclick="generalBtReset()">Reset</a>

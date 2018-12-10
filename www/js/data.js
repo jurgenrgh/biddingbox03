@@ -13,7 +13,7 @@ var vulColor = '#d50000';
 var nvulColor = '#2e7d32';
 
 var seatOrder = ["N", "E", "S", "W"];
-var seatOrderWord = ["north", "east", "south", "west"];
+var seatOrderWord = ["North", "East", "South", "West"];
 var bidOrder = ["W", "N", "E", "S"];
 var vulOrder = ["None", "NS", "EW", "All"];
 var suitNameOrder = ["Clubs", "Diams", "Hearts", "Spades", "NT"];
@@ -35,8 +35,8 @@ var previousPage = ""; //Save previous page when switching pages
 //
 var validPin = 1234; // for access to director settings
 
-var seatIx = 1; // Seat of this tablet (1 is East)
-var tableIx = 0; // Table of this tablet
+var seatIx = 1;  // Seat of this tablet (1 is East); (0,1,2,3) = (n,e,s,w); 
+var tableIx = 0; // Table of this tablet; just a count from 0..
 var sectionId = "A"; // an additional id for table/tournament/session
 
 var firstBoardNbr = 1; //can be set by the director as first of current series
@@ -63,7 +63,7 @@ var rotatedBoard = false; // change seats n<->s, e<->w for 1 round
 // Variables set on Player Settings Page /////////////////////////////////////////
 //
 var reconfirmBidSubmission = true;
-var newBoardControlSeat = "north"; //The player who triggers next board to be played 
+var newBoardControlSeat = "North"; //The player who triggers next board to be played 
 
 ///////////////////////////////////////////////////////////////////////////////////
 // Bidding Box Status   ///////////////////////////////////////////////////////////
@@ -159,7 +159,7 @@ var testFlag = true;
 // name: client or server BtName
 // address: client or server BtAddress
 // socket: socketId
-// seat: "north", "east", "south", "west", "void"
+// seat: "North", "East", "South", "West", "void"
 // NB on a client tablet only the "this" socket is relevant
 // On the server all 3 client sockets are set
 //

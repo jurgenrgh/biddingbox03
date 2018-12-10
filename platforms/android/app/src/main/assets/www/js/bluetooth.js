@@ -1,10 +1,27 @@
 //This is a js file intended solely for the BluetoothSettings.html module
 //
-////// Initializations ////////////////////////////////////////////////
+// function initBtSettingsPage()
+// 
+// function getBtDevices()
+// function assignBtFunction(names, addresses)
+// function makeBtConnection() 
+// function startBtListening()
+// function startBtCalling(client)
+// function setBtConnectionState(tab, state)
+// function generalBtReset()
+// function doReset()
+//
+///////////////////////////////////////////////////////////////////////////////
+////// Initializations ////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Visual init only
-//
+// Sets "Client" or "Server" function on BT settings page
+// Sets this-tablet-name on BT settings page
+// Sets the tablet names derived from Bluetooth pairing
+// For the server these are all 4 names
+// For each client this is server and local name only
+// 
 function initBtSettingsPage() {
     var el = document.getElementById("this-tablet-name");
     el.innerHTML = tablet[thisTabletIx].name;
@@ -92,14 +109,14 @@ function assignBtFunction(names, addresses) {
             type: "server",
             name: names[0],
             address: addresses[0],
-            seat: "north",
+            seat: "North",
             socket: -1
         };
         tablet[1] = {
             type: "client",
             name: thisTabletBtName,
             address: thisTabletBtAddress,
-            seat: "east",
+            seat: "East",
             socket: -1
         };
         tablet[2] = {
@@ -125,7 +142,7 @@ function assignBtFunction(names, addresses) {
             type: "server",
             name: thisTabletBtName,
             address: thisTabletBtAddress,
-            seat: "north",
+            seat: "North",
             socket: -1
         };
         jx = 1 + getIndex(names, 0);
@@ -133,7 +150,7 @@ function assignBtFunction(names, addresses) {
             type: "client" + jx,
             name: names[0],
             address: addresses[0],
-            seat: "east",
+            seat: "East",
             socket: -1
         };
         jx = 1 + getIndex(names, 1);
@@ -141,7 +158,7 @@ function assignBtFunction(names, addresses) {
             type: "client" + jx,
             name: names[1],
             address: addresses[1],
-            seat: "south",
+            seat: "South",
             socket: -1
         };
         jx = 1 + getIndex(names, 2);
@@ -149,14 +166,14 @@ function assignBtFunction(names, addresses) {
             type: "client" + jx,
             name: names[2],
             address: addresses[2],
-            seat: "west",
+            seat: "West",
             socket: -1
         };
         serverTabletIx = 0;
         thisTabletIx = 0;
     }
 
-    console.log("tablet array:", tablet);
+    //console.log("tablet array:", tablet);
 }
 //////////////////////////////////////////////////////////////////
 // Bluetooth Connection //////////////////////////////////////////
@@ -165,34 +182,34 @@ function assignBtFunction(names, addresses) {
 //If it is a client - wait and the start calling
 //Delay depends upon alphabetical rank, i.e. position
 //in the paired list.
-function makeConnection() {
+function makeBtConnection() {
     var client = "";
-    logBtGlobals();
+    //logBtGlobals();
     if (thisTabletIx == serverTabletIx) { //this is the server
         console.log("start listening", tablet[serverTabletIx]);
-        setConnectionState("server", "waiting");
+        setBtConnectionState("server", "waiting");
         startBtListening();
     } else { //this is a client
         console.log("start calling", tablet[thisTabletIx]);
         if (thisTabletIx == 1) {
             client = "client1";
-            setConnectionState("client1", "waiting");
-            setConnectionState("client2", "unset");
-            setConnectionState("client3", "unset");
+            setBtConnectionState("client1", "waiting");
+            setBtConnectionState("client2", "unset");
+            setBtConnectionState("client3", "unset");
         }
         if (thisTabletIx == 2) {
             client = "client2";
-            setConnectionState("client1", "unset");
-            setConnectionState("client2", "waiting");
-            setConnectionState("client3", "unset");
+            setBtConnectionState("client1", "unset");
+            setBtConnectionState("client2", "waiting");
+            setBtConnectionState("client3", "unset");
         }
         if (thisTabletIx == 3) {
             client = "client3";
-            setConnectionState("client1", "unset");
-            setConnectionState("client2", "unset");
-            setConnectionState("client3", "waiting");
+            setBtConnectionState("client1", "unset");
+            setBtConnectionState("client2", "unset");
+            setBtConnectionState("client3", "waiting");
         }
-        startCalling(client);
+        startBtCalling(client);
     }
 }
 
@@ -208,7 +225,7 @@ function startBtListening() {
             listeningForConnectionRequest = true;
 
             //console.log("startBluetoothListening socket = " + socketId);
-            setConnectionState("server", "waiting");
+            setBtConnectionState("server", "waiting");
 
             networking.bluetooth.onAccept.addListener(function (acceptInfo) {
                 if (acceptInfo.socketId !== serverSocketId) {
@@ -219,7 +236,7 @@ function startBtListening() {
                 nbrConnectedClients += 1;
 
                 if (nbrConnectedClients == 3) {
-                    setConnectionState("server", "connected");
+                    setBtConnectionState("server", "connected");
                 }
                 //Server socket is never closed, i.e. server keeps listening
                 //networking.bluetooth.close(serverSocketId);
@@ -239,7 +256,7 @@ function startBtListening() {
 
 // Offers to connect to the server
 // client = "client1", "client2", "client3"
-function startCalling(client) {
+function startBtCalling(client) {
     var deviceAddress;
     console.log("start calling", client);
     if (tablet[thisTabletIx].socket < 0) { //if not connected
@@ -248,8 +265,8 @@ function startCalling(client) {
             thisClientSocketId = socketId;
             tablet[thisTabletIx].socket = socketId;
             //console.log("Client connected, socket = ", socketId);
-            setConnectionState(client, "connected");
-            setConnectionState("server", "connected");
+            setBtConnectionState(client, "connected");
+            setBtConnectionState("server", "connected");
             //Notify Server who the Client is.
             sendMessage("this", "server", "confirmConnection", tablet[thisTabletIx].name);
         }, function (errorMessage) {
@@ -268,9 +285,9 @@ function startCalling(client) {
 // The function changes the class of the corresponding element
 // in order to display the  red, yellow or green symbol
 //
-function setConnectionState(tab, state) {
+function setBtConnectionState(tab, state) {
     var el;
-    console.log("setConnectionState", tab, state);
+    console.log("setBtConnectionState", tab, state);
 
     if (tab == "server") {
         el = document.getElementById("server-connection");
@@ -331,10 +348,10 @@ function doReset() {
     nbrConnectedClients = 0;
 
     // Clear the displayed Connections
-    setConnectionState("server", "disconnected");
-    setConnectionState("client1", "disconnected");
-    setConnectionState("client2", "disconnected");
-    setConnectionState("client3", "disconnected");
+    setBtConnectionState("server", "disconnected");
+    setBtConnectionState("client1", "disconnected");
+    setBtConnectionState("client2", "disconnected");
+    setBtConnectionState("client3", "disconnected");
 
     initAllBtGlobals();
 
@@ -346,6 +363,9 @@ function doReset() {
     logBtGlobals();
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Test Functions  /////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 function testGlobals() {
     console.log("All Globals");
     logBtGlobals();

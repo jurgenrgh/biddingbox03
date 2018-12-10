@@ -85,8 +85,12 @@ function yesModalClicked() {
         seatIx = seatOrder.indexOf(currentModalData);
         tablet[thisTabletIx].seat = seatOrderWord[seatIx];
         console.log("setting new seat = " + currentModalData, seatIx);
+        resetBiddingBox();
     }
-    resetBiddingBox();
+    if(currentModalId == "new-board"){
+        executePlaySelectedBoard();
+    }
+    
 }
 
 function noModalClicked() {

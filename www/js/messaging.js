@@ -117,13 +117,13 @@ function msgInterpreter(socketId, strMsg) {
     // Server sends this message to the client to assign the ClientId  
     if (objMsg.type == "confirmConnection") {
         console.log("after if type: ", objMsg.type);
-        //Put the socketId in the right talet[] object
+        //Put the socketId in the right tablet[] object
         for (i = 0; i < tablet.length; i++) {
             if (tablet[i].name == objMsg.text) {
                 tablet[i].socket = socketId;
                 clientIx = i;
                 //console.log("socket set", socketId, tablet[i].name, tablet[i].type, objMsg.text, objMsg.from);
-                setConnectionState(tablet[i].type, "connected");
+                setBtConnectionState(tablet[i].type, "connected");
             }
         }
 

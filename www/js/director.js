@@ -20,19 +20,21 @@ function initDirSettingsPage() {
     el = document.getElementById("dir-this-tablet-rank");
     el.innerHTML = tablet[thisTabletIx].type;
 
-    if (tablet[thisTabletIx].seat == "north") {
+    console.log("tablet", tablet);
+
+    if (tablet[thisTabletIx].seat == "North") {
         document.getElementById("radio-north").checked = 'checked';
         seatIx = 0;
     }
-    if (tablet[thisTabletIx].seat == "east") {
+    if (tablet[thisTabletIx].seat == "East") {
         document.getElementById("radio-east").checked = 'checked';
         seatIx = 1;
     }
-    if (tablet[thisTabletIx].seat == "south") {
+    if (tablet[thisTabletIx].seat == "South") {
         document.getElementById("radio-south").checked = 'checked';
         seatIx = 2;
     }
-    if (tablet[thisTabletIx].seat == "west") {
+    if (tablet[thisTabletIx].seat == "West") {
         document.getElementById("radio-west").checked = 'checked';
         seatIx = 3;
     }
@@ -75,16 +77,16 @@ function initDirSettingsPage() {
         document.getElementById("radio-no-reconfirm-bid").checked = true;
     }
 
-    if (newBoardControlSeat == "north") {
+    if (newBoardControlSeat == "North") {
         document.getElementById("next-control-north").checked = true;
     }
-    if (newBoardControlSeat == "east") {
+    if (newBoardControlSeat == "East") {
         document.getElementById("next-control-east").checked = true;
     }
-    if (newBoardControlSeat == "south") {
+    if (newBoardControlSeat == "South") {
         document.getElementById("next-control-south").checked = true;
     }
-    if (newBoardControlSeat == "west") {
+    if (newBoardControlSeat == "West") {
         document.getElementById("next-control-west").checked = true;
     }
 }
@@ -216,7 +218,7 @@ function handleBidReconfirmChange(par) {
 }
 
 function handleNewBoardControlChange(seat) {
-    console.log("next board control", seat);
+    //console.log("next board control", seat);
     newBoardControlSeat = seat;
 }
 
