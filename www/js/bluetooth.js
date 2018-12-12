@@ -1,7 +1,6 @@
 //This is a js file intended solely for the BluetoothSettings.html module
 //
 // function initBtSettingsPage()
-// 
 // function getBtDevices()
 // function assignBtFunction(names, addresses)
 // function makeBtConnection() 

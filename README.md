@@ -33,5 +33,8 @@ Now click the **Connect** button on the server. Wait a few seconds and then clic
 
 Once connected you can ping any tablet from any other using the buttons provided, i.e. send a test message, which will cause a confirmation to pop up on the remote device. 
 
-
+### 3. Jan Martel's testing on Fire 7 tablets
+Connection from server to the first client works, connection to more clients doesn't - times out.
+This is the status of the 121218 Backup. The plan is to assign distinct uuid's to the 3 clients. 
+The director assigns the seat and N,E,S,W as before; i.e. clientId, server not bound to seat.   
 
