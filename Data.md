@@ -20,16 +20,16 @@
 |                       |               |               |           |
 |reconfirmBidSubmission |	true        | Player        |           |	
 |newBoardControlSeat    | "North"       | Player	    |           |
-|
+|                       |               |               |           |
 |timerIdBoard           |  none         | system        |           |	
 |timerIdSession         |	none        | system        |	        |
-|
+|                       |               |               |           |
 |boardIx                | firstBoardNbr | BB            |           |	
 |dealerIx               | boardIx       | BB            |           |
 |vulIx                  | boardIx       | BB            |           |
 |roundIx                | 0             | BB            |	        |
 |bidderIx               | 0             | BB            |	        |
-|
+|                       |               |               |           |    
 |bStat = {}             |			    |               |           |
 |lastBidder             | "NO"          | BB            |	        |
 |tricks                 | 0             | BB            |	        |
@@ -42,39 +42,39 @@
 |newSuit                | "none"        | BB            |	        |
 |newCall                | "none"        | BB            |	        |
 |newAlert               | false         | BB            |           |
-|
-|boardsRec[]            |               |               |An array of roundsRec entries	
-|roundsRec[]            |               |               |An array of nRounds seatsRec entries
-|seatsRec[]             |               |               |An array of 4 callObj	Objects
-|
+|                       |               |               |           |
+|boardsRec[]            |               |               |An array of roundsRec entries	|
+|roundsRec[]            |               |               |An array of nRounds seatsRec entries|
+|seatsRec[]             |               |               |An array of 4 callObj	Objects|
+|                       |               |               |           |
 |callObj = {}           |               |               |see<sup>1</sup>       |  
 |.tricks                |               |               |           |
 |.suit                  |               |               |           |
 |.alert                 |               |               |           |   
-|			
+|			            |               |               |           |
 |tablet[]={}            |               |               |           |
 |.type		            |               | BT            |	        |
 |.name		            |               | BT            |	        |
 |.address		        |               | BT            |           |	
 |.socket	            |               | BT            |           |	
 |.seat		            |               | BT            |           |	
-|
+|                       |               |               |           |    
 |listeningForConnectionRequest|         | BT            |           |	
 |serverSocketId	        |               | BT            |           |	
 |thisClientSocketId     |               | BT            |           |	
 |nbrConnectedClients    |		        | BT            |           |	
-|clientSocketId[]       		        | BT            |           |	
-|			
+|clientSocketId[]       |		        | BT            |           |	
+|			            |               |               |           |
 |thisTabletIx	        |	            | BT            |           |	
 |thisTabletBtName       |		        | BT	        |           |
 |thisTabletBtAddress    |		        | BT	        |           |
 |serverTabletIx		    |               | BT	        |           |
-|
-|uuidNorth		        | constant      | sys           |           |           |	
-|uuidEast		        | constant      | sys	        |           |           |
-|uuidSouth		        | constant      | sys	        |           |           |
-|uuidWest		        | constant      | sys	        |           |           |
-|			
+|                       |               |               |           |
+|uuidNorth		        | constant      | sys           |           |  	
+|uuidEast		        | constant      | sys	        |           |  
+|uuidSouth		        | constant      | sys	        |           |  
+|uuidWest		        | constant      | sys	        |           |  
+|			            |               |               |           |
 |relaySecDelay          |               | sys           |           |	
 |relayRepCount	        |               | sys           |           |	
 -------------------------------------------------------------------------
