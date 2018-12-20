@@ -15,6 +15,7 @@
 |alertScreenmate        |	true        | Dir	        |           |
 |alertBothOpps          |	false       | Dir	        |           |
 |trayTransfer           |	"ns"        | Dir	        |           |
+|
 |rotatedBoard           | 	false       | Dir	        |           |
 |
 |reconfirmBidSubmission |	true        | Player        |           |	
