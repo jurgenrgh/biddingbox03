@@ -77,24 +77,30 @@ function okModalClicked() {
 }
 
 function yesModalClicked() {
-    if (currentModalId == "reset") {
+    if (currentModalId == "box-reset") {
         console.log("calling resetBiddingBox");
         resetBiddingBox();
     }
     if (currentModalId == "new-seat") {
-        seatIx = seatOrder.indexOf(currentModalData);
-        tablet[thisTabletIx].seat = seatOrderWord[seatIx];
-        console.log("setting new seat = " + currentModalData, seatIx);
+        thisSeatIx = seatOrder.indexOf(currentModalData);
+        tablet[thisTabletIx].seatIx = thisSeatIx;
+        console.log("setting new seat = " + currentModalData, thisSeatIx);
         resetBiddingBox();
     }
     if(currentModalId == "new-board"){
         executePlaySelectedBoard();
     }
-    
+
+    if (currentModalId == "bt-reset") {
+        doBtReset();
+    }
 }
 
 function noModalClicked() {
-    if (currentModalId == "reset") {
+    if (currentModalId == "box-reset") {
+        return;
+    }
+    if (currentModalId == "bt-reset") {
         return;
     }
 }

@@ -36,14 +36,15 @@ var app = {
     networking.bluetooth.onReceive.addListener(onBtReceiveHandler);
 
     // Actual app Initialization /////////////////////////////////////////////
+    //Get paired Bluetooth devices
+    getBtDevices();
+
     getCommonCssColors();
     drawBiddingRecordTable(36);
-    drawCompass();
+    //drawCompass();
     initBiddingBoxSettings();
     initClockScreen();
     //restoreAllBtGlobals(); //Initializes those not stored
-    //Get paired Bluetooth devices
-    getBtDevices();
   }
 };
 

@@ -20,14 +20,15 @@ function drawCompass() {
   
     var tnbr = textTableNbr.textContent;
     var bnbr = textBoardNbr.textContent;
-    var seat = seatOrder[seatIx];
+    var seat = seatOrder[thisSeatIx];
+
     //var north = textNorth.textContent;
     //var east = textEast.textContent;
     //var south = textSouth.textContent;
     //var west = textWest.textContent;
   
     console.log("drawCompass", "TableIx: " + tableIx, "SectionId: " + sectionId, "BoardIx: " + boardIx, "DealerIx: " + dealerIx, "VulIx: " + vulIx );
-  
+    console.log("compass", thisSeatIx);
     // Table Nbr and seat direction
     tnbr = tableIx + 1;
     textTableNbr.textContent = "Table " + sectionId + tnbr + seat;

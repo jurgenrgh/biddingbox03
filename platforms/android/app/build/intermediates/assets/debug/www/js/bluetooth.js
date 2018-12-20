@@ -1,7 +1,6 @@
 //This is a js file intended solely for the BluetoothSettings.html module
 //
 // function initBtSettingsPage()
-// 
 // function getBtDevices()
 // function assignBtFunction(names, addresses)
 // function makeBtConnection() 
@@ -9,7 +8,7 @@
 // function startBtCalling(client)
 // function setBtConnectionState(tab, state)
 // function generalBtReset()
-// function doReset()
+// function doBtReset()
 //
 ///////////////////////////////////////////////////////////////////////////////
 ////// Initializations ////////////////////////////////////////////////////////
@@ -66,7 +65,7 @@ function getBtDevices() {
             thisTabletBtName = adapterInfo.name; // Our Bluetooth name
             //!!!! After Android 6 the local MAC address is no longer accessible !!!!
             // So the addr is always 02:00:00:00:00:00
-            if(adapterInfo.enabled == false){
+            if (adapterInfo.enabled == false) {
                 popupBox("Bluetooth Adapter is not enabled", "Check Android Bluetooth Settings and restart", "", "OK", "", "");
             }
             thisTabletBtAddress = adapterInfo.address; // Our BT address
@@ -94,7 +93,7 @@ function getBtDevices() {
             pairedBtAddresses[i] = devices[i].address;
         }
         assignBtFunction(pairedBtNames, pairedBtAddresses); // adds thisTablet if necessary and sorts alphabetically
-
+        drawCompass();
     });
 }
 
@@ -102,35 +101,43 @@ function getBtDevices() {
 //reorder the paired..[] arrays accordingly
 // 
 function assignBtFunction(names, addresses) {
+    var i;
     var jx = 0;
+    var serverSeatIx = getSeatIxFromName(names[0]);
+    var seats = [];
+
+    thisSeatIx = getSeatIxFromName(thisTabletBtName);
+
+    console.log("Functions", names, addresses);
+
     //if this is a client
     if (names.length == 1) {
         tablet[0] = {
             type: "server",
             name: names[0],
             address: addresses[0],
-            seat: "North",
+            seatIx: serverSeatIx,
             socket: -1
         };
         tablet[1] = {
             type: "client",
             name: thisTabletBtName,
             address: thisTabletBtAddress,
-            seat: "East",
+            seatIx: thisSeatIx,
             socket: -1
         };
         tablet[2] = {
             type: "client",
             name: "undefined",
             address: "undefined",
-            seat: "void",
+            seatIx: -1,
             socket: -1
         };
         tablet[3] = {
             type: "client",
             name: "undefined",
             address: "undefined",
-            seat: "void",
+            seatIx: -1,
             socket: -1
         };
         serverTabletIx = 0;
@@ -138,11 +145,14 @@ function assignBtFunction(names, addresses) {
     }
     //else this is the server
     else {
+        for (i = 0; i < 3; i++) {
+            seats[i] = getSeatIxFromName(names[i]);
+        }
         tablet[0] = {
             type: "server",
             name: thisTabletBtName,
             address: thisTabletBtAddress,
-            seat: "North",
+            seatIx: thisSeatIx,
             socket: -1
         };
         jx = 1 + getIndex(names, 0);
@@ -150,7 +160,7 @@ function assignBtFunction(names, addresses) {
             type: "client" + jx,
             name: names[0],
             address: addresses[0],
-            seat: "East",
+            seatIx: seats[0],
             socket: -1
         };
         jx = 1 + getIndex(names, 1);
@@ -158,7 +168,7 @@ function assignBtFunction(names, addresses) {
             type: "client" + jx,
             name: names[1],
             address: addresses[1],
-            seat: "South",
+            seatIx: seats[1],
             socket: -1
         };
         jx = 1 + getIndex(names, 2);
@@ -166,7 +176,7 @@ function assignBtFunction(names, addresses) {
             type: "client" + jx,
             name: names[2],
             address: addresses[2],
-            seat: "West",
+            seatIx: seats[2],
             socket: -1
         };
         serverTabletIx = 0;
@@ -184,11 +194,15 @@ function assignBtFunction(names, addresses) {
 //in the paired list.
 function makeBtConnection() {
     var client = "";
+    var tabIx; // tablet index for next connection
     //logBtGlobals();
     if (thisTabletIx == serverTabletIx) { //this is the server
         console.log("start listening", tablet[serverTabletIx]);
+        tabIx = findNextUnconnectedClient();
+
         setBtConnectionState("server", "waiting");
-        startBtListening();
+        //startBtListening();
+        startBtListening(tabIx, callbackClientConnected);
     } else { //this is a client
         console.log("start calling", tablet[thisTabletIx]);
         if (thisTabletIx == 1) {
@@ -213,14 +227,20 @@ function makeBtConnection() {
     }
 }
 
+function callbackClientConnected(nbrClients){
+    popupBox("Client Connected", "Client Number " + nbrClients + " Connected", "client-connected", "OK", "", "");
+}
 // This is the 'server' side, of the socket connection
 // The 'server' (listener) is an arbitrarily chosen tablet
 // the others are 'clients' who requests a connection (callers)
-function startBtListening() {
+//function startBtListening() {
+
+function startBtListening(tabIx, callbackClientConnected) {
     //console.log("Enter Listening", listeningForConnectionRequest);
 
     if (!listeningForConnectionRequest) {
-        networking.bluetooth.listenUsingRfcomm(uuid, function (socketId) {
+        //networking.bluetooth.listenUsingRfcomm(uuid, function (socketId) {
+        networking.bluetooth.listenUsingRfcomm(uuidEast, function (socketId) {
             serverSocketId = socketId;
             listeningForConnectionRequest = true;
 
@@ -234,10 +254,12 @@ function startBtListening() {
                 }
                 clientSocketId[nbrConnectedClients] = acceptInfo.clientSocketId;
                 nbrConnectedClients += 1;
-
+                console.log("client connected", nbrConnectedClients);
                 if (nbrConnectedClients == 3) {
                     setBtConnectionState("server", "connected");
                 }
+                callbackClientConnected( nbrConnectedClients);
+
                 //Server socket is never closed, i.e. server keeps listening
                 //networking.bluetooth.close(serverSocketId);
                 //listeningForConnectionRequest = false;
@@ -261,7 +283,8 @@ function startBtCalling(client) {
     console.log("start calling", client);
     if (tablet[thisTabletIx].socket < 0) { //if not connected
         deviceAddress = tablet[serverTabletIx].address;
-        networking.bluetooth.connect(deviceAddress, uuid, function (socketId) {
+        //networking.bluetooth.connect(deviceAddress, uuid, function (socketId) {
+        networking.bluetooth.connect(deviceAddress, uuidEast, function (socketId) {
             thisClientSocketId = socketId;
             tablet[thisTabletIx].socket = socketId;
             //console.log("Client connected, socket = ", socketId);
@@ -326,22 +349,23 @@ function setBtConnectionState(tab, state) {
 function generalBtReset() {
 
     popupBox("Do you want to Reset the Bluetooth Connections?",
-        "This will break all Bluetooth connections to this Tablet only.", "reset", "", "YES", "CANCEL");
+        "This will break all Bluetooth connections to this Tablet only.", "bt-reset", "", "YES", "CANCEL");
 }
 
-function doReset() {
-    console.log("Starting doReset");
+function doBtReset() {
+    console.log("Starting doBtReset");
     // Clear the sockets
     if (serverSocketId > -1) {
         networking.bluetooth.close(serverSocketId);
     }
-    
+
     listeningForConnectionRequest = false;
     serverSocketId = -1;
 
-    for(i=0; i<tablet.length;i++ ){
-        if( tablet[i].socket > -1 ){
+    for (i = 0; i < tablet.length; i++) {
+        if (tablet[i].socket > -1) {
             networking.bluetooth.close(tablet[i].socket);
+            tablet[i].socket = -1;
         }
     }
     thisClientSocketId = -1;
@@ -361,6 +385,22 @@ function doReset() {
     logBtGlobals();
     initBtSettingsPage();
     logBtGlobals();
+}
+
+// Get index of the first tablet structure that doesn't 
+// have a socket assigned.
+// This is used to start listening for the corresponding 
+// client connection using the appropriate uuid
+// 
+function findNextUnconnectedClient() {
+    var i;
+    var tabIx = 1;
+    for (i = 3; i > 0; i--) {
+        if (tablet[i].socket < 0) {
+            tabIx = i;
+        }
+    }
+    return tabIx;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

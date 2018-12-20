@@ -22,30 +22,30 @@ function initDirSettingsPage() {
 
     console.log("tablet", tablet);
 
-    if (tablet[thisTabletIx].seat == "North") {
+    if (tablet[thisTabletIx].seatIx == 0) {
         document.getElementById("radio-north").checked = 'checked';
-        seatIx = 0;
+        thisSeatIx = 0;
     }
-    if (tablet[thisTabletIx].seat == "East") {
+    if (tablet[thisTabletIx].seatIx == 1) {
         document.getElementById("radio-east").checked = 'checked';
-        seatIx = 1;
+        ThisSeatIx = 1;
     }
-    if (tablet[thisTabletIx].seat == "South") {
+    if (tablet[thisTabletIx].seatIx == 2) {
         document.getElementById("radio-south").checked = 'checked';
-        seatIx = 2;
+        thisSeatIx = 2;
     }
-    if (tablet[thisTabletIx].seat == "West") {
+    if (tablet[thisTabletIx].seatIx == 3) {
         document.getElementById("radio-west").checked = 'checked';
-        seatIx = 3;
+        thisSeatIx = 3;
     }
-    if (tablet[thisTabletIx].seat == "void") {
-        document.getElementById("radio-north").checked = 'checked';
-        seatIx = 1; //arbitrarily
+    if (tablet[thisTabletIx].seatIx == -1) {
+        document.getElementById("radio-east").checked = 'checked';
+        thisSeatIx = 1; //arbitrarily
     }
 
     //Set Globals from BB02, declared in globals.js
     //
-    //var seatIx = 1; // Seat of this tablet set above
+    //var thisSeatIx = 1; // Seat of this tablet set above
     //var validPin = 1234; //needs to be added
 
     // var tableIx = 0; // Table of this tablet

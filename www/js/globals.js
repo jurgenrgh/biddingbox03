@@ -8,28 +8,28 @@ function initAllBtGlobals() {
         type: "void",
         name: "void",
         address: "void",
-        seat: "void",
+        seatIx: -1,
         socket: -1
     };
     tablet[1] = {
         type: "void",
         name: "void",
         address: "void",
-        seat: "void",
+        seatIx: -1,
         socket: -1
     };
     tablet[2] = {
         type: "void",
         name: "void",
         address: "void",
-        seat: "void",
+        seatIx: -1,
         socket: -1
     };
     tablet[3] = {
         type: "void",
         name: "void",
         address: "void",
-        seat: "void",
+        seatIx: -1,
         socket: -1
     };
 
@@ -39,7 +39,11 @@ function initAllBtGlobals() {
     serverTabletIx = 0;
 
     // UUID must be the same on all connected devices
-    uuid = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
+    //uuid = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
+    uuidNorth = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
+    uuidEast = '322de69b-6359-466c-a541-c6af48348f1d';
+    uuidSouth = 'f5341169-8493-452b-bc56-16e78fbb61d2';
+    uuidWest = '465191cd-a322-4fd0-b165-dd1b8caff80a';
 
     listeningForConnectionRequest = false;
 
@@ -68,28 +72,28 @@ function restoreAllBtGlobals() {
         type: "void",
         name: "void",
         address: "void",
-        seat: "void",
+        seatIx: -1,
         socket: -1
     });
     tablet[1] = initObject("tablet1", {
         type: "void",
         name: "void",
         address: "void",
-        seat: "void",
+        seatIx: -1,
         socket: -1
     });
     tablet[2] = initObject("tablet2", {
         type: "void",
         name: "void",
         address: "void",
-        seat: "void",
+        seatIx: -1,
         socket: -1
     });
     tablet[3] = initObject("tablet3", {
         type: "void",
         name: "void",
         address: "void",
-        seat: "void",
+        seatIx: -1,
         socket: -1
     });
 
@@ -99,7 +103,11 @@ function restoreAllBtGlobals() {
     serverTabletIx = initVariable("serverTabletIx", 0);
 
     // UUID must be the same on all connected devices
-    uuid = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
+    // uuid = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
+    uuidNorth = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
+    uuidEast = '322de69b-6359-466c-a541-c6af48348f1d';
+    uuidSouth = 'f5341169-8493-452b-bc56-16e78fbb61d2';
+    uuidWest = '465191cd-a322-4fd0-b165-dd1b8caff80a';
 
     listeningForConnectionRequest = initVariable("listeningForConnectionRequest", false);
 
@@ -136,7 +144,11 @@ function storeAllBtGlobals() {
     localStorage.setItem("thisTabletBtAddress", thisTabletBtAddress);
     localStorage.setItem("serverTabletIx", serverTabletIx);
 
-    localStorage.setItem("uuid", '94f39d29-7d6d-437d-973b-fba39e49d4ee');
+    //localStorage.setItem("uuid", '94f39d29-7d6d-437d-973b-fba39e49d4ee');
+    localStorage.setItem("uuidNorth", '94f39d29-7d6d-437d-973b-fba39e49d4ee');
+    localStorage.setItem("uuidEast", '322de69b-6359-466c-a541-c6af48348f1d');
+    localStorage.setItem("uuidSouth", 'f5341169-8493-452b-bc56-16e78fbb61d2');
+    localStorage.setItem("uuidWest", '465191cd-a322-4fd0-b165-dd1b8caff80a');
 
     localStorage.setItem("listeningForConnectionRequest", listeningForConnectionRequest);
 
@@ -170,7 +182,11 @@ function logBtGlobals() {
     console.log("thisTabletBtAddress", thisTabletBtAddress);
     console.log("serverTabletIx", serverTabletIx);
 
-    console.log("uuid", '94f39d29-7d6d-437d-973b-fba39e49d4ee');
+    //console.log("uuid", '94f39d29-7d6d-437d-973b-fba39e49d4ee');
+    console.log("uuidNorth", '94f39d29-7d6d-437d-973b-fba39e49d4ee');
+    console.log("uuidEast", '322de69b-6359-466c-a541-c6af48348f1d');
+    console.log("uuidSouth", 'f5341169-8493-452b-bc56-16e78fbb61d2');
+    console.log("uuidWest", '465191cd-a322-4fd0-b165-dd1b8caff80a');
 
     console.log("listeningForConnectionRequest", listeningForConnectionRequest);
 
@@ -292,7 +308,7 @@ function hmsToSeconds(hms) {
     if (len == 2) {
         m = parseInt(sep[0]);
         s = parseInt(sep[1]);
-        seconds = s + 60*m;
+        seconds = s + 60 * m;
     } else {
         h = parseInt(sep[0]);
         m = parseInt(sep[1]);
@@ -300,4 +316,21 @@ function hmsToSeconds(hms) {
         seconds = s + 60 * m + 3600 * h;
     }
     return (seconds);
+}
+
+// Takes the last character of the tablet name and converts
+// it to an integer mod 4 = endInt. 
+// Then seatIx = (endInt -1) mod 4
+// this makes 1,2,3,4 <-> N,E,S,W
+// Returns value of global seatIx
+function getSeatIxFromName(strName) {
+    var len = strName.length;
+    var endInt = strName.charCodeAt(len - 1);
+    //var endInt = parseInt(endChar, 10);
+    var six = (endInt + 3) % 4;
+
+    //console.log("getSeat", strName, len, endInt, six);
+
+    console.log("getSeat", strName, seatOrder[six]);
+    return six;
 }

@@ -2,13 +2,13 @@
 // Suit selection becomes available after level (tricks) is selected
 //
 function handleBoxReset() {
-    popupBox("Reset the Bidding Box", "Are you sure? This will clear all data for the current board.", "reset", "", "RESET", "CANCEL");
+    popupBox("Reset the Bidding Box", "Are you sure? This will clear all data for the current board.", "box-reset", "", "RESET", "CANCEL");
 }
 
 function playSelectedBoard() {
     var boardNr = boardIx + 1;
 
-    if (newBoardControlSeat == seatOrderWord[seatIx]) {
+    if (newBoardControlSeat == seatOrderWord[thisSeatIx]) {
         popupBox("Starting Board " + boardNr, "Check Board Number and Orientation!", "new-board", "", "OK", "CANCEL");
     } else {
         popupBox("New Board Control", newBoardControlSeat + " must start the new Board", "", "OK", "", "");
@@ -17,7 +17,7 @@ function playSelectedBoard() {
 
 function executePlaySelectedBoard() {
     clearBidBox();
-    if (bidderIx == seatIx) {
+    if (bidderIx == thisSeatIx) {
         bStat.boxOpen = true;
     }
     else{

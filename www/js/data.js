@@ -35,7 +35,7 @@ var previousPage = ""; //Save previous page when switching pages
 //
 var validPin = 1234; // for access to director settings
 
-var seatIx = 1;  // Seat of this tablet (1 is East); (0,1,2,3) = (n,e,s,w); 
+var thisSeatIx = 1;  // Seat of this tablet (1 is East); (0,1,2,3) = (n,e,s,w); 
 var tableIx = 0; // Table of this tablet; just a count from 0..
 var sectionId = "A"; // an additional id for table/tournament/session
 
@@ -112,7 +112,7 @@ var bStat = {
 // Has to be handled seperately
 // The current idea is an entry for each call;
 // the form could be:
-// key: 'xxyyzz', xx = board nbr, yy = round nbr, zz = seatIx
+// key: 'xxyyzz', xx = board nbr, yy = round nbr, zz = thisSeatIx
 // value: String(tricks) + suit + String(alert).
 // or
 // key: 'xxyyzz-tricks', value: String(tricks)
@@ -176,8 +176,14 @@ var thisTabletBtName = "void";
 var thisTabletBtAddress = "void";
 var serverTabletIx = 0;
 
-// UUID must be the same on all connected devices
-var uuid = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
+// UUID must be the same on both ends of a connection
+// distinct UUIDs are used for the 3 clients
+// clients are assigned seats and uuid is determined by the seat
+// the server changes uuid for each connection
+var uuidNorth = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
+var uuidEast  = '322de69b-6359-466c-a541-c6af48348f1d';
+var uuidSouth = 'f5341169-8493-452b-bc56-16e78fbb61d2';
+var uuidWest  = '465191cd-a322-4fd0-b165-dd1b8caff80a';
 
 var listeningForConnectionRequest = false;
 

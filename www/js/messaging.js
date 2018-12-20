@@ -109,8 +109,8 @@ function msgInterpreter(socketId, strMsg) {
     var clientTextName;
     var text;
 
-    console.log("Msg Interpreter: ", socketId, strMsg);
-    console.log("Msg Interpreter: ", objMsg);
+    console.log("Msg Interpreter Socket: ", socketId, strMsg);
+    console.log("Msg Interpreter Msg: ", objMsg);
 
     ////////////////////////////////////////////////////////////////
     // Confirm Connection:

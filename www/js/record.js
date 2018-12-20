@@ -82,8 +82,8 @@ function initBiddingRecord(boardNr) {
     for (j = 0, col; col = row.cells[j]; j++) {
         table.rows[1].cells[j].innerHTML = seatsRec[j].suit;
     }
-    //if (dealerIx == seatIx) {
-    if (bidderIx == ((seatIx + 1) % 4)) {
+    
+    if (bidderIx == ((thisSeatIx + 1) % 4)) {
         promptBidder(true);
     }
 }
