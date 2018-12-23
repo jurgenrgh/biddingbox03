@@ -98,8 +98,15 @@ function getBtDevices() {
     });
 }
 
-//Sort the tablet names (including this tablet)
-//reorder the paired..[] arrays accordingly
+// names = Paired BT Names
+// addresses = Paired BT addresses 
+// if this is a client there is only 1 name and 1 addr
+// if this is a server there are 3
+//
+// Initializes the tablet array and assigns seatIx  
+// tablet[].seatIx = 0,1,2,3  ~ N,E,S,W ~ (charCode + 3)(mod 4)
+// where charCode is the ASCII numerical code of the last character
+// Thus last character (1,2,3,4) -> (N,E,S,W)
 // 
 function assignBtFunction(names, addresses) {
     var i;
@@ -113,28 +120,28 @@ function assignBtFunction(names, addresses) {
 
     //if this is a client
     if (names.length == 1) {
-        tablet[0] = {
+        tablet[0] = {               //the only paired device
             type: "server",
-            name: names[0],
-            address: addresses[0],
+            name: names[0],         
+            address: addresses[0],  
             seatIx: serverSeatIx,
             socket: -1
         };
-        tablet[1] = {
+        tablet[1] = {               //info from getAdapterState 
             type: "client",
             name: thisTabletBtName,
             address: thisTabletBtAddress,
             seatIx: thisSeatIx,
             socket: -1
         };
-        tablet[2] = {
+        tablet[2] = {               //unused
             type: "client",
             name: "undefined",
             address: "undefined",
             seatIx: -1,
             socket: -1
         };
-        tablet[3] = {
+        tablet[3] = {               //unused
             type: "client",
             name: "undefined",
             address: "undefined",

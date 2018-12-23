@@ -91,10 +91,26 @@ function initDirSettingsPage() {
     }
 }
 
+// Called directly when the seat assignment is changed
+// Followed by confirmation popup. 
+// Actual change: doSeatChange called upon confitmation
+// newSeat = 'N','E','S', or 'W' 
+//
 function handleSeatChange(newSeat) {
     currentModalId = "new-seat";
     currentModalData = newSeat;
-    popupBox("New Seat Assignment", "This Tablet will be " + newSeat + ". The Bidding Box will be cleared!!", "new-seat", "", "OK", "CANCEL");
+    popupBox("New Seat Assignment", "This Tablet will be " + newSeat + ". Make sure that the seat assigment is consistent!", "new-seat", "", "OK", "CANCEL");
+}
+
+// Called by the modal box confirming intent to change the
+// seat assignment
+// seat =  'N','E','S', or 'W' 
+//
+function doSeatChange(seat){
+    thisSeatIx = seatOrder.indexOf(seat);
+    tablet[thisTabletIx].seatIx = thisSeatIx;
+    console.log("setting new seat = " + seat, thisSeatIx);
+    resetBiddingBox();
 }
 
 document.getElementById("input-table-number").onchange = function () {

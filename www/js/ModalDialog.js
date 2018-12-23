@@ -82,10 +82,8 @@ function yesModalClicked() {
         resetBiddingBox();
     }
     if (currentModalId == "new-seat") {
-        thisSeatIx = seatOrder.indexOf(currentModalData);
-        tablet[thisTabletIx].seatIx = thisSeatIx;
-        console.log("setting new seat = " + currentModalData, thisSeatIx);
-        resetBiddingBox();
+        doSeatChange(currentModalData);
+        
     }
     if(currentModalId == "new-board"){
         executePlaySelectedBoard();

@@ -318,9 +318,9 @@ function hmsToSeconds(hms) {
     return (seconds);
 }
 
-// Takes the last character of the tablet name and converts
+// Takes the code of the last character of tablet name and converts
 // it to an integer mod 4 = endInt. 
-// Then seatIx = (endInt -1) mod 4
+// Then seatIx = (endInt + 3) mod 4
 // this makes 1,2,3,4 <-> N,E,S,W
 // Returns value of global seatIx
 function getSeatIxFromName(strName) {
@@ -330,7 +330,6 @@ function getSeatIxFromName(strName) {
     var six = (endInt + 3) % 4;
 
     //console.log("getSeat", strName, len, endInt, six);
-
-    console.log("getSeat", strName, seatOrder[six]);
+    //console.log("getSeat", strName, seatOrder[six]);
     return six;
 }
