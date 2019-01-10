@@ -34,6 +34,7 @@ var app = {
     
     //Listener for bluetooth message
     networking.bluetooth.onReceive.addListener(onBtReceiveHandler);
+    networking.bluetooth.onAccept.addListener(onBtAcceptConnectionHandler);
 
     // Actual app Initialization /////////////////////////////////////////////
     //Get paired Bluetooth devices

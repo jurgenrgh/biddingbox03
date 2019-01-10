@@ -40,10 +40,10 @@ function initAllBtGlobals() {
 
     // UUID must be the same on all connected devices
     //uuid = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
-    uuidNorth = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
-    uuidEast = '322de69b-6359-466c-a541-c6af48348f1d';
-    uuidSouth = 'f5341169-8493-452b-bc56-16e78fbb61d2';
-    uuidWest = '465191cd-a322-4fd0-b165-dd1b8caff80a';
+    uuid[0] = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
+    uuid[1] = '322de69b-6359-466c-a541-c6af48348f1d';
+    uuid[2] = 'f5341169-8493-452b-bc56-16e78fbb61d2';
+    uuid[3] = '465191cd-a322-4fd0-b165-dd1b8caff80a';
 
     listeningForConnectionRequest = false;
 
@@ -51,10 +51,7 @@ function initAllBtGlobals() {
 
     thisClientSocketId = -1;
     nbrConnectedClients = 0;
-    clientSocketId[0] = -1;
-    clientSocketId[1] = -1;
-    clientSocketId[2] = -1;
-
+   
     relaySecDelay = 3;
     relayRepCount = 32;
 }
@@ -104,10 +101,10 @@ function restoreAllBtGlobals() {
 
     // UUID must be the same on all connected devices
     // uuid = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
-    uuidNorth = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
-    uuidEast = '322de69b-6359-466c-a541-c6af48348f1d';
-    uuidSouth = 'f5341169-8493-452b-bc56-16e78fbb61d2';
-    uuidWest = '465191cd-a322-4fd0-b165-dd1b8caff80a';
+    uuid[0] = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
+    uuid[1] = '322de69b-6359-466c-a541-c6af48348f1d';
+    uuid[2] = 'f5341169-8493-452b-bc56-16e78fbb61d2';
+    uuid[3] = '465191cd-a322-4fd0-b165-dd1b8caff80a';
 
     listeningForConnectionRequest = initVariable("listeningForConnectionRequest", false);
 
@@ -115,15 +112,6 @@ function restoreAllBtGlobals() {
 
     thisClientSocketId = initVariable("thisClientSocketId", -1);
     nbrConnectedClients = initVariable("nbrConnectedClients", 0);
-    if (nbrConnectedClients > 0) {
-        clientSocketId[0] = initVariable("clientSocketId0", -1);
-    }
-    if (nbrConnectedClients > 1) {
-        clientSocketId[1] = initVariable("clientSocketId1", -1);
-    }
-    if (nbrConnectedClients > 2) {
-        clientSocketId[2] = initVariable("clientSocketId2", -1);
-    }
 
     relaySecDelay = initVariable("relaySecDelay", 3);
     relayRepCount = initVariable("relayRepCount", 32);
@@ -145,10 +133,10 @@ function storeAllBtGlobals() {
     localStorage.setItem("serverTabletIx", serverTabletIx);
 
     //localStorage.setItem("uuid", '94f39d29-7d6d-437d-973b-fba39e49d4ee');
-    localStorage.setItem("uuidNorth", '94f39d29-7d6d-437d-973b-fba39e49d4ee');
-    localStorage.setItem("uuidEast", '322de69b-6359-466c-a541-c6af48348f1d');
-    localStorage.setItem("uuidSouth", 'f5341169-8493-452b-bc56-16e78fbb61d2');
-    localStorage.setItem("uuidWest", '465191cd-a322-4fd0-b165-dd1b8caff80a');
+    localStorage.setItem("uuid01", '94f39d29-7d6d-437d-973b-fba39e49d4ee');
+    localStorage.setItem("uuid02", '322de69b-6359-466c-a541-c6af48348f1d');
+    localStorage.setItem("uuid03", 'f5341169-8493-452b-bc56-16e78fbb61d2');
+    localStorage.setItem("uuid04", '465191cd-a322-4fd0-b165-dd1b8caff80a');
 
     localStorage.setItem("listeningForConnectionRequest", listeningForConnectionRequest);
 
@@ -156,16 +144,6 @@ function storeAllBtGlobals() {
 
     localStorage.setItem("thisClientSocketId", thisClientSocketId);
     localStorage.setItem("nbrConnectedClients", nbrConnectedClients);
-
-    if (nbrConnectedClients > 0) {
-        localStorage.setItem("clientSocketId0", clientSocketId[0]);
-    }
-    if (nbrConnectedClients > 1) {
-        localStorage.setItem("clientSocketId1", clientSocketId[1]);
-    }
-    if (nbrConnectedClients > 2) {
-        localStorage.setItem("clientSocketId2", clientSocketId[2]);
-    }
 
     localStorage.setItem("relaySecDelay", relaySecDelay);
     localStorage.setItem("relayRepCount", relayRepCount);
@@ -183,10 +161,10 @@ function logBtGlobals() {
     console.log("serverTabletIx", serverTabletIx);
 
     //console.log("uuid", '94f39d29-7d6d-437d-973b-fba39e49d4ee');
-    console.log("uuidNorth", '94f39d29-7d6d-437d-973b-fba39e49d4ee');
-    console.log("uuidEast", '322de69b-6359-466c-a541-c6af48348f1d');
-    console.log("uuidSouth", 'f5341169-8493-452b-bc56-16e78fbb61d2');
-    console.log("uuidWest", '465191cd-a322-4fd0-b165-dd1b8caff80a');
+    console.log("uuid01", '94f39d29-7d6d-437d-973b-fba39e49d4ee');
+    console.log("uuid02", '322de69b-6359-466c-a541-c6af48348f1d');
+    console.log("uuid03", 'f5341169-8493-452b-bc56-16e78fbb61d2');
+    console.log("uuid04", '465191cd-a322-4fd0-b165-dd1b8caff80a');
 
     console.log("listeningForConnectionRequest", listeningForConnectionRequest);
 
@@ -194,16 +172,6 @@ function logBtGlobals() {
 
     console.log("thisClientSocketId", thisClientSocketId);
     console.log("nbrConnectedClients", nbrConnectedClients);
-
-    if (nbrConnectedClients > 0) {
-        console.log("clientSocketId0", clientSocketId[0]);
-    }
-    if (nbrConnectedClients > 1) {
-        console.log("clientSocketId1", clientSocketId[1]);
-    }
-    if (nbrConnectedClients > 2) {
-        console.log("clientSocketId2", clientSocketId[2]);
-    }
 
     console.log("relaySecDelay", relaySecDelay);
     console.log("relayRepCount", relayRepCount);

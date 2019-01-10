@@ -159,7 +159,8 @@ var testFlag = true;
 // name: client or server BtName
 // address: client or server BtAddress
 // socket: socketId
-// seat: "North", "East", "South", "West", "void"
+// seatIx: 0,1,2,3 = "North", "East", "South", "West"
+// uuid: uuid[0], .... , uuid[3]; accto seatIx
 // NB on a client tablet only the "this" socket is relevant
 // On the server all 3 client sockets are set
 //
@@ -180,17 +181,17 @@ var serverTabletIx = 0;
 // distinct UUIDs are used for the 3 clients
 // clients are assigned seats and uuid is determined by the seat
 // the server changes uuid for each connection
-var uuidNorth = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
-var uuidEast  = '322de69b-6359-466c-a541-c6af48348f1d';
-var uuidSouth = 'f5341169-8493-452b-bc56-16e78fbb61d2';
-var uuidWest  = '465191cd-a322-4fd0-b165-dd1b8caff80a';
+var uuid = [];
+uuid[0] = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
+uuid[1] = '322de69b-6359-466c-a541-c6af48348f1d';
+uuid[2] = 'f5341169-8493-452b-bc56-16e78fbb61d2';
+uuid[3] = '465191cd-a322-4fd0-b165-dd1b8caff80a';
 
 var listeningForConnectionRequest = false;
 
 var serverSocketId = -1;
 var thisClientSocketId = -1;
 var nbrConnectedClients = 0;
-var clientSocketId = [];
 
 var relaySecDelay = 3;
 var relayRepCount = 32;

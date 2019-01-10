@@ -64,7 +64,6 @@
 |serverSocketId	        |               | BT            |           |	
 |thisClientSocketId     |               | BT            |           |	
 |nbrConnectedClients    |		        | BT            |           |	
-|clientSocketId[]       |		        | BT            |           |	
 |			            |               |               |           |
 |thisTabletIx	        |	            | assignBtFunction            |           |	
 |serverTabletIx		    |               | assignBtFunction	        |           |
@@ -72,10 +71,10 @@
 |thisTabletBtAddress    |		        | getBtDevices	        |           |
 
 |                       |               |               |           |
-|uuidNorth		        | constant      | sys           |           |  	
-|uuidEast		        | constant      | sys	        |           |  
-|uuidSouth		        | constant      | sys	        |           |  
-|uuidWest		        | constant      | sys	        |           |  
+|uuid[0]	            | constant      | sys           |           |  	
+|uuid[1]	            | constant      | sys	        |           |  
+|uuid[2]	            | constant      | sys	        |           |  
+|uuid[3]	            | constant      | sys	        |           |  
 |			            |               |               |           |
 |relaySecDelay          |               | sys           |           |	
 |relayRepCount	        |               | sys           |           |	
@@ -146,17 +145,16 @@
 |serverSocketId	        |               | BT            |           |	
 |thisClientSocketId     |               | BT            |           |	
 |nbrConnectedClients    |		        | BT            |           |	
-|clientSocketId[]       |		        | BT            |           |	
 |			            |               |               |           |
 |thisTabletIx	        |	            | BT            |           |	
 |thisTabletBtName       |		        | BT	        |           |
 |thisTabletBtAddress    |		        | BT	        |           |
 |serverTabletIx		    |               | BT	        |           |
 |                       |               |               |           |
-|uuidNorth		        | constant      | sys           |           |  	
-|uuidEast		        | constant      | sys	        |           |  
-|uuidSouth		        | constant      | sys	        |           |  
-|uuidWest		        | constant      | sys	        |           |  
+|uuid[0]	            | constant      | sys           |           |  	
+|uuid[1]	            | constant      | sys	        |           |  
+|uuid[2]	            | constant      | sys	        |           |  
+|uuid[3]	            | constant      | sys	        |           |  
 |			            |               |               |           |
 |relaySecDelay          |               | sys           |           |	
 |relayRepCount	        |               | sys           |           |	

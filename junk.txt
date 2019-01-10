@@ -302,3 +302,32 @@ assignSeat();
 }
 
 ////////////////////////////////////////////
+
+//replaced by callback:
+///////////////////////
+networking.bluetooth.onAccept.addListener(function (acceptInfo) {
+                    if (acceptInfo.socketId !== serverSocketId) {
+                        console.log('onAccept -- acceptInfo.socketId != serverSocketId');
+                        return;
+                    }
+
+                    tablet[tabIx].socket = acceptInfo.clientSocketId;
+                    nbrConnectedClients += 1;
+                    console.log("Nbr clients connected", nbrConnectedClients, tablet);
+                    if (nbrConnectedClients == 3) {
+                        setBtConnectionState("server", "connected");
+                    }
+
+                    //Close server socket
+                    networking.bluetooth.close(serverSocketId);
+                    listeningForConnectionRequest = false;
+
+                    console.log("Accepted Connection: ", "Number: ", nbrConnectedClients, "Server Socket: ", serverSocketId);
+                    nextTabIx = findNextUnconnectedClient();
+                    console.log("next tabIx", nextTabIx, tablet);
+                    if (nextTabIx > 0) {
+                        popupBox(seatName + " Tablet Connected", "Press OK and then press 'Connect' on the " + seatOrderWord[tablet[nextTabIx].seatIx] + " tablet", "connect-next-client", "OK", "", "");
+                    } else {
+                        popupBox(seatName + " Tablet Connected", "All tablets communicate", "last-client-connected", "OK", "", "");
+                    }
+                });

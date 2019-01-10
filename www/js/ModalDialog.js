@@ -26,7 +26,7 @@ var textSample = "<strong>Lorem ipsum dolor sit amet,</strong> " +
     "officia deserunt mollit <br/> anim <br/> id est laborum.";
 
 function popupBox(msgTitle, msgText, id, okText, yesText, noText) {
-
+    console.log("popup",msgTitle, msgText, id, okText, yesText, noText);
     currentModalId = id;
 
     var head = document.getElementById("dialog-header");
@@ -74,6 +74,9 @@ function hidePopupBox() {
 
 function okModalClicked() {
     console.log("okModal ID= " + currentModalId);
+    if(currentModalId == "connect-next-client"){
+        makeBtConnection();
+    }
 }
 
 function yesModalClicked() {
