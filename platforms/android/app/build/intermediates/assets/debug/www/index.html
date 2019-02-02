@@ -42,6 +42,7 @@
     <!--Bidding Box Page-------------------------------------------->
     <!-------------------------------------------------------------->
     <div id="biddingBox" style="display:block;">
+
         <!-- Dropdown Structure -->
         <ul id="dropdown1" class="dropdown-content">
             <li><a href="#!">Bidding Box</a></li>
@@ -105,22 +106,22 @@
 
                 <div row>
                     <div class="col s12">
-                        <a class="btn waves-effect black-text standard-btn" id="btn-selected-board" onclick="playSelectedBoard();">Play
-                            Board 1</a>
+                        <div class="btn waves-effect standard-btn" id="btn-selected-board" onclick="promptNewBoard();">Play
+                            Board 1</div>
                     </div>
                 </div>
                 <div row>
                     <div class="col s4">
-                        <a class="btn waves-effect black-text standard-btn" id="btn-add" onclick="handleBoardNumberChange(1);"><i
-                                class="material-icons" style="font-size:1.5rem;">add</i></a>
+                        <div class="btn waves-effect standard-btn" id="btn-add" onclick="handleBoardNumberChange(1);"><i
+                                class="material-icons" style="font-size:1.5rem;">add</i></div>
                     </div>
                     <div class="col s4">
                         <input class="console-number-input" type="number" id="input-board-number" name="input-board-number"
                             min="1" max="36">
                     </div>
                     <div class="col s4">
-                        <a class="btn waves-effect black-text standard-btn" id="btn-subtract" onclick="handleBoardNumberChange(-1);"><i
-                                class="material-icons" style="font-size:1.5rem;">remove</i></a>
+                        <div class="btn waves-effect standard-btn" id="btn-subtract" onclick="handleBoardNumberChange(-1);"><i
+                                class="material-icons" style="font-size:1.5rem;">remove</i></div>
                     </div>
                 </div>
                 <div row>
@@ -128,8 +129,8 @@
                 </div>
                 <div row>
                     <div class="col s12">
-                        <a class="btn waves-effect black-text standard-btn" id="btn-setup" onclick="handleBoxReset();">Reset
-                            Box</a>
+                        <div class="btn waves-effect standard-btn" id="btn-setup" onclick="handleBoxReset();">Reset
+                            Box</div>
                     </div>
                 </div>
             </div>
@@ -589,7 +590,6 @@
                 <div class="col s9 section-title"></div>
             </div>
             <div class="row">
-                
                 <div class="col s3">
                     <a href="javascript:void(0);" class="btn waves-effect black-text standard-btn" onclick="pping('server');">Server</a>
                 </div>
@@ -601,6 +601,21 @@
                 </div>
                 <div class="col s3">
                     <a class="btn waves-effect black-text standard-btn" onclick="pping('client3');">Client3</a>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col s3">
+                    <a href="javascript:void(0);" class="btn waves-effect black-text standard-btn" onclick="pping('north');">North</a>
+                </div>
+                <div class="col s3">
+                    <a class="btn waves-effect black-text  standard-btn" onclick="pping('east');">East</a>
+                </div>
+                <div class="col s3">
+                    <a class="btn waves-effect black-text standard-btn" onclick="pping('south');">South</a>
+                </div>
+                <div class="col s3">
+                    <a class="btn waves-effect black-text standard-btn" onclick="pping('west');">West</a>
                 </div>
             </div>
 
@@ -721,12 +736,13 @@
     <script type="text/javascript" src="js/materialize.min.js"></script>
     <script type="text/javascript" src="js/data.js"></script>
     <script type="text/javascript" src="js/globals.js"></script>
+    <script type="text/javascript" src="js/messaging.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/bluetooth.js"></script>
-    <script type="text/javascript" src="js/messaging.js"></script>
     <script type="text/javascript" src="js/director.js"></script>
     <script type="text/javascript" src="js/ModalDialog.js"></script>
     <script type="text/javascript" src="js/record.js"></script>
+    <script type="text/javascript" src="js/bidding.js"></script>
     <script type="text/javascript" src="js/box.js"></script>
     <script type="text/javascript" src="js/compass.js"></script>
 

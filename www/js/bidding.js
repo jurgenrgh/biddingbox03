@@ -1,0 +1,293 @@
+///////////////////////////////////////////////////////////////////////////////
+// Called when the bidder selects a nbr of tricks. The selection is provisional
+// until bidder confirms.
+// Selecting a selected button will undo all current choices
+//
+function handleTricksBid(idTricks) {
+    var id = parseInt(idTricks);
+    var oldTricks = bStat.newTricks;
+    console.log("box open ", bStat.boxOpen);
+    if (bStat.boxOpen == false) {
+        popupBox("It's not your turn", "", "", "OK", "", "");
+        return;
+    }
+
+    if (oldTricks != 0) {
+        unselectBidButton(oldTricks.toString());
+    }
+
+    if (id == oldTricks) {
+        unselectBidButton(oldTricks.toString());
+        bStat.newTricks = 0;
+        bStat.newSuit = "none";
+        bStat.newCall = "none";
+        bStat.newAlert = false;
+        updateBiddingRecord();
+        prepBidBox();
+    } else {
+        selectBidButton(idTricks);
+        bStat.newTricks = id;
+        updateBiddingRecord();
+        prepSuitBids();
+    }
+    checkEnableSubmit();
+}
+
+/////////////////////////////////////////////////////
+// After a suit button is clicked
+// 
+function handleSuitBid(idSuit) {
+    var id = suitNameOrder.indexOf(idSuit);
+    var oldSuit = bStat.newSuit;
+    console.log("box open ", bStat.boxOpen);
+    if (bStat.boxOpen == false) {
+        popupBox("It's not your turn", "", "", "OK", "", "");
+        return;
+    }
+
+    if (oldSuit != "none") { //if a suit was selected - unselect
+        unselectBidButton(oldSuit);
+    }
+
+    if (idSuit == oldSuit) { //if same suit selected twice - restart
+        unselectBidButton(oldSuit);
+        bStat.newSuit = "none";
+    } else {
+        selectBidButton(idSuit);
+        bStat.newSuit = idSuit;
+    }
+    updateBiddingRecord();
+    checkEnableSubmit();
+}
+///////////////////////////////////////////////////////////////////////////////
+// A call is anything on the 3rd row of buttons, namely X, XX, Pass, Alert but
+// not Submit (the check symbol), which is handles separately
+//
+
+/**
+ *
+ *
+ * @param {*} idCall
+ * 
+ */
+function handleCalls(idCall) {
+    if (bStat.boxOpen == false) {
+        popupBox("It's not your turn", 5);
+        return;
+    }
+
+    if (idCall == "Alert") {
+        if (bStat.newAlert) {
+            bStat.newAlert = false;
+            unselectBidButton("Alert");
+        } else {
+            bStat.newAlert = true;
+            selectBidButton("Alert");
+        }
+        updateBiddingRecord();
+    } else {
+        if (bStat.newCall == idCall) { //Same call hit twice = undo
+            unselectBidButton(idCall);
+            getbStat();
+            bStat.boxOpen = true;
+            bStat.newTricks = 0;
+            bStat.newSuit = "none";
+            bStat.newCall = "none";
+            bStat.newAlert = false;
+            prepBidBox();
+            updateBiddingRecord();
+        } else { //All normal cases follow
+            unselectCallButtons();
+            selectBidButton(idCall);
+            if (idCall == "Pass") {
+                bStat.newTricks = 0;
+                bStat.newSuit = "none";
+                bStat.newCall = "Pass";
+                bStat.newAlert = false;
+
+                enableBidButton("Submit");
+                enableBidButton("Alert");
+                updateBiddingRecord();
+            }
+            if (idCall == "X") {
+                bStat.newTricks = 0;
+                bStat.newSuit = "none";
+                bStat.newCall = "X";
+                bStat.newAlert = false;
+                enableBidButton("Submit");
+                enableBidButton("Alert");
+                updateBiddingRecord();
+            }
+            if (idCall == "XX") {
+                bStat.newTricks = 0;
+                bStat.newSuit = "none";
+                bStat.newCall = "XX";
+                bStat.newAlert = false;
+                enableBidButton("Submit");
+                enableBidButton("Alert");
+                updateBiddingRecord();
+            }
+        }
+    }
+}
+///////////////////////////////////////////////////////////////////////////////
+// Confirms that selected bid is made
+// Check-symbol lrh button
+//
+function handleSubmitCall() {
+    if (bStat.boxOpen == false) {
+        popupBox("It's not your turn", 5);
+        return;
+    }
+
+    confirmSelectedBid();
+
+    //unhiliteBiddingRecordCell();
+    //var t = makeBidRecordEntry();
+    //recordNewBid();
+    //clearBidBox();
+
+    //getbStat();
+
+    //promptNextSeat(bStat.passCount);
+
+    //console.log("submit", t);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Enables the submit button in the bidding box if
+// a valid bid is pending. Can be called anytime
+//
+function checkEnableSubmit() {
+    var bCheck = false;
+    if ((bStat.newTricks > 0) && (bStat.newSuit != "none")) {
+        bCheck = true;
+    }
+    if ((bStat.newCall == "X") || (bStat.newCall == "XX") || (bStat.newCall == "PASS")) {
+        bCheck = true;
+    }
+    if (bCheck) {
+        enableBidButton("Submit");
+    } else {
+        disableBidButton("Submit");
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// The current bid is what is recorded in the new** elements
+// of bStat. Retracting this bid this requires
+//  - resetting the bidbox accto bStat old info
+//  - clearing the bidding record cell
+//  - reinitializing bStat
+//
+function cancelCurrentBid() {
+    getbStat();
+    bStat.newTricks = 0;
+    bStat.newSuit = "none";
+    bStat.newCall = "none";
+    bStat.newAlert = false;
+    updateBiddingRecord();
+    prepBidBox();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// The bidder has pressed the submit button (check symbol in BB)
+// Now he is asked "are you sure" in different ways depending
+// upon the bidding phase; namely, passout, final contract, or
+// continuing.
+// This function is called after the submit button is clicked but
+// before any other action
+//
+function confirmSelectedBid() {
+    var passCount = bStat.passCount;
+    if (bStat.newCall == "Pass") {
+        passCount += 1;
+    }
+    //console.log("Nbr of passes", passCount);
+    // Board being passed out
+    if (passCount == 4) {
+        console.log("before passout popup"); 
+        popupBox("Board passed out", "Confirm or Cancel your Pass", "confirm-passout", "", "Confirm", "Cancel");
+        console.log("after passout popup");   
+    }
+     
+    // Contract being set - end of bidding
+    if ((passCount == 3) && (bStat.tricks != 0)) {
+        var tricks = bStat.tricks;
+        var suit = bStat.suit;
+        var dbl = bStat.dbl;
+        var rdbl = bStat.rdbl;
+        var x = "";
+        if (dbl)
+            x = "X";
+        if (rdbl)
+            x = "XX";
+
+        if (suit == "Spades")
+            suit = "&spades;";
+        if (suit == "Hearts")
+            suit = "&hearts;";
+        if (suit == "Diams")
+            suit = "&diams;";
+        if (suit == "Clubs")
+            suit = "&clubs;";
+
+        var contract = tricks.toString(10) + suit + x;
+        popupBoxYesNo("Contract: " + contract, "Confirm", "Cancel Pass", "confirmContract", -1);
+    }
+
+    // Bidding not finished: normal move to next bidder
+    if ((passCount < 3) || ((bStat.tricks == 0) && (passCount == 3))) {
+        var bid = makeBidRecordEntry();
+        console.log("before confirm bid", bid);
+        popupBoxCallback("Your Bid is " + bid, "Confirm or Cancel your Bid", "callback", "", "Confirm", "Cancel", confirmBid, cancelBid);
+        console.log("after confirm bid");
+    }
+    console.log("Exit Bid Confirmation");
+}
+
+// The bidder has passed and agrees that the hand is to be passed out
+function confirmPassout() {
+    enableInput();
+    //console.log("confirmPassout");
+}
+
+function cancelPassout() {
+    //console.log("cancelPassout");
+    cancelCurrentBid();
+}
+
+function confirmContract() {
+    enableInput();
+    unhiliteBiddingRecordCell();
+    var t = makeBidRecordEntry();
+    recordNewBid();
+    clearBidBox();
+    getbStat();
+    var contract = getContract();
+    popupBoxYesNo("Final Contract: " + contract + "<br/>Bid next board?", "Yes", "No", "finalContract", -1);
+}
+
+function cancelContract() {
+    cancelCurrentBid();
+    //console.log("cancelContract");
+}
+
+function confirmBid() {
+    console.log("confirmBid entry", bStat.passCount, bStat);
+    unhiliteBiddingRecordCell();
+    var t = makeBidRecordEntry();
+
+    recordNewBid();
+    sendBid("m", boardIx, roundIx, bidderIx); //send current bid to screenmate
+
+    getbStat();
+    clearBidBox();
+    bidderIx = (bidderIx + 1) % 4;
+    console.log("confirmBid exit", bidderIx, bStat);   
+}
+
+function cancelBid() {
+    console.log("cancelBid");
+    cancelCurrentBid();
+}

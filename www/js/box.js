@@ -1,32 +1,79 @@
+
 ///////////////////////////////////////////////////////////////////////////////
-// Suit selection becomes available after level (tricks) is selected
+// 
 //
+/**
+ * @description
+ * Called from onClickHandler for new board <br>
+ * If this is the controlling tablet send a message to each of the other 3 tablets <br>
+ * All four are then initialized <br>
+ * All four are alerted by a popup, the bidder is asked to bid <br> 
+ * boardNbr and bidderIx were already set <br>
+ */
+function promptNewBoard() {
+    var bn = document.getElementById("input-board-number");
+
+    if (newBoardControlSeat == seatOrderWord[thisSeatIx]) {
+        popupBox("Starting New Board " + bn, "Check Board Number and Orientation!", "new-board", "", "OK", "CANCEL");
+    } else {
+        popupBox("New Board Control", newBoardControlSeat + " must start the new Board", "", "OK", "", "");
+    }
+    
+
+    if (bidderIx == thisSeatIx) {
+        bStat.boxOpen = true;
+    } else {
+        bStat.boxOpen = false;
+    }
+}
+
 function handleBoxReset() {
     popupBox("Reset the Bidding Box", "Are you sure? This will clear all data for the current board.", "box-reset", "", "RESET", "CANCEL");
 }
 
-function playSelectedBoard() {
-    var boardNr = boardIx + 1;
+/**
+ * @description
+ * Called from OK exit of Starting New Board Popup <br>
+ * on the board controller tablet <br>
+ * Send notice of new board to other 3 tablets <br>
+ * All 4 boards the will call setNewBoard
+ */ 
+function startNewBoard() {
+    var bNbr = document.getElementById("input-board-number"); // new board number
+    var bIx = bNbr - 1; // new board index
 
-    if (newBoardControlSeat == seatOrderWord[thisSeatIx]) {
-        popupBox("Starting Board " + boardNr, "Check Board Number and Orientation!", "new-board", "", "OK", "CANCEL");
-    } else {
-        popupBox("New Board Control", newBoardControlSeat + " must start the new Board", "", "OK", "", "");
-    }
+    sendNewBoardNotice(bNbr, bIx);
+    setNewBoard(bNbr);
+    
+
+    
+
+    
 }
 
-function executePlaySelectedBoard() {
+/**
+ * @description
+ * Called from startNewBoard after all 4 tablets have been notified
+ * 
+ * @param {int} bNbr New board number 
+ */
+function setNewBoard(bNbr){
+    var bIx = bNbr - 1; // new board index
+    var dIx = bIx % 4;  // new dealer index
+    console.log("setNewBoard: ", bNbr);
+
+    document.getElementById("input-board-number").value = bNbr; //set board number 
     clearBidBox();
-    if (bidderIx == thisSeatIx) {
-        bStat.boxOpen = true;
-    }
-    else{
-        bStat.boxOpen = false;
-    }
+    
     initBiddingRecord(boardIx + 1);
     
-    ///>>>>>>>>>>>>>>>>>>>> Message to all 3 other seats: Next Board //////
-}
+    if (dIx == thisSeatIx) {
+        bStat.boxOpen = true;
+    } else {
+        bStat.boxOpen = false;
+    }
+
+} 
 
 function resetBiddingBox() {
     console.log("reset bidding box");
@@ -102,6 +149,72 @@ function clearBidBox() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// Set up the bidding box according to bStat
+//
+function prepBidBox() {
+    //console.log("prepBidBox: Enter", bStat);
+    //Enable and disable the trick buttons acc to last bid given by bStat
+    //Opens the Box
+    var idSuit;
+    var id;
+    var i;
+    var n = bStat.tricks;
+
+    for (i = 1; i <= 7; i++) {
+        id = i.toString();
+        unselectBidButton(id);
+    }
+
+    for (i = 1; i < n; i++) { //disable lower levels
+        id = i.toString();
+        disableBidButton(id);
+    }
+
+    if (n > 0) {
+        if (bStat.suit == "NT") { //disable current level if NT bid
+            id = n.toString();
+            disableBidButton(id);
+        } else {
+            id = n.toString();
+            enableBidButton(id);
+        }
+    }
+
+    for (i = (n + 1); i <= 7; i++) {
+        id = i.toString();
+        enableBidButton(id);
+    }
+
+    // Enable and disable suit buttons acc to bStat
+    for (i = 0; i < 5; i++) {
+        idSuit = suitNameOrder[i];
+        unselectBidButton(idSuit);
+        disableBidButton(idSuit);
+    }
+
+    unselectBidButton("X");
+    unselectBidButton("XX");
+    unselectBidButton("Pass");
+    unselectBidButton("Alert");
+
+    if ((bStat.tricks == 0) || (bStat.lastBidder == "ME") || (bStat.lastBidder == "PA") || (bStat.lastBidder == "NO") || (bStat.dbl == true) || (bStat.rdbl == true)) {
+        disableBidButton('X');
+    }
+    if ((bStat.tricks == 0) || (bStat.lastBidder == "LH") || (bStat.lastBidder == "RH") || (bStat.lastBidder == "NO") || (bStat.dbl == false) || (bStat.rdbl == true)) {
+        disableBidButton('XX');
+    }
+
+    enableBidButton('Pass');
+    disableBidButton('Alert');
+    disableBidButton('Submit');
+    bStat.boxOpen = true;
+
+    setCurrentBiddingRecordCell("");
+
+    //console.log("prepBidBox: Exit", bStat);
+}
+
+///////////////////////////////////////////////////////////////////////////////
 //Disable and grey out the bids and calls individually /////
 //////////////////////////////////////////////////////////////////////////////
 function enableBidButton(idTricks) {
@@ -153,9 +266,9 @@ function unselectCallButtons() {
 
 //This sets the Board number field - nothing else for now
 function initBiddingBoxSettings() {
-    var boardNr = boardIx + 1;
-    document.getElementById("input-board-number").value = boardNr;
-    document.getElementById("btn-selected-board").innerHTML = "Play Board " + boardNr;
+    var boardNbr = boardIx + 1;
+    document.getElementById("input-board-number").value = boardNbr;
+    document.getElementById("btn-selected-board").innerHTML = "Play Board " + boardNbr;
     //console.log("init box", boardNr);
 }
 
@@ -176,61 +289,21 @@ function handleBoardNumberChange(increment) {
     //console.log("board nr change", bnbr);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// Called when the bidder selects a nbr of tricks. The selection is provisional
-// until bidder confirms.
-// Selecting a selected button will undo all current choices
+//////////////////////////////////////////////////////////////////////////////
+// After a bidding level (tricks) has been selected,
+// enable appropriate suit bid buttons
 //
-function handleTricksBid(idTricks) {
-    var id = parseInt(idTricks);
-    var oldTricks = bStat.newTricks;
-
-    if (bStat.boxOpen == false) {
-        popupBox("It's not your turn", "", "", "OK", "", "");
-        return;
+function prepSuitBids() {
+    var ixSuit = 0;
+    //console.log("prepSuits", bStat);
+    if (bStat.newTricks == bStat.tricks) {
+        ixSuit = suitNameOrder.indexOf(bStat.suit) + 1;
     }
+    enableHigherSuitBids(ixSuit);
 
-    if (oldTricks != 0) {
-        unselectBidButton(oldTricks.toString());
-    }
-
-    if (id == oldTricks) {
-        unselectBidButton(oldTricks.toString());
-        bStat.newTricks = 0;
-        bStat.newSuit = "none";
-        bStat.newCall = "none";
-        bStat.newAlert = false;
-        updateBiddingRecord();
-        prepBidBox();
-    } else {
-        selectBidButton(idTricks);
-        bStat.newTricks = id;
-        updateBiddingRecord();
-        prepSuitBids();
-    }
-    checkEnableSubmit();
-}
-
-function handleSuitBid(idSuit) {
-    var id = suitNameOrder.indexOf(idSuit);
-    var oldSuit = bStat.newSuit;
-
-    if (bStat.boxOpen == false) {
-        popupBox("It's not your turn", "", "", "OK", "", "");
-        return;
-    }
-
-    if (oldSuit != "none") { //if a suit was selected - unselect
-        unselectBidButton(oldSuit);
-    }
-
-    if (idSuit == oldSuit) { //if same suit selected twice - restart
-        unselectBidButton(oldSuit);
-        bStat.newSuit = "none";
-    } else {
-        selectBidButton(idSuit);
-        bStat.newSuit = idSuit;
-    }
-    updateBiddingRecord();
-    checkEnableSubmit();
+    //disable X,XX,Pass; allow alert
+    disableBidButton("X");
+    disableBidButton("XX");
+    disableBidButton("Pass");
+    enableBidButton("Alert");
 }

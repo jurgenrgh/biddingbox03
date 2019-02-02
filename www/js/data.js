@@ -118,14 +118,17 @@ var bStat = {
 // key: 'xxyyzz-tricks', value: String(tricks)
 // key: 'xxyyzz-suit', value: suit
 // key: 'xxyyzz-alert', value: String(alert)
-
-//var boardsRec = []; // an array of roundsRec arrays
-//var roundsRec = []; // an array of seatsRec arrays
-//var seatsRec = []; // an array of 4 callObj objects
-
-var boardsRec = []; // an array of roundsRec arrays
-var roundsRec = []; // an array of seatsRec arrays
-var seatsRec = []; // an array of 4 callObj objects
+//
+// boardsRec has been  changed to a single 3D array
+// bordsRec[i][j][k] is a callObj (see below)
+// k = 0,...,3 calls of one round
+// j = 0,...   rounds of one board
+// i = 0,...   boards
+//
+var boardsId = []; //Board identifier = boardN
+var boardsRec = [];  
+boardsRec[0] = [];   
+boardsRec[0][0] = [];
 
 ///////////////////////////////////////////////////////////////////////////////
 // Call Object: The content of a table cell
@@ -135,12 +138,14 @@ var seatsRec = []; // an array of 4 callObj objects
 // alert: true/false except for "blank" and "empty"
 // "blank" ("&ndash;")means diagram slot empty because dealer later in rotation
 // "empty"(&nbsp;) means no bid yet
-//
+// Callable as call = new callObj(t,s,a);
+// 
 function callObj(tricks, suit, alert) {
     this.tricks = tricks;
     this.suit = suit;
     this.alert = alert;
 }
+
 
 //////////////////////////////////////////////////////////////
 // Bluetooth Names and addresses - BT global variables

@@ -43,10 +43,8 @@
 |.newSuit                | "none"        | BB            |	        |
 |.newCall                | "none"        | BB            |	        |
 |.newAlert               | false         | BB            |           |
-|                       |               |               |           |
-|boardsRec[]            |               |               |An array of roundsRec entries	|
-|roundsRec[]            |               |               |An array of nRounds seatsRec entries|
-|seatsRec[]             |               |               |An array of 4 callObj	Objects|
+|                        |               |               |           |
+|boardsRec[b][r][s]      |               |               |A callObj for each board,round,seat 	|
 |                       |               |               |           |
 |callObj = {}           |               |               |see<sup>1</sup>       |  
 |.tricks                |               |               |           |
@@ -125,9 +123,7 @@
 |newCall                | "none"        | BB            |	        |
 |newAlert               | false         | BB            |           |
 |                       |               |               |           |
-|boardsRec[]            |               |               |An array of roundsRec entries	|
-|roundsRec[]            |               |               |An array of nRounds seatsRec entries|
-|seatsRec[]             |               |               |An array of 4 callObj	Objects|
+|boardsRec[b][r][s]     |               |               |A callObj for each board,round,seat 	|
 |                       |               |               |           |
 |callObj = {}           |               |               |see<sup>1</sup>       |  
 |.tricks                |               |               |           |

@@ -51,7 +51,7 @@ function initAllBtGlobals() {
 
     thisClientSocketId = -1;
     nbrConnectedClients = 0;
-   
+
     relaySecDelay = 3;
     relayRepCount = 32;
 }
@@ -286,18 +286,161 @@ function hmsToSeconds(hms) {
     return (seconds);
 }
 
-// Takes the code of the last character of tablet name and converts
-// it to an integer mod 4 = endInt. 
-// Then seatIx = (endInt + 3) mod 4
-// this makes 1,2,3,4 <-> N,E,S,W
-// Returns value of global seatIx
+/**
+ * @description
+ * Takes the charcode of the last character of tablet name and converts <br>
+ * it to an integer so that remainder mod 4 = endInt. <br>
+ * Then seatIx = (endInt + 3) mod 4  <br>
+ * this makes 1,2,3,4 <-> N,E,S,W  <br>
+ * Returns value of seatIx <br>
+ * 
+ * @param {string} strName 
+ * @return {int} seatIx
+ */
 function getSeatIxFromName(strName) {
     var len = strName.length;
     var endInt = strName.charCodeAt(len - 1);
-    //var endInt = parseInt(endChar, 10);
     var six = (endInt + 3) % 4;
-
-    //console.log("getSeat", strName, len, endInt, six);
-    //console.log("getSeat", strName, seatOrder[six]);
     return six;
 }
+
+function disableBBControlInput() {
+    var sec = document.getElementById("btn-selected-board");
+    sec.classList.remove("standard-btn");
+    sec.classList.add("standard-btn-disabled");
+    sec.style.color ='#666666';
+
+    var t = document.getElementById("btn-subtract");
+    t.classList.remove("standard-btn");
+    t.classList.add("standard-btn-disabled");
+    t.style.color ='#666666';
+
+    var s = document.getElementById("btn-add");
+    s.classList.remove("standard-btn");
+    s.classList.add("standard-btn-disabled");
+    s.style.color ='#666666';
+
+    var b = document.getElementById("btn-setup");
+    b.classList.remove("standard-btn");
+    b.classList.add("standard-btn-disabled");
+    b.style.color ='#666666';
+
+    var su = document.getElementById("input-board-number");
+    su.classList.add("input-disabled");
+    su.disabled = true;
+    su.style.color ='#666666';
+}
+
+function enableInput() {
+    var sec = document.getElementById("btn-selected-board");
+    sec.classList.add("standard-btn");
+    sec.classList.remove("standard-btn-disabled");
+    sec.style.color ='black';
+
+    var t = document.getElementById("btn-subtract");
+    t.classList.add("standard-btn");
+    t.classList.remove("standard-btn-disabled");
+    t.style.color ='black';
+
+    var s = document.getElementById("btn-add");
+    s.classList.add("standard-btn");
+    s.classList.remove("standard-btn-disabled");
+    s.style.color ='black';
+
+    var b = document.getElementById("btn-setup");
+    b.classList.add("standard-btn");
+    b.classList.remove("standard-btn-disabled");
+    b.style.color ='black';
+
+    var su = document.getElementById("input-board-number");
+    su.classList.remove("input-disabled");
+    su.disabled = false;
+    su.style.color ='black';
+}
+
+///////////////////////////////////////////////////////
+// Get seatIx from relative position code
+// i.e. relative position 'l', 'r', 'p', 'm'
+// meaning LHO, RHO, Partner, Screenmate are converted into
+// seat index [0,1,2,3] meaning [N,E,S,W]
+// input may also be 'n' or 'N' or 'north' or 'North' etc
+// Returns -1 if not one of the above
+//
+function positionToSeatIx(posCode) {
+    var low = posCode.toLowerCase();
+    var seatIx = -1; //receiving seat index
+
+    //console.log("pos to seatix", posCode, low, seatIx);
+
+    if (low == 'r') {
+        seatIx = (thisSeatIx + 3) % 4;
+    }
+    if (low == 'l') {
+        seatIx = (thisSeatIx + 1) % 4;
+    }
+    if (low == 'p') {
+        seatIx = (thisSeatIx + 2) % 4;
+    }
+    if (low == 'm') {
+        if( thisSeatIx == 0 || thisSeatIx == 2){
+            seatIx = (thisSeatIx + 1) % 4;
+        }
+        if( thisSeatIx == 1 || thisSeatIx == 3){
+            seatIx = (thisSeatIx + 3) % 4;
+        }
+    }
+    //console.log("pos to seatix", posCode, low, seatIx);
+    if ((low == 'n') || (low == 'north')) {
+        seatIx = 0;
+    }
+    if ((low == 'e') || (low == 'east')) {
+        seatIx = 1;
+    }
+    if ((low == 's') || (low == 'south')) {
+        seatIx = 2;
+    }
+    if ((low == 'w') || (low == 'west')) {
+        seatIx = 3;
+    }
+    //console.log("pos to seatix", posCode, low, seatIx);
+    return seatIx;
+}
+
+//For server tablet only: given seat name, e.g. "North"
+// return client name, e.g. "client1"  
+// (currently not used)
+function seatToClient(seat){
+    var client;
+    for(i = 0; i < 4; i++)
+    if(seatOrderWord[tablet[i].seatIx] == seat){
+        client = tablet[i].type;
+    }
+    return client;
+}
+
+/**
+ * Translate the destination code acc to message tag
+ * 
+ * @param {string} rcvCode 
+ * @return {string} newCode 
+ */ 
+function checkMessageDestination( rcvCode, tag ){
+    var newCode = "";
+    if(tag == confirm-connection){
+
+    }
+    if(tag == seat-id){
+
+    }
+    if(tag == client-id){
+        
+    }
+    if(tag == ping){
+
+    }
+    return newCode;
+}
+
+    
+
+

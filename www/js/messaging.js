@@ -1,51 +1,72 @@
-// Send Message, text directly given
-// msgText: Any string but may have functional content interpreted
-// by receiving side.
-//
-// source: "this" when this is the originator
-// source: "client1", "client2", "client3"  when this is the server relaying a msg
-// recipient: "server", "client1", "client2", "client3"
-// type: a tag that determines what is to be done with the text
-// msgText: the actual message; format corresponds to type
-// If msgText = "" the text from the "outgoing message" field is sent
-//
-/////////////////////////////////
-function sendMessage(source, recipient, type, msgText) {
-    var senderSocketId;
+////////////////////////////////////////////////////////////////////////////////
+/**
+ * @description
+ * Special Message ("this", "server", "confirm-connection", btName)
+ * 
+ * 
+ * 
+ * @param {string} sndCode "this" when this tablet is the originator      
+ * @param {} sndCode "client1", "client2", "client3" when this is the server relaying a msg       
+ * @param {} sndCode "North", "East", "South", "West"  
+ *   
+ * @param {string} rcvCode "server", "client1", "client2", "client3"  
+ * @param {} rcvCode "North", "East", "South", "West"  
+ * @param {} rcvCode 'R', 'L', 'P', 'M' = RHO, LHO, Partner, Screenmate  
+ *  
+ * @param {string} tag that determines what is to be done with the text by the receiver 
+ *   
+ * @param {string} msgText the actual message; interpreted accto tag; a stringified JSON object   
+ * @param {} msgText if = "" the text from the "outgoing message" field is sent
+ */
+function sendMessage(sndCode, rcvCode, tag, msgText) {
+    var recipient = rcvCode;
+    var senderSocketId = -1;
     var strContent;
     var objContent = {};
     var buf;
+    var posIx = -1;
 
-    console.log("sendMessage: ", source, recipient, type, msgText);
+    console.log("sendMessage call 1 ", senderSocketId, posIx, recipient, sndCode, rcvCode, tag, msgText);
 
-    if (tablet[thisTabletIx].type == recipient) {
+    if (sndCode == "this") {
+        sndCode = tablet[thisTabletIx].type;
+    }
+
+    posIx = positionToSeatIx(rcvCode);
+    if (posIx >= 0) {
+        recipient = seatOrderWord[posIx];
+    }
+    console.log("sendMessage call 2 ", senderSocketId, posIx, recipient, sndCode, rcvCode, tag, msgText);
+
+    if (tablet[thisTabletIx].type == rcvCode) {
         popupBox("Local Message", "not handled", "id", "OK", "", "");
-        return;
+        return -1;
     }
 
-    if (source == "this") {
-        source = tablet[thisTabletIx].type;
-    }
-
+    // When this tablet is the server: Get socket
     if (tablet[thisTabletIx].type == "server") {
-        if (recipient == "client1") {
+        if ((rcvCode == "client1") || (tablet[1].seatIx == posIx)) {
             senderSocketId = tablet[1].socket;
         }
-        if (recipient == "client2") {
+        if ((rcvCode == "client2") || (tablet[2].seatIx == posIx)) {
             senderSocketId = tablet[2].socket;
         }
-        if (recipient == "client3") {
+        if ((rcvCode == "client3") || (tablet[3].seatIx == posIx)) {
             senderSocketId = tablet[3].socket;
         }
+        console.log("from server", rcvCode, senderSocketId);
+        console.log("tablets", tablet);
     }
 
+    //If not the server - there is only one socket
     if (tablet[thisTabletIx].type != "server") {
         senderSocketId = tablet[thisTabletIx].socket;
     }
+    //console.log("sendMessage call 3 ", senderSocketId, posIx, recipient, sndCode, rcvCode, tag, msgText);
 
-    objContent.from = source;
+    objContent.from = sndCode;
     objContent.to = recipient;
-    objContent.type = type;
+    objContent.tag = tag;
     objContent.text = msgText;
 
     console.log("sendMessage content", objContent);
@@ -54,6 +75,7 @@ function sendMessage(source, recipient, type, msgText) {
     strContent = JSON.stringify(objContent);
     buf = arrayBufferFromString(strContent);
 
+    console.log("sendMessage call 4 ", senderSocketId, posIx, recipient, sndCode, rcvCode, tag, msgText);
     if (senderSocketId > 0) {
         networking.bluetooth.send(senderSocketId, buf, function (bytes_sent) {
             console.log('Sent nbr of bytes: ', bytes_sent, 'Socket: ', senderSocketId);
@@ -69,14 +91,30 @@ function sendMessage(source, recipient, type, msgText) {
     }
 }
 
-////////////////////////////////////////////////////////////////////////
-// Received Message
-// Called in response to onReceive Event, i.e. when a Bluetooth
-// message has arrived.
-// 
-// If not, this is considered an error
-// If yes, the data is read and displayed in the inbox
-//  
+//////////////////////////////////////////////////////////////////////
+// Message to inform the server of seatId and clientId
+// (not yet used - needed for chabging seats)
+function sendSeatIdToServer() {
+    var sIx = tablet[thisTabletIx].seatIx;
+    var seatId = seatOrderWord[sIx];
+    var clientId = tablet[thisTabletIx].type;
+    var sndObj = {
+        seat: seatId,
+        client: clientId
+    };
+    var msgText = JSON.stringify(sndObj);
+    sendMessage("this", "server", "seat-id", msgText);
+}
+
+/**
+ * @description 
+ * Called when a message was received, i.e. in response to onReceive Event <br> 
+ * Outputs the raw message string to the HTML field on the BT page    <br>
+ * objReceived = JSON object <= parsed JSON string <= receiveInfo.data  <br>
+ * Calls msgInterpreter which handles input acc to message content  <br>
+ * The message text contains the "msg type" information, i.e. what to do next <br>
+ * @param {arrayBuffer} receiveInfo 
+ */
 function onBtReceiveHandler(receiveInfo) {
     var socketId = receiveInfo.socketId;
     var strReceived = stringFromArrayBuffer(receiveInfo.data);
@@ -89,66 +127,76 @@ function onBtReceiveHandler(receiveInfo) {
     objReceived = JSON.parse(strReceived);
     console.log("Obj received: ", objReceived);
 
-    // Message into Inbox
+    // Message into Input field
     textField.value = "From " + objReceived.from + ": " + objReceived.text;
-    //textField.value = strReceived;
+
     M.updateTextFields();
     M.textareaAutoResize(textField);
-
+    // Process the Message 
     msgInterpreter(socketId, strReceived);
 }
 
-// Some incoming messages require action
-// An example is the msg that communicates client name
-// allowing the server to associate it with a socket. 
-// The content element "type" determines what to do.
-
+/**
+ * @description
+ * Most incoming messages require action <br>    
+ * An example is the msg that communicates the client name  <br>  
+ * allowing the server to associate it with a socket.   <br>
+ * msgObj.tag determines what to do.   <br>
+ * The remainder of the function is specific to each message type <br>
+ * 
+ * @param {number} socketId = receiving socket on this table
+ * @param {string} strMsg = string as received, unparsed stringified JSON object
+ */
 function msgInterpreter(socketId, strMsg) {
     var objMsg = JSON.parse(strMsg);
     var clientIx;
     var clientTextName;
     var text;
+    var rcvdTextObj;
 
     console.log("Msg Interpreter Socket: ", socketId, strMsg);
     console.log("Msg Interpreter Msg: ", objMsg);
 
     ////////////////////////////////////////////////////////////////
     // Confirm Connection:
-    // Server sends this message to the client to assign the ClientId  
-    if (objMsg.type == "confirmConnection") {
-        console.log("after if type: ", objMsg.type);
+    // Client sends this message to the server to assign the socketId
+    // and to set the BTname   
+    if (objMsg.tag == "confirm-connection") {
+        console.log("after if type: ", objMsg.tag);
         //Put the socketId in the right tablet[] object
         for (i = 0; i < tablet.length; i++) {
             if (tablet[i].name == objMsg.text) {
                 tablet[i].socket = socketId;
                 clientIx = i;
-                //console.log("socket set", socketId, tablet[i].name, tablet[i].type, objMsg.text, objMsg.from);
+                console.log("socket set", socketId, tablet[i].name, tablet[i].type, objMsg.text, objMsg.from);
                 setBtConnectionState(tablet[i].type, "connected");
             }
         }
 
         clientTextName = "client" + clientIx;
 
-        //console.log("sending Message: ", "server", clientTextName, "clientId", clientTextName);
-        sendMessage("server", clientTextName, "clientId", clientTextName);
+        //Server sends communicates client's own id nbr to client
+        sendMessage("server", clientTextName, "client-id", clientTextName);
         return;
     }
 
     //If msg not for this tablet - Relay 
     // except if the name is not yet determined - i.e. msg to set the name
-    if ((tablet[thisTabletIx].type != objMsg.to) && (objMsg.type != "clientId")) {
-        sendMessage(objMsg.from, objMsg.to, objMsg.type, strMsg);
+    if ((tablet[thisTabletIx].type != objMsg.to) && (objMsg.tag != "client-id") && (seatOrderWord[tablet[thisTabletIx].seatIx] != objMsg.to)) {
+        sendMessage(objMsg.from, objMsg.to, objMsg.tag, strMsg);
         console.log("Relay: ", objMsg);
         return;
     }
 
-    if (objMsg.type == "ping") {
+    if (objMsg.tag == "ping") {
         text = "from " + objMsg.from;
         console.log(objMsg);
         popupBox("Ping Received", text, "id", "OK", "", "");
     }
 
-    if (objMsg.type == "clientId") {
+    //Client receives its id number
+    if (objMsg.tag == "client-id") {
+        console.log("Msg Interpreter", objMsg);
         var el = document.getElementById("this-tablet-rank");
         el.innerHTML = objMsg.text;
         tablet[thisTabletIx].type = objMsg.text;
@@ -156,16 +204,110 @@ function msgInterpreter(socketId, strMsg) {
         document.getElementById("client2-div").style.display = 'none';
         document.getElementById("client3-div").style.display = 'none';
     }
+
+    if (objMsg.tag == "new-bid") {
+        console.log("Msg Interpreter", objMsg);
+        rcvdTextObj = JSON.parse(objMsg.text);
+        console.log("new Bid received", rcvdTextObj);
+        text = objMsg.from + " to " + objMsg.to + " Bid: " + rcvdTextObj.tricks + " " + rcvdTextObj.suit;
+        popupBox("New Bid", text, "id", "OK", "", "");
+        //Now update the bidding record visually and logically
+        storeExternalBid(rcvdTextObj);
+    }
+
+    if (objMsg.tag == "new-board") {
+        console.log("Msg Interpreter", objMsg);
+        rcvdTextObj = JSON.parse(objMsg.text);
+        console.log("new Board starts", rcvdTextObj);
+        var text1 = "New Board Number " + rcvdTextObj.boardNbr;
+        var text2 = "You are the Dealer. Please Bid"
+        popupBox( text1, text2, "id", "OK", "", "");
+    }
 }
 
-// Ping causes a message of type "ping" to be sent to the receiver
-// recipient = "server", "client1", "client2", "client3"
-// the message text, if any, comes from the msg input field
-// the recipient replies by sending a message containing the
-// same text but with type "pong" 
+////////////////////////////////////////////////////////////////////////////
+// This is a diagostic function to check that communication works
+// Ping causes a message of type "ping" to be sent to the receiver  
+// recipient = "server", "client1", "client2", "client3"   
+// The message text, if any, comes from the msg input field  
+// The recipient responds by displaying a modal popup with the text   
+////////////////////////////////////////////////////////////////////////////
 function pping(recipient) {
     var val = document.getElementById("msg-send").value;
     var txt = "Ping: " + val;
-    console.log("Tablet Ping: ", tablet);
+    //console.log("Tablet Ping: ", tablet);
     sendMessage("this", recipient, "ping", txt);
+}
+
+//////////////////////////////////////////////////////
+// Bidding Messages
+//////////////////////////////////////////////////////
+// Send a bid another tablet  
+// recCode = receiver 'R', 'L', 'P', 'M'  
+// meaning rho, lho, partner, screenmate   
+// any combination, e.g. 'RLP', in any order is ok    
+// rix = relative bid index = 0, 1, 2, ... from current bid backward
+// rix = 0 means bidderIx  
+// Normally this will be the current bid
+//////////////////////////////////////////////////////////// 
+function sendBid(rcvCode, brdIx, rndIx, bidIx) {
+    // receiving seat
+    var rcvSeatIx = positionToSeatIx(rcvCode);
+    var rcvSeat = seatOrderWord[rcvSeatIx];
+    // Sending Seat
+    var sndSeat = seatOrderWord[thisSeatIx];
+    // Bid
+    var nTricks = boardsRec[brdIx][rndIx][bidIx].tricks;
+    var cSuit = boardsRec[brdIx][rndIx][bidIx].suit;
+    // Message Text
+    var msgObj = {
+        from: sndSeat,
+        to: rcvSeat,
+        board: brdIx,
+        round: rndIx,
+        bidder: bidIx,
+        tricks: nTricks,
+        suit: cSuit
+    };
+    var msgText = JSON.stringify(msgObj);
+    console.log("sendBid", rcvCode, msgText);
+    sendMessage("this", rcvSeat, "new-bid", msgText);
+}
+
+// The originator sends a message to the three other
+// players when a new board is started
+//  
+/**
+ * @description
+ * When a new board is started the newBoardControlSeat sends
+ * a message to each of the other boards:
+ * From the onClickHandler for the new board
+ * - Call this function to notify the other 3 players
+ * - On each tablet initialize the bidding box
+ * - Prompt the dealer to bid  
+ * 
+ * @param {int} nbr Board Number 
+ * @param {int} ix Board Index in the boardRecord array 
+ */
+function sendNewBoardNotice(nbr, ix) {
+    var sndSeat = newBoardControlSeat;
+    var rcvSeat;
+    var sndIx = seatOrderWord.indexOf(sndSeat);
+    var msgObj = {};
+    var msgText;
+    var i;
+
+    for (i = 0; i < 4; i++) {
+        if (i != sndIx) {
+            rcvSeat = seatOrderWord[i];
+            msgObj = {
+                from: sndSeat,
+                to: rcvSeat,
+                boardNbr: nbr,
+                boardIx: ix
+            };
+            msgText = JSON.stringify(msgObj);
+            sendMessage("this", rcvSeat, "new-board", msgText);
+        }
+    }
 }
