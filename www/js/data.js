@@ -35,7 +35,7 @@ var previousPage = ""; //Save previous page when switching pages
 //
 var validPin = 1234; // for access to director settings
 
-var thisSeatIx = 1;  // Seat of this tablet (1 is East); (0,1,2,3) = (n,e,s,w); 
+var thisSeatIx = 1; // Seat of this tablet (1 is East); (0,1,2,3) = (n,e,s,w); 
 var tableIx = 0; // Table of this tablet; just a count from 0..
 var sectionId = "A"; // an additional id for table/tournament/session
 
@@ -92,17 +92,17 @@ var bidderIx = 1; //current bidder (bid order ix: WNES)
 // newCall: "X", "XX", "Pass", "none"
 //
 var bStat = {
-    lastBidder: "NO",
-    tricks: 0,
-    suit: "none",
-    dbl: false,
-    rdbl: false,
-    passCount: 0,
-    boxOpen: false,
-    newTricks: 0,
-    newSuit: "none",
-    newCall: "none",
-    newAlert: false
+  lastBidder: "NO",
+  tricks: 0,
+  suit: "none",
+  dbl: false,
+  rdbl: false,
+  passCount: 0,
+  boxOpen: false,
+  newTricks: 0,
+  newSuit: "none",
+  newCall: "none",
+  newAlert: false
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -120,14 +120,27 @@ var bStat = {
 // key: 'xxyyzz-alert', value: String(alert)
 //
 // boardsRec has been  changed to a single 3D array
-// bordsRec[i][j][k] is a callObj (see below)
+// boardsRec[i][j][k] is a callObj (see below)
 // k = 0,...,3 calls of one round
 // j = 0,...   rounds of one board
 // i = 0,...   boards
 //
+var maxBoards = 36;
+var maxRounds = 36;
+var maxBids = 4;
 var boardsId = []; //Board identifier = boardN
-var boardsRec = [];  
-boardsRec[0] = [];   
+var boardsRec = [];
+
+for (i = 0; i < maxBoards; i++) {
+  boardsRec[i] = [];
+  for (j = 0; j < maxRounds; j++) {
+    boardsRec[i][j] = [];
+    for (k = 0; k < maxBids; k++) {
+      boardsRec[i][j][k] = new callObj(0, "&nbsp;", ""); //space is code for none;
+    }
+  }
+}
+boardsRec[0] = [];
 boardsRec[0][0] = [];
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -141,9 +154,9 @@ boardsRec[0][0] = [];
 // Callable as call = new callObj(t,s,a);
 // 
 function callObj(tricks, suit, alert) {
-    this.tricks = tricks;
-    this.suit = suit;
-    this.alert = alert;
+  this.tricks = tricks;
+  this.suit = suit;
+  this.alert = alert;
 }
 
 

@@ -92,10 +92,39 @@
   padding-top: 2px;
   margin: 4px;
   color: #666666;
-  background-color: #CCCCCC;
+  /*background-color: #CCCCCC;*/
   opacity: 0.5;
   pointer-events: none;
 }
+
+.large-btn {
+  width: 100%;
+  height: 5.0rem;
+  font-weight: 600;
+  font-size: 1.50rem;
+  align-items: center;
+  justify-content: center;
+  padding-top: 12px;
+  margin: 4px;
+  color: black;
+  background-color: var(--main-bg-color);
+}
+
+.large-btn-disabled {
+  width: 100%;
+  height: 5.0rem;
+  font-weight: 600;
+  font-size: 1.50rem;
+  align-items: center;
+  justify-content: center;
+  padding-top: 12px;
+  margin: 4px;
+  color: #666666;
+  /*background-color: #CCCCCC;*/
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 
 input[type="number"] {
   display: block;
@@ -149,19 +178,24 @@ input.console-text-input[type="text"] {
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
+  background: var(--main-bg-color);
   opacity: 0.3;
   height: 48px;
 }
 
 .input-disabled{
   color: #666666;
-  background-color: #CCCCCC;
+  /*background-color: #CCCCCC;*/
+  background: var(--main-bg-color);
+  border: none;
   opacity: 0.5;
 }
 
 input[type="number"]:disabled {
   color: #666666;
-  background: #CCCCCC;
+  /*background: #CCCCCC;*/
+  background: var(--main-bg-color);
+  border: none;
   opacity: 0.5;
 }
 
@@ -186,6 +220,30 @@ input[type="number"]:disabled {
 
 select option {
   direction: rtl;
+}
+
+#bt-bidbox{
+  vertical-align: middle;
+  padding-right: 12px;
+  padding-bottom: 24px;
+}
+
+#bt-director{
+  vertical-align: middle;
+  padding-right: 12px;
+  padding-bottom: 24px;
+}
+
+#bt-player{
+  vertical-align: middle;
+  padding-right: 12px;
+  padding-bottom: 24px;
+}
+
+#bt-clock{
+  vertical-align: middle;
+  padding-right: 12px;
+  padding-bottom: 24px;
 }
 
 .dot-connected {

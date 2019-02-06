@@ -4,8 +4,13 @@
 // Further, the bidding records of previous boards are maintained for
 // this and the 3 other seats
 ///////////////////////////////////////////////////////////////////////////////
-// Draw an empty table with header and nRows rows of 4 cells
 //
+/**
+ * @description
+ * Draw an empty table with header and nRows rows of 4 cells <br>
+ * 
+ * @param {int} nRows 
+ */
 function drawBiddingRecordTable(nRows) {
     //popupBox("Draw Rows", nRows, "id", "OK", "", "");
     //console.log("Bidding Record Table Rows:", nRows);
@@ -82,24 +87,27 @@ function initBiddingRecord(boardNbr) {
         promptBidder(true);
     }
 }
-
-///////////////////////////////////////////////////////////////////////////////
-// Adds the most recent bid to the table
-// Info comes from bStat; the table entry coordinates
-// from the corresponding round and boardRounds
+/**
+ * @description
+ * Adds the most recent bid to the table <br>
+ * Info comes from bStat; the table entry coordinates <br>
+ * from the corresponding round and boardRounds <br>
+ */
 function updateBiddingRecord() {
     var newCall = makeBidRecordEntry();
     setCurrentBiddingRecordCell(newCall);
     //console.log("UpdateBiddingRec", newCall);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// Construct the text to be shown in the table cell
-// The info comes from the "new" part of bStat
-// Returns a string
-// The string consists of 3 <span> elements and goes into the innerHTML
-// of the current cell
-//
+/**
+ * @description
+ * Construct the text to be shown in the table cell <br>
+ * The information comes from the "new" part of bStat <br>
+ * 
+ * @returns string newEntry <br>
+ * The string consists of 3 <span> elements and goes into the innerHTML <br>
+ * of the current cell <br>
+ */
 function makeBidRecordEntry() {
     var newSuit = bStat.newSuit;
     var newTricks = bStat.newTricks;
@@ -107,7 +115,7 @@ function makeBidRecordEntry() {
     var newAlert = bStat.newAlert;
     var newEntry = "";
 
-    newEntry = makeBidTableEntry(newTricks, newSuit);
+    newEntry = makeBidTableEntry(newTricks, newSuit, newCall);
     
     if (newAlert == true) {
         newEntry = newEntry + '<span class="record-alert">' + '!!' + '</span>';
@@ -117,9 +125,18 @@ function makeBidRecordEntry() {
     return (newEntry);
 }
 
-// Makes the actual HTML for the bidding table cell
-// 
-function makeBidTableEntry(nTricks, cSuit){
+/**
+ * @description
+ * Makes the actual HTML for the bidding table cell <br>
+ * 
+ * @param {int} nTricks Bidding Level or 0 <br>
+ * @param {string} cSuit Suit bid <br>
+ * @param {string} nCall X, XX, Pass and then ntricks = 0 <br>
+ * 
+ * @returns string newEntry for direct insertion into DOM
+ */
+function makeBidTableEntry(nTricks, cSuit, nCall){
+    console.log("makeBidTableEntry", nTricks, cSuit, bStat);
     if (nTricks > 0) {
         newEntry = '<span class="record-tricks">' + nTricks + '</span>';
     } else {
@@ -145,16 +162,16 @@ function makeBidTableEntry(nTricks, cSuit){
         newEntry = newEntry + '<span>' + '' + '</span>';
     }
 
-    if (cSuit == "X") {
+    if (nCall == "X") {
         newEntry = newEntry + '<span class="dbl">' + 'X' + '</span>';
     }
-    if (cSuit == "XX") {
+    if (nCall == "XX") {
         newEntry = newEntry + '<span class="rdbl">' + 'XX' + '</span>';
     }
-    if (cSuit == "Pass") {
+    if (nCall == "Pass") {
         newEntry = newEntry + '<span class="pass">' + 'Pass' + '</span>';
     }
-    if (cSuit == "none") {
+    if (nCall == "none") {
         newEntry = newEntry + '<span>' + '' + '</span>';
     }
     return (newEntry);
@@ -186,18 +203,26 @@ function setBiddingRecordCell(msgObj) {
     var cSuit = msgObj.suit;
     var table = document.getElementById("auction");
     var newCall = makeBidTableEntry(nTricks, cSuit);
+    console.log("setBiddingRecordCell", msgObj, colIx, rowIx, nTricks, cSuit, newCall);
     table.rows[rowIx].cells[colIx].innerHTML = newCall;
+    return newCall;
 }
-
-// Called after external message received
-// msgObj = {from: senderSeat, to: receiverSeat, board: brdIx, round: rndIx, bidder: bidIx, tricks: nTricks, suit: cSuit};
+/**
+ * @description
+ * Called after "new-bid" external message received<br>
+ * Calls setBiddingRecordCell(msgObj)<br>
+ * 
+ * @param {obj} msgObj = {tricks: int, suit: int, alert: <not used>}
+ * @returns newCall displayable format of the bid 
+ */
 function storeExternalBid(msgObj){
     // Display the bid in the bidding table
-    setBiddingRecordCell(msgObj);
+    var newCall = setBiddingRecordCell(msgObj);
     // Record the bid in the boardsRec array
-    boardsRec[msgObj.board][msgObj.round][msgObj.msgbidder].tricks = msgObj.tricks;
-    boardsRec[msgObj.board][msgObj.round][msgObj.msgbidder].suit = msgObj.suit; 
-    boardsRec[msgObj.board][msgObj.round][msgObj.msgbidder].alert = msgObj.suit;
+    boardsRec[msgObj.board][msgObj.round][msgObj.bidder].tricks = msgObj.tricks;
+    boardsRec[msgObj.board][msgObj.round][msgObj.bidder].suit = msgObj.suit; 
+    //boardsRec[msgObj.board][msgObj.round][msgObj.bidder].alert = msgObj.suit;
+    return newCall;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -211,7 +236,6 @@ function hiliteBiddingRecordCell(row, col) {
         colIx = col;
         rowIx = row;
     }
-
     var table = document.getElementById("auction");
     var cell = table.rows[rowIx].cells[colIx];
     cell.style.background = modalBgColor;
@@ -228,33 +252,32 @@ function unhiliteBiddingRecordCell(row, col) {
         colIx = col;
         rowIx = row;
     }
-
     var table = document.getElementById("auction");
     var cell = table.rows[rowIx].cells[colIx];
     cell.style.background = mainBgColor;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// Called when player prompted to bid.
-// The bidding status is a structure that contains all the information
-// necessary to manage the bidding box. This initialization obtains the
-// necessary info from the bidding record contents, which is contained
-// in the boardsRec array.
-//
-// The state of the bidding: bStat
-// lastBidder: "ME", "PA", "LH", "RH", "NO"
-// tricks: #d the bid level
-// suit: "C", "D", "H", "S", "NT", "none"
-// dbl and rdble: true/false
-// var bStat = {lastBidder: "NO", tricks: 0, suit: "none", dbl: false,
-// rdbl: false, newTricks: 0, newSuit: "none", newCall: "none", newAlert: false};
-//
-// further, the bStat structure contains the current (unconfirmed)
-// (tricks,suit,call) selections:
-// newTricks: 0, newSuit: "none", newCall: "none", newAlert: false
-//
+/**
+ * @description
+ * Called when player is prompted to bid. <br>
+ * The bidding status is a structure that contains all the information <br>
+ * necessary to manage the bidding box. This initialization obtains the <br>
+ * necessary info from the bidding record contents, which is contained <br>
+ * in the boardsRec array. <br>
+ *
+ * The state of the bidding: bStat <br>
+ * lastBidder: "ME", "PA", "LH", "RH", "NO"  <br>
+ * tricks: #d the bid level  <br>
+ * suit: "C", "D", "H", "S", "NT", "none"  <br>
+ * dbl and rdble: true/false  <br>
+ * var bStat = {lastBidder: "NO", tricks: 0, suit: "none", dbl: false,  <br>
+ * rdbl: false, newTricks: 0, newSuit: "none", newCall: "none", newAlert: false};  <br>
+ * 
+ * further, the bStat structure contains the current (unconfirmed)  <br>
+ * (tricks,suit,call) selections:  <br>
+ * newTricks: 0, newSuit: "none", newCall: "none", newAlert: false  <br>
+ */
 function getbStat() {
-
     var lastBidder = "NO";
     var bidIx = -1;
     var tricks = 0;
@@ -323,7 +346,6 @@ function getbStat() {
     bStat.newSuit = "none";
     bStat.newCall = "none";
     bStat.newAlert = false;
-
     //console.log("Status ", nRounds, bStat);
 }
 
@@ -332,7 +354,7 @@ function getbStat() {
 function promptBidder(popup) {
     //console.log("prompt");
     getbStat();
-    //console.log("prompt status", bStat);
+    console.log("prompt status", bStat);
     prepBidBox();
     hiliteBiddingRecordCell();
     if (popup == true) {
@@ -341,6 +363,10 @@ function promptBidder(popup) {
     disableBBControlInput();
 }
 
+function promptNonBidder(){
+    console.log("NonBidder");
+    popupBox("Nonbidder", "",  "pls-bid", "OK", "", "");
+}
 
 
 function bidNextBoard() {

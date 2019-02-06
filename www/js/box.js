@@ -1,4 +1,3 @@
-
 ///////////////////////////////////////////////////////////////////////////////
 // 
 //
@@ -11,20 +10,20 @@
  * boardNbr and bidderIx were already set <br>
  */
 function promptNewBoard() {
-    var bn = document.getElementById("input-board-number");
-
+    var doc = document.getElementById("input-board-number");
+    var bn = parseInt(doc.value);
+    console.log("promptNewBoard", bn);
     if (newBoardControlSeat == seatOrderWord[thisSeatIx]) {
         popupBox("Starting New Board " + bn, "Check Board Number and Orientation!", "new-board", "", "OK", "CANCEL");
     } else {
         popupBox("New Board Control", newBoardControlSeat + " must start the new Board", "", "OK", "", "");
     }
-    
-
     if (bidderIx == thisSeatIx) {
         bStat.boxOpen = true;
     } else {
         bStat.boxOpen = false;
     }
+
 }
 
 function handleBoxReset() {
@@ -36,45 +35,45 @@ function handleBoxReset() {
  * Called from OK exit of Starting New Board Popup <br>
  * on the board controller tablet <br>
  * Send notice of new board to other 3 tablets <br>
- * All 4 boards the will call setNewBoard
- */ 
+ * All 4 boards the will call setNewBoard <br>
+ */
 function startNewBoard() {
-    var bNbr = document.getElementById("input-board-number"); // new board number
+    var doc = document.getElementById("input-board-number"); // new board number
+    var bNbr = parseInt(doc.value);
     var bIx = bNbr - 1; // new board index
 
     sendNewBoardNotice(bNbr, bIx);
     setNewBoard(bNbr);
-    
-
-    
-
-    
 }
 
 /**
  * @description
- * Called from startNewBoard after all 4 tablets have been notified
+ * Called from startNewBoard after all 4 tablets have been notified <br>
  * 
  * @param {int} bNbr New board number 
  */
-function setNewBoard(bNbr){
+function setNewBoard(bNbr) {
     var bIx = bNbr - 1; // new board index
-    var dIx = bIx % 4;  // new dealer index
+    var dIx = bIx % 4; // new dealer index
     console.log("setNewBoard: ", bNbr);
 
     document.getElementById("input-board-number").value = bNbr; //set board number 
     clearBidBox();
-    
+
     initBiddingRecord(boardIx + 1);
-    
+
     if (dIx == thisSeatIx) {
         bStat.boxOpen = true;
     } else {
         bStat.boxOpen = false;
     }
+    disableBBControlInput();
+}
 
-} 
-
+/**
+ * @description
+ * Needs description
+ */
 function resetBiddingBox() {
     console.log("reset bidding box");
     boardIx = 0; // Board index
@@ -89,7 +88,7 @@ function resetBiddingBox() {
     clearBidBox();
     initBiddingRecord(1);
     /////////////////// not needed because director settings ///
-    //enableInput();
+    //enableBBControlInput();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -268,7 +267,7 @@ function unselectCallButtons() {
 function initBiddingBoxSettings() {
     var boardNbr = boardIx + 1;
     document.getElementById("input-board-number").value = boardNbr;
-    document.getElementById("btn-selected-board").innerHTML = "Play Board " + boardNbr;
+    document.getElementById("btn-play-board").innerHTML = "Play Board " + boardNbr;
     //console.log("init box", boardNr);
 }
 
@@ -285,7 +284,7 @@ function handleBoardNumberChange(increment) {
         drawCompass();
         //console.log("New Board Number ", boardIx + 1, dealerIx, vulIx);
     }
-    document.getElementById("btn-selected-board").innerHTML = "Play Board " + bnbr;
+    document.getElementById("btn-play-board").innerHTML = "Play Board " + bnbr;
     //console.log("board nr change", bnbr);
 }
 

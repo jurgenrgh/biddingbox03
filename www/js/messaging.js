@@ -1,22 +1,28 @@
 ////////////////////////////////////////////////////////////////////////////////
 /**
  * @description
- * Special Message ("this", "server", "confirm-connection", btName)
+ * Sending a message requires <br>
+ * - finding the socketId of the recipient <br>
+ * - constructing the text to be transmissed <br>
  * 
+ * The text is a stringified JSON object:<br>
+ * - objContent.from = sndCode<br>
+ * - objContent.to = recipient<br>
+ * - objContent.tag = tag<br>
+ * - objContent.text = msgText<br>
  * 
- * 
- * @param {string} sndCode "this" when this tablet is the originator      
- * @param {} sndCode "client1", "client2", "client3" when this is the server relaying a msg       
- * @param {} sndCode "North", "East", "South", "West"  
+ * @param {string} sndCode "this" when this tablet is the originator <br>   
+ * "client1", "client2", "client3" when this is the server relaying a msg <br>       
+ * "North", "East", "South", "West"<br>
  *   
- * @param {string} rcvCode "server", "client1", "client2", "client3"  
- * @param {} rcvCode "North", "East", "South", "West"  
- * @param {} rcvCode 'R', 'L', 'P', 'M' = RHO, LHO, Partner, Screenmate  
+ * @param {string} rcvCode "server", "client1", "client2", "client3"  <br>
+ * "North", "East", "South", "West"  <br>
+ * 'R', 'L', 'P', 'M' = RHO, LHO, Partner, Screenmate <br>  
  *  
- * @param {string} tag that determines what is to be done with the text by the receiver 
+ * @param {string} tag that determines what is to be done with the text by the receiver <br>
  *   
- * @param {string} msgText the actual message; interpreted accto tag; a stringified JSON object   
- * @param {} msgText if = "" the text from the "outgoing message" field is sent
+ * @param {string} msgText the actual message; interpreted accto tag; a stringified JSON object <br>  
+ * if = "" the text from the "outgoing message" field is sent<br>
  */
 function sendMessage(sndCode, rcvCode, tag, msgText) {
     var recipient = rcvCode;
@@ -26,7 +32,7 @@ function sendMessage(sndCode, rcvCode, tag, msgText) {
     var buf;
     var posIx = -1;
 
-    console.log("sendMessage call 1 ", senderSocketId, posIx, recipient, sndCode, rcvCode, tag, msgText);
+    //console.log("sendMessage call 1 ", senderSocketId, posIx, recipient, sndCode, rcvCode, tag, msgText);
 
     if (sndCode == "this") {
         sndCode = tablet[thisTabletIx].type;
@@ -36,7 +42,7 @@ function sendMessage(sndCode, rcvCode, tag, msgText) {
     if (posIx >= 0) {
         recipient = seatOrderWord[posIx];
     }
-    console.log("sendMessage call 2 ", senderSocketId, posIx, recipient, sndCode, rcvCode, tag, msgText);
+    //console.log("sendMessage call 2 ", senderSocketId, posIx, recipient, sndCode, rcvCode, tag, msgText);
 
     if (tablet[thisTabletIx].type == rcvCode) {
         popupBox("Local Message", "not handled", "id", "OK", "", "");
@@ -91,9 +97,11 @@ function sendMessage(sndCode, rcvCode, tag, msgText) {
     }
 }
 
-//////////////////////////////////////////////////////////////////////
-// Message to inform the server of seatId and clientId
-// (not yet used - needed for chabging seats)
+/**
+ * @description
+ * Message from client to server when the seat id is changed <br>
+ * (not yet in use) <br> 
+ */
 function sendSeatIdToServer() {
     var sIx = tablet[thisTabletIx].seatIx;
     var seatId = seatOrderWord[sIx];
@@ -162,20 +170,19 @@ function msgInterpreter(socketId, strMsg) {
     // Client sends this message to the server to assign the socketId
     // and to set the BTname   
     if (objMsg.tag == "confirm-connection") {
-        console.log("after if type: ", objMsg.tag);
         //Put the socketId in the right tablet[] object
         for (i = 0; i < tablet.length; i++) {
             if (tablet[i].name == objMsg.text) {
                 tablet[i].socket = socketId;
                 clientIx = i;
-                console.log("socket set", socketId, tablet[i].name, tablet[i].type, objMsg.text, objMsg.from);
+                console.log("socket set socketId, tabIx", socketId, i, tablet[i].name, tablet[i].type, objMsg.text, objMsg.from);
                 setBtConnectionState(tablet[i].type, "connected");
             }
         }
-
+        console.log("received confirm-confirmation", objMsg, tablet);
         clientTextName = "client" + clientIx;
 
-        //Server sends communicates client's own id nbr to client
+        //Server communicates client's own id nbr to client
         sendMessage("server", clientTextName, "client-id", clientTextName);
         return;
     }
@@ -183,7 +190,7 @@ function msgInterpreter(socketId, strMsg) {
     //If msg not for this tablet - Relay 
     // except if the name is not yet determined - i.e. msg to set the name
     if ((tablet[thisTabletIx].type != objMsg.to) && (objMsg.tag != "client-id") && (seatOrderWord[tablet[thisTabletIx].seatIx] != objMsg.to)) {
-        sendMessage(objMsg.from, objMsg.to, objMsg.tag, strMsg);
+        sendMessage(objMsg.from, objMsg.to, objMsg.tag, objMsg.text);
         console.log("Relay: ", objMsg);
         return;
     }
@@ -206,32 +213,56 @@ function msgInterpreter(socketId, strMsg) {
     }
 
     if (objMsg.tag == "new-bid") {
-        console.log("Msg Interpreter", objMsg);
         rcvdTextObj = JSON.parse(objMsg.text);
         console.log("new Bid received", rcvdTextObj);
-        text = objMsg.from + " to " + objMsg.to + " Bid: " + rcvdTextObj.tricks + " " + rcvdTextObj.suit;
-        popupBox("New Bid", text, "id", "OK", "", "");
+        var bidder = bidOrder[rcvdTextObj.bidder];
+        var newCall = storeExternalBid(rcvdTextObj);
+        popupBox("New Bid: " + newCall + " " + bidder, "", "id", "OK", "", "");
         //Now update the bidding record visually and logically
-        storeExternalBid(rcvdTextObj);
+        console.log("TO PROMPT BIDDER", thisSeatIx, bidderIx);
+        bidderIx = (bidderIx + 1) % 4;
+        if(bidderIx == 0){
+            roundIx++;
+        }
+        
+        if (bidderIx == ((thisSeatIx + 1) % 4)) {
+            promptBidder(true);
+        }
+        else{
+            promptNonBidder();
+        }
     }
 
     if (objMsg.tag == "new-board") {
+        var text1;
+        var text2;
+        rcvdTextObj = JSON.parse(objMsg.text);
+        var brdNbr = rcvdTextObj.boardNbr;
+        var dIx = (brdNbr - 1) % 4;
         console.log("Msg Interpreter", objMsg);
         rcvdTextObj = JSON.parse(objMsg.text);
         console.log("new Board starts", rcvdTextObj);
-        var text1 = "New Board Number " + rcvdTextObj.boardNbr;
-        var text2 = "You are the Dealer. Please Bid"
+        text1 = "New Board: #" + brdNbr;
+        text2 = seatOrderWord[dIx] + " is the Dealer. Check Board Number and Orientation!";
+        if( thisSeatIx == (brdNbr - 1) % 4){
+            text2 = "You are the Dealer. Please Bid";
+        }
         popupBox( text1, text2, "id", "OK", "", "");
+        setNewBoard(brdNbr);
     }
 }
 
-////////////////////////////////////////////////////////////////////////////
-// This is a diagostic function to check that communication works
-// Ping causes a message of type "ping" to be sent to the receiver  
-// recipient = "server", "client1", "client2", "client3"   
-// The message text, if any, comes from the msg input field  
-// The recipient responds by displaying a modal popup with the text   
-////////////////////////////////////////////////////////////////////////////
+/**
+ * @description
+ * This is a diagostic function to check that communication works <br>
+ * Ping causes a message of type "ping" to be sent to the receiver  <br>
+ * recipient = "server", "client1", "client2", "client3" <br>
+ * or "north", "south","east","west" <br>
+ * The message text, if any, comes from the msg input field  <br>
+ * The recipient responds by displaying a modal popup with the text <br>
+ * 
+ * @param {string} recipient 
+ */
 function pping(recipient) {
     var val = document.getElementById("msg-send").value;
     var txt = "Ping: " + val;
@@ -242,14 +273,16 @@ function pping(recipient) {
 //////////////////////////////////////////////////////
 // Bidding Messages
 //////////////////////////////////////////////////////
-// Send a bid another tablet  
-// recCode = receiver 'R', 'L', 'P', 'M'  
-// meaning rho, lho, partner, screenmate   
-// any combination, e.g. 'RLP', in any order is ok    
-// rix = relative bid index = 0, 1, 2, ... from current bid backward
-// rix = 0 means bidderIx  
-// Normally this will be the current bid
-//////////////////////////////////////////////////////////// 
+/**
+ * @description
+ * Send a bid to another tablet <br>
+ * The parameters specifying board, round, bidder are the indices in boardsRec[][][] <br> 
+ * 
+ * @param {string} rcvCode  'R', 'L', 'P', 'M' meaning rho, lho, partner, screenmate <br>
+ * @param {int} brdIx Board index
+ * @param {int} rndIx Round index
+ * @param {int} bidIx Bidder index
+ */
 function sendBid(rcvCode, brdIx, rndIx, bidIx) {
     // receiving seat
     var rcvSeatIx = positionToSeatIx(rcvCode);
@@ -274,17 +307,14 @@ function sendBid(rcvCode, brdIx, rndIx, bidIx) {
     sendMessage("this", rcvSeat, "new-bid", msgText);
 }
 
-// The originator sends a message to the three other
-// players when a new board is started
-//  
 /**
  * @description
- * When a new board is started the newBoardControlSeat sends
- * a message to each of the other boards:
- * From the onClickHandler for the new board
- * - Call this function to notify the other 3 players
- * - On each tablet initialize the bidding box
- * - Prompt the dealer to bid  
+ * When a new board is started the newBoardControlSeat sends <br>
+ * a message to each of the other boards: <br>
+ * From the onClickHandler for the new board <br>
+ * - Call this function to notify the other 3 players <br>
+ * - On each tablet initialize the bidding box <br>
+ * - Prompt the dealer to bid  <br>
  * 
  * @param {int} nbr Board Number 
  * @param {int} ix Board Index in the boardRecord array 
@@ -295,7 +325,7 @@ function sendNewBoardNotice(nbr, ix) {
     var sndIx = seatOrderWord.indexOf(sndSeat);
     var msgObj = {};
     var msgText;
-    var i;
+    var i;var delay = 0;
 
     for (i = 0; i < 4; i++) {
         if (i != sndIx) {
@@ -307,7 +337,8 @@ function sendNewBoardNotice(nbr, ix) {
                 boardIx: ix
             };
             msgText = JSON.stringify(msgObj);
-            sendMessage("this", rcvSeat, "new-board", msgText);
+            
+            setTimeout(sendMessage, 500*i, "this", rcvSeat, "new-board", msgText);
         }
     }
 }

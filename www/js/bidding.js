@@ -1,8 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-// Called when the bidder selects a nbr of tricks. The selection is provisional
-// until bidder confirms.
-// Selecting a selected button will undo all current choices
-//
+/**
+ * @description
+ * Called when the bidder selects a nbr of tricks. <br>
+ * The selection is provisional until bidder confirms. <br>
+ * Selecting a selected button will undo all current choices <br>
+ * 
+ * @param {int} idTricks Number of tricks, i.e. bidding level 
+ */
 function handleTricksBid(idTricks) {
     var id = parseInt(idTricks);
     var oldTricks = bStat.newTricks;
@@ -71,12 +74,15 @@ function handleSuitBid(idSuit) {
  * 
  */
 function handleCalls(idCall) {
+    console.log("handle call");
+
     if (bStat.boxOpen == false) {
         popupBox("It's not your turn", 5);
         return;
     }
 
     if (idCall == "Alert") {
+        console.log("alert", bStat);
         if (bStat.newAlert) {
             bStat.newAlert = false;
             unselectBidButton("Alert");
@@ -100,6 +106,7 @@ function handleCalls(idCall) {
             unselectCallButtons();
             selectBidButton(idCall);
             if (idCall == "Pass") {
+                console.log("pass", bStat);
                 bStat.newTricks = 0;
                 bStat.newSuit = "none";
                 bStat.newCall = "Pass";
@@ -110,6 +117,7 @@ function handleCalls(idCall) {
                 updateBiddingRecord();
             }
             if (idCall == "X") {
+                console.log("X", bStat);
                 bStat.newTricks = 0;
                 bStat.newSuit = "none";
                 bStat.newCall = "X";
@@ -119,6 +127,7 @@ function handleCalls(idCall) {
                 updateBiddingRecord();
             }
             if (idCall == "XX") {
+                console.log("XX", bStat);
                 bStat.newTricks = 0;
                 bStat.newSuit = "none";
                 bStat.newCall = "XX";
@@ -248,7 +257,7 @@ function confirmSelectedBid() {
 
 // The bidder has passed and agrees that the hand is to be passed out
 function confirmPassout() {
-    enableInput();
+    enableBBControlInput();
     //console.log("confirmPassout");
 }
 
@@ -258,7 +267,7 @@ function cancelPassout() {
 }
 
 function confirmContract() {
-    enableInput();
+    enableBBControlInput();
     unhiliteBiddingRecordCell();
     var t = makeBidRecordEntry();
     recordNewBid();
@@ -274,15 +283,20 @@ function cancelContract() {
 }
 
 function confirmBid() {
+    var delay = 1000;
     console.log("confirmBid entry", bStat.passCount, bStat);
     unhiliteBiddingRecordCell();
     var t = makeBidRecordEntry();
 
     recordNewBid();
-    sendBid("m", boardIx, roundIx, bidderIx); //send current bid to screenmate
-
-    getbStat();
+    //send current bid to 3 other players
+    //others will not necessarily display immediately
+    sendBid("R", boardIx, roundIx, bidderIx); 
+    setTimeout(sendBid, delay, "P", boardIx, roundIx, bidderIx);
+    setTimeout(sendBid, 2*delay, "L", boardIx, roundIx, bidderIx);
+    
     clearBidBox();
+    getbStat();
     bidderIx = (bidderIx + 1) % 4;
     console.log("confirmBid exit", bidderIx, bStat);   
 }

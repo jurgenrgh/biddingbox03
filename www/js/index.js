@@ -29,9 +29,9 @@ var app = {
     console.log("outer width: ", window.outerWidth, "outer height: ", window.outerHeight);
     console.log("screen width: ", screen.width, "screen height: ", screen.height);
     console.log("pixel ratio: ", window.devicePixelRatio);
-    
+
     screen.orientation.lock("portrait");
-    
+
     //Listener for bluetooth message
     networking.bluetooth.onReceive.addListener(onBtReceiveHandler);
     networking.bluetooth.onAccept.addListener(onBtAcceptConnectionHandler);
@@ -104,10 +104,10 @@ function stringFromArrayBuffer(buf) {
 //Takes focus from currently hilited element,
 //which causes the keyboard to hide
 // 
-document.onkeypress =  function(e){
-  if( e.keyCode == 13 ){
+document.onkeypress = function (e) {
+  if (e.keyCode == 13) {
     //console.log("Enter pressed: ", e.keyCode);
     document.activeElement.blur();
-  }    
+  }
   //console.log("Key pressed: ", e.keyCode);
 };

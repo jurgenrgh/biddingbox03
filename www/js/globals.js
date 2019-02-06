@@ -304,10 +304,15 @@ function getSeatIxFromName(strName) {
     return six;
 }
 
+/**
+ * @description
+ * The buttons controlling the next board to be played are <br>
+ * disabled while the hand is being bid <br>
+ */
 function disableBBControlInput() {
-    var sec = document.getElementById("btn-selected-board");
-    sec.classList.remove("standard-btn");
-    sec.classList.add("standard-btn-disabled");
+    var sec = document.getElementById("btn-play-board");
+    sec.classList.remove("large-btn");
+    sec.classList.add("large-btn-disabled");
     sec.style.color ='#666666';
 
     var t = document.getElementById("btn-subtract");
@@ -320,9 +325,9 @@ function disableBBControlInput() {
     s.classList.add("standard-btn-disabled");
     s.style.color ='#666666';
 
-    var b = document.getElementById("btn-setup");
-    b.classList.remove("standard-btn");
-    b.classList.add("standard-btn-disabled");
+    var b = document.getElementById("btn-bb-reset");
+    b.classList.remove("large-btn");
+    b.classList.add("large-btn-disabled");
     b.style.color ='#666666';
 
     var su = document.getElementById("input-board-number");
@@ -331,10 +336,15 @@ function disableBBControlInput() {
     su.style.color ='#666666';
 }
 
-function enableInput() {
-    var sec = document.getElementById("btn-selected-board");
-    sec.classList.add("standard-btn");
-    sec.classList.remove("standard-btn-disabled");
+/**
+ * @description
+ * Enable the Board number selection mechanism <br> 
+ * Active only between boards being bid <br>
+ */
+function enableBBControlInput() {
+    var sec = document.getElementById("btn-play-board");
+    sec.classList.add("large-btn");
+    sec.classList.remove("large-btn-disabled");
     sec.style.color ='black';
 
     var t = document.getElementById("btn-subtract");
@@ -347,9 +357,9 @@ function enableInput() {
     s.classList.remove("standard-btn-disabled");
     s.style.color ='black';
 
-    var b = document.getElementById("btn-setup");
-    b.classList.add("standard-btn");
-    b.classList.remove("standard-btn-disabled");
+    var b = document.getElementById("btn-bb-reset");
+    b.classList.add("large-btn");
+    b.classList.remove("large-btn-disabled");
     b.style.color ='black';
 
     var su = document.getElementById("input-board-number");

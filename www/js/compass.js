@@ -1,8 +1,13 @@
-// Redraw the Compass svg using current values of
-// the globals for board, table etc.
-// A refresh callable at any time (maybe even periodically)
-// Also sets input fields for seat, board, table consistently
-//
+//////////////////////////////////////////////////////////////////////
+// The "Compass" is an SVG that appears at the upper lh corner
+// of the Bidding Box Page
+//////////////////////////////////////////////////////////////////// 
+/**
+ * @description
+ * Redraw the Compass svg using current values of <br>
+ * the globals for board, table etc. <br>
+ * This is a refresh action callable at any time (even periodically) <br>
+ */
 function drawCompass() {
     //var rectTableNbr = document.getElementById("svgRectTableNbr");
     var textTableNbr = document.getElementById("svgTextTableNbr");

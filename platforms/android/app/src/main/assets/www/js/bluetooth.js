@@ -4,15 +4,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 ////// Initializations ////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-//
-// Visual init on BT settings page
-// This Tablet: "Client" or "Server"
-// This Tablet: this-tablet-name
-// Server Tablet: tablet BT name from GetBtDevices
-// Client Tablets: tablet BT names from GetBtDevices
-// For the server these are all 4 names
-// For each client this is server and local name only
-// 
+/**
+ * @description
+ * Visual initialization of the BT settings page <br>
+ * This Tablet: "Client" or "Server" and this-tablet-name <br>
+ * Server Tablet: tablet BT name from GetBtDevices <br>
+ * Client Tablets: tablet BT names from GetBtDevices <br>
+ * The server knows all 4 names, 3 from pairing <br>
+ * Each client knows its own name and the server name from pairing <br>
+ */
 function initBtSettingsPage() {
     var el = document.getElementById("this-tablet-name");
     el.innerHTML = tablet[thisTabletIx].name;
@@ -40,12 +40,14 @@ function initBtSettingsPage() {
     }
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// Get Adapter State and name and list of paired devices
-// The names are then entered into the page slots
-// Initial connection state set to "disconnected"
-// Called after Phonegap event "deviceready" has been fired
-//
+/**
+ * @description
+ * Get Adapter State and name and list of paired devices<br>
+ * The names are then entered into the page slots<br>
+ * Initial connection state set to "disconnected"<br>
+ * Called after Phonegap event "deviceready" has been fired<br>
+ * Compass is refreshed<br>
+ */
 function getBtDevices() {
     // The status of the local adapter 
     networking.bluetooth.getAdapterState(function (adapterInfo) {
@@ -87,8 +89,9 @@ function getBtDevices() {
             pairedBtNames[i] = devices[i].name;
             pairedBtAddresses[i] = devices[i].address;
         }
-        assignBtFunction(pairedBtNames, pairedBtAddresses); 
+        assignBtFunction(pairedBtNames, pairedBtAddresses);
         drawCompass();
+        //makeBtConnection();
     });
 }
 
@@ -219,12 +222,14 @@ function assignBtFunction(names, addresses) {
 
     console.log("Functions - tablet array:", tablet);
 }
-//////////////////////////////////////////////////////////////////
-// Bluetooth Connection //////////////////////////////////////////
-//////////////////////////////////////////////////////////////////
-//
-// Called by pushing "Connect" on BT page, either server or client
-//
+
+/**
+ * @description
+ * Called directly from onClick "Connect" on the Bluetooth page <br>
+ * Called also through a modal prompt on either server or client <br>
+ * If server: finds next unconnected client and calls startBtListening(tabIx), sets waiting state <br>
+ * If client: sets the correct waiting state and calls chainBtClentConnection() <br>
+ */
 function makeBtConnection() {
     var client = "";
     var tabIx; // tablet index for next connection
@@ -234,11 +239,9 @@ function makeBtConnection() {
         tabIx = findNextUnconnectedClient();
         //console.log("Connect server next tabIx = ", tabIx, tablet[tabIx]);
         setBtConnectionState("server", "waiting");
-
         startBtListening(tabIx);
-
     } else { //this is a client
-        //console.log("Branch Client Calling", thisTabletIx, tablet[thisTabletIx]);
+        console.log("Branch Client Calling", thisTabletIx, tablet[thisTabletIx]);
         if (thisTabletIx == 1) {
             client = "client1";
             setBtConnectionState("client1", "waiting");
@@ -257,17 +260,21 @@ function makeBtConnection() {
             setBtConnectionState("client2", "unset");
             setBtConnectionState("client3", "waiting");
         }
-        //startBtCalling();
-        //doBtClientConnection();
         chainBtClientConnection();
     }
 }
 
-// This is the 'server' side, of the socket connection
-// The 'server' (listener) is an arbitrarily chosen tablet
-// the others are 'clients' who requests a connection (callers)
-// If tabIx <= 0 do nothing
-//
+/**
+ * @description
+ * This is the 'server' side, of the socket connection <br>
+ * The 'server' (listener) is an arbitrarily chosen tablet <br>
+ * The server must be paired with the 3 clients and no other BT devices <br>
+ * Each client is paired with the server and no other BT devices <br>
+ * The 'clients' request a connection (callers) <br>
+ * If tabIx <= 0 do nothing <br>
+ * 
+ * @param {int} tabIx The tablet array index 
+ */
 function startBtListening(tabIx) {
     var seatName = seatOrderWord[tablet[tabIx].seatIx];
 
@@ -289,13 +296,11 @@ function startBtListening(tabIx) {
                 } else {
                     //console.log("No Listeners", checkListener);
                 }
-
             }, function (errorMessage) {
                 console.log("error from Listener");
                 console.error(errorMessage);
                 popupBox("Bluetooth Listener Error", errorMessage, "btListenerError", "OK", "", "");
             });
-
         } else {
             console.log("Listening requested but already set");
         }
@@ -305,10 +310,13 @@ function startBtListening(tabIx) {
         }
     }
 }
-
-// Callback for networking.bluetooth.onAccept.addListener(callback)
-// Incoming connection requests from client tablets
-//
+/**
+ * @description
+ * Callback for networking.bluetooth.onAccept.addListener(callback) <br>
+ * Handles incoming connection requests from client tablets <br>
+ * 
+ * @param {obj} acceptInfo 
+ */
 function onBtAcceptConnectionHandler(acceptInfo) {
     var nextTabIx;
     var tabIx = findNextUnconnectedClient(); //this is current client
@@ -319,6 +327,7 @@ function onBtAcceptConnectionHandler(acceptInfo) {
         return;
     }
     tablet[tabIx].socket = acceptInfo.clientSocketId;
+    console.log("socket set, socket, tabIx", acceptInfo.clientSocketId, tabIx, tablet);
     nbrConnectedClients += 1;
     console.log("Nbr clients connected", nbrConnectedClients, tablet);
     if (nbrConnectedClients == 3) {
@@ -339,8 +348,18 @@ function onBtAcceptConnectionHandler(acceptInfo) {
     }
 }
 
-
-
+/**
+ * @description
+ * This is the function called to make a connection from  <br>
+ * client to server. The server must be "listening", the <br>
+ * client is said to be "calling". <br>
+ * There are 4 uuid's and all 4 are tried in succession. <br> 
+ * The connection can succeed only if the server is listening <br>
+ * for the correct uuid; so the server changes uuid after each <br>
+ * successful connection. <br>
+ * If the connection attempt fails the tryClient function returns <br>
+ * with an implicit parameter that gives the index of the next uuid to try <br> 
+ */
 function chainBtClientConnection() {
     tryBtClientConnection(0)
         .then(tryBtClientConnection)
@@ -348,14 +367,20 @@ function chainBtClientConnection() {
         .then(tryBtClientConnection)
         .catch();
 }
-//Client Connection using chained promise for retry
-//The uuid is not fixed
-//all uuids are tried in case of failure 
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>Two previous versions saved in junk.txt 
+
+/**
+ * @description
+ * Client Connection using chained promise for retry <br>
+ * Called for each try from chainBtClientConnection() <br>
+ * Each time with the next uuid Index (there are currently 4) <br>
+ * uuid[] is a global array - same on all tablets <br>
+ *  
+ * @param {int} uuidIx Index of the uuid to be tried 
+ */
 function tryBtClientConnection(uuidIx) {
     var deviceAddress;
 
-    //console.log("Async Client Retry Calling uuidx: ", uuidIx);
+    console.log("Async Client Retry Calling uuidx: ", uuidIx);
     if (tablet[thisTabletIx].socket < 0) { //if not connected
         deviceAddress = tablet[serverTabletIx].address;
 
@@ -364,7 +389,7 @@ function tryBtClientConnection(uuidIx) {
             networking.bluetooth.connect(deviceAddress, uuid[uuidIx], function (socketId) {
                 thisClientSocketId = socketId;
                 tablet[thisTabletIx].socket = socketId;
-
+                console.log("socket set, socketId, tabIx ", socketId, thisTabletIx, tablet);
                 setBtConnectionState("client1", "connected");
                 setBtConnectionState("server", "connected");
 
@@ -391,17 +416,24 @@ function tryBtClientConnection(uuidIx) {
     }
 }
 
-
-///////////////////////////////////////////////////////////////////////////////////////
-// tablet = "this", "server", "client1", "client2", or "client3"
-// state is "disconnected", "waiting", "connected", or "unset"
-// The function changes the class of the corresponding element
-// in order to display the  red, yellow or green symbol
-//
+/**
+ * @description
+ * The function changes the class of the corresponding element <br>
+ * in order to display the  red, yellow or green symbol <br>
+ * This affects the visuals only, i.e. the red, yellow, green dots on the BT page <br>
+ * These indicators occur on each page in the urh corner and on the BT page <br>
+ * 
+ * @param {*} tab tablet: "this", "server", "client1", "client2", or "client3" 
+ * @param {*} state "disconnected", "waiting", "connected", or "unset"
+ */
 function setBtConnectionState(tab, state) {
     var el;
     //console.log("setBtConnectionState", tab, state);
 
+    elBB = document.getElementById("bt-bidbox");
+    elDir = document.getElementById("bt-director");
+    elPlayer = document.getElementById("bt-player");
+    elClock = document.getElementById("bt-clock");
     if (tab == "server") {
         el = document.getElementById("server-connection");
     }
@@ -419,29 +451,68 @@ function setBtConnectionState(tab, state) {
     el.classList.remove("dot-connected");
     el.classList.remove("dot-unset");
 
+    elBB.classList.remove("dot-disconnected");
+    elBB.classList.remove("dot-waiting");
+    elBB.classList.remove("dot-connected");
+    elBB.classList.remove("dot-unset");
+
+    elDir.classList.remove("dot-disconnected");
+    elDir.classList.remove("dot-waiting");
+    elDir.classList.remove("dot-connected");
+    elDir.classList.remove("dot-unset");
+
+    elPlayer.classList.remove("dot-disconnected");
+    elPlayer.classList.remove("dot-waiting");
+    elPlayer.classList.remove("dot-connected");
+    elPlayer.classList.remove("dot-unset");
+
+    elClock.classList.remove("dot-disconnected");
+    elClock.classList.remove("dot-waiting");
+    elClock.classList.remove("dot-connected");
+    elClock.classList.remove("dot-unset");
+
     if (state == "disconnected") {
         el.classList.add("dot-disconnected");
+        elBB.classList.add("dot-disconnected");
+        elDir.classList.add("dot-disconnected");
+        elPlayer.classList.add("dot-disconnected");
+        elClock.classList.add("dot-disconnected");
     }
     if (state == "waiting") {
         el.classList.add("dot-waiting");
+        elBB.classList.add("dot-waiting");
+        elDir.classList.add("dot-waiting");
+        elPlayer.classList.add("dot-waiting");
+        elClock.classList.add("dot-waiting");
     }
     if (state == "connected") {
         el.classList.add("dot-connected");
+        elBB.classList.add("dot-connected");
+        elDir.classList.add("dot-connected");
+        elPlayer.classList.add("dot-connected");
+        elClock.classList.add("dot-connected");
     }
     if (state == "unset") {
         el.classList.add("dot-unset");
     }
 }
 
-// This clears everything and starts over
-// To make the same connections as before
-// use "reconnect"; but you must do the same for the neighbors 
+/**
+ * @description
+ * Brings up a dialog box, and if accepted doBtReset() is called <br>
+ * This clears the Bluetooth system and starts over <br>
+ * Try to make the same connections as before <br>
+ */
 function generalBtReset() {
-
     popupBox("Do you want to Reset the Bluetooth Connections?",
         "This will break all Bluetooth connections to this Tablet only.", "bt-reset", "", "YES", "CANCEL");
 }
 
+/**
+ * @description
+ * General reset of the Bluetooth Connections <br>
+ * Called after popupBox thru generalBtReset() <br>
+ */
 function doBtReset() {
     console.log("Starting doBtReset");
     // Clear the sockets
@@ -467,21 +538,16 @@ function doBtReset() {
     setBtConnectionState("client2", "disconnected");
     setBtConnectionState("client3", "disconnected");
 
-    //initAllBtGlobals();
-
-    //logBtGlobals();
-
     getBtDevices();
-    //logBtGlobals();
     initBtSettingsPage();
-    //logBtGlobals();
 }
-
-// Get index of the first tablet structure that doesn't 
-// have a socket assigned.
-// This is used to start listening for the corresponding 
-// client connection using the appropriate uuid
-// 
+/**
+ * @description
+ * Get index of the first tablet structure that doesn't <br>
+ * have a socket assigned. The criterion is tablet[].socket = -1. <br>
+ * This is used to start listening for the corresponding <br>
+ * client connection using the appropriate uuid <br>
+ */ 
 function findNextUnconnectedClient() {
     var i;
     var tabIx = 0;
