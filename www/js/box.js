@@ -1,6 +1,3 @@
-///////////////////////////////////////////////////////////////////////////////
-// 
-//
 /**
  * @description
  * Called from onClickHandler for new board <br>
@@ -9,10 +6,10 @@
  * All four are alerted by a popup, the bidder is asked to bid <br> 
  * boardNbr and bidderIx were already set <br>
  */
-function promptNewBoard() {
+function handleNewBoard() {
     var doc = document.getElementById("input-board-number");
     var bn = parseInt(doc.value);
-    console.log("promptNewBoard", bn);
+    console.log("handleNewBoard", bn);
     if (newBoardControlSeat == seatOrderWord[thisSeatIx]) {
         popupBox("Starting New Board " + bn, "Check Board Number and Orientation!", "new-board", "", "OK", "CANCEL");
     } else {
@@ -23,58 +20,66 @@ function promptNewBoard() {
     } else {
         bStat.boxOpen = false;
     }
+}
+/**
+ * @description
+ * Called from OK exit of "new-board" Popup <br>
+ * on the board controller tablet <br>
+ * Send notice of new board to other 3 tablets <br>
+ * All 4 boards the will call startNewBoard <br>
+ */
+function selectNewBoard() {
+    var doc = document.getElementById("input-board-number"); // new board number
+    var bNbr = parseInt(doc.value);
+    var bIx = bNbr - 1; // new board index
 
+    sendNewBoardNotice(bNbr, bIx);
+    startNewBoard(bNbr);
+}
+/**
+ * @description
+ * Called from selectNewBoard after all 4 tablets have been notified <br>
+ * Called on each tablet
+ * @param {int} bNbr New board number 
+ */
+function startNewBoard(bNbr) {
+    var bIx = bNbr - 1; // new board index
+    var dIx = bIx % 4; // new dealer index
+    
+    disableBBControlInput();
+    document.getElementById("input-board-number").value = bNbr; //set board number 
+
+    boardIx = bNbr - 1;
+    dealerIx = boardIx % 4;
+    vulIx = (Math.floor(boardIx / 4) + dealerIx) % 4;
+    drawCompass("bidding-box");
+
+    clearBidBox();
+    initBiddingRecord(boardIx + 1);
+    
+    if (dIx == thisSeatIx) {
+        bStat.boxOpen = true;
+    } else {
+        bStat.boxOpen = false;
+    }
 }
 
+/**
+ * @description
+ * Called by pressing "Reset Box" button on bidding box or director page <br>
+ * Calls resetBiddingBoxPage if the user chooses "RESET" <br>
+ */
 function handleBoxReset() {
     popupBox("Reset the Bidding Box", "Are you sure? This will clear all data for the current board.", "box-reset", "", "RESET", "CANCEL");
 }
 
 /**
  * @description
- * Called from OK exit of Starting New Board Popup <br>
- * on the board controller tablet <br>
- * Send notice of new board to other 3 tablets <br>
- * All 4 boards the will call setNewBoard <br>
+ * Called through "Reset Box" on the Bidding Box or the Director Settings page <br>
+ * Called also after seat, section or table number change <br>
+ * Does complete reinitialization of the box  <br>
  */
-function startNewBoard() {
-    var doc = document.getElementById("input-board-number"); // new board number
-    var bNbr = parseInt(doc.value);
-    var bIx = bNbr - 1; // new board index
-
-    sendNewBoardNotice(bNbr, bIx);
-    setNewBoard(bNbr);
-}
-
-/**
- * @description
- * Called from startNewBoard after all 4 tablets have been notified <br>
- * 
- * @param {int} bNbr New board number 
- */
-function setNewBoard(bNbr) {
-    var bIx = bNbr - 1; // new board index
-    var dIx = bIx % 4; // new dealer index
-    console.log("setNewBoard: ", bNbr);
-
-    document.getElementById("input-board-number").value = bNbr; //set board number 
-    clearBidBox();
-
-    initBiddingRecord(boardIx + 1);
-
-    if (dIx == thisSeatIx) {
-        bStat.boxOpen = true;
-    } else {
-        bStat.boxOpen = false;
-    }
-    disableBBControlInput();
-}
-
-/**
- * @description
- * Needs description
- */
-function resetBiddingBox() {
+function resetBiddingBoxPage() {
     console.log("reset bidding box");
     boardIx = 0; // Board index
     dealerIx = 0; // Dealer; function of boardIx
@@ -83,23 +88,23 @@ function resetBiddingBox() {
     roundIx = 0; //current round of bidding
     bidderIx = 1; //current bidder (bid order ix)
     hidePopupBox();
-    drawCompass();
-    initBiddingBoxSettings();
+    drawCompass("bidding-box");
+    initBiddingBoxPageSettings();
     clearBidBox();
     initBiddingRecord(1);
-    /////////////////// not needed because director settings ///
-    //enableBBControlInput();
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// Reset the bidding status (bStat) and the bidding box
-// 1) first unselect (i.e. take away hilite), then enble trick buttons
-// 2) same for suit buttons
-// 3) same for calls
-// 4) initialize the bStat object for start of bidding
-//
+/**
+ * @description
+ * Called to initialize the box for a new bid, i.e. whenever this <br>
+ * player is prompted to bid <br>
+ * Reset the bidding status (bStat) and the bidding box  <br>
+ * 1) first unselect (i.e. take away hilite), then enble trick buttons  <br>
+ * 2) same for suit buttons  <br>
+ * 3) same for calls  <br>
+ * 4) initialize the bStat object for start of bidding  <br>
+ */
 function clearBidBox() {
-
     var idSuit;
     var id;
     var i;
@@ -143,15 +148,14 @@ function clearBidBox() {
         newCall: "none",
         newAlert: false
     };
-
-    //console.log("clearBidBox Exit", bStat);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// Set up the bidding box according to bStat
-//
+/**
+ * @description
+ * Set up the bidding box according to bStat
+ */
 function prepBidBox() {
-    //console.log("prepBidBox: Enter", bStat);
+    console.log("prepBidBox: Enter", bStat);
     //Enable and disable the trick buttons acc to last bid given by bStat
     //Opens the Box
     var idSuit;
@@ -208,69 +212,28 @@ function prepBidBox() {
     disableBidButton('Submit');
     bStat.boxOpen = true;
 
-    setCurrentBiddingRecordCell("");
+    setCurrentBiddingTableCell("");
 
-    //console.log("prepBidBox: Exit", bStat);
+    console.log("prepBidBox: Exit", bStat);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-//Disable and grey out the bids and calls individually /////
-//////////////////////////////////////////////////////////////////////////////
-function enableBidButton(idTricks) {
-    var targetDiv = document.getElementById(idTricks);
-    if (targetDiv != null) {
-        targetDiv.classList.remove("disabled");
-    }
-}
-
-//enable only suits higher ranking or same as argument
-function enableHigherSuitBids(ixSuit) {
-    for (var i = ixSuit; i < 5; i++) {
-        var targetDiv = document.getElementById(suitNameOrder[i]);
-        targetDiv.classList.remove("disabled");
-    }
-}
-
-function disableBidButton(idTricks) {
-    var targetDiv = document.getElementById(idTricks);
-    if (targetDiv != null) {
-        targetDiv.classList.add("disabled");
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// Select means highlight the provisional choice
-//
-function selectBidButton(idTricks) {
-    var targetDiv = document.getElementById(idTricks);
-    if (targetDiv != null) {
-        targetDiv.classList.add("hiliteBid");
-    }
-}
-
-function unselectBidButton(idTricks) {
-    var targetDiv = document.getElementById(idTricks);
-    if (targetDiv != null) {
-        targetDiv.classList.remove("hiliteBid");
-    }
-}
-
-function unselectCallButtons() {
-    unselectBidButton("XX");
-    unselectBidButton("Pass");
-    unselectBidButton("X");
-    unselectBidButton("Alert");
-}
-
-
-//This sets the Board number field - nothing else for now
-function initBiddingBoxSettings() {
+/**
+ * @description
+ * Called from resetBiddingBoxPage and onLoad initialization <br>
+ * This sets the Board number field - nothing else for now <br>
+ */
+function initBiddingBoxPageSettings() {
     var boardNbr = boardIx + 1;
     document.getElementById("input-board-number").value = boardNbr;
     document.getElementById("btn-play-board").innerHTML = "Play Board " + boardNbr;
     //console.log("init box", boardNr);
 }
 
+/**
+ * @description
+ * Response to changing board number on the bidding box page 
+ * @param {int} increment Changes are in steps of +-1
+ */
 function handleBoardNumberChange(increment) {
     var x = document.getElementById("input-board-number");
     var bnbr = parseInt(x.value) + increment;
@@ -281,20 +244,145 @@ function handleBoardNumberChange(increment) {
         dealerIx = boardIx % 4;
         vulIx = (Math.floor(boardIx / 4) + dealerIx) % 4;
         //console.log("New Board Number ", x.value);
-        drawCompass();
+        drawCompass("bidding-box");
         //console.log("New Board Number ", boardIx + 1, dealerIx, vulIx);
     }
     document.getElementById("btn-play-board").innerHTML = "Play Board " + bnbr;
     //console.log("board nr change", bnbr);
 }
 
+/**
+ * @description
+ * Response to changing board number on the Display Board page 
+ * @param {int} increment Changes are in steps of +-1
+ */
+function handleDisplayBoardNumberChange(increment) {
+    var x = document.getElementById("input2-board-number");
+    var bnbr = parseInt(x.value) + increment;
+    //console.log("bnbr type: ", typeof(bnbr), "Value type: ", typeof(x.value), "Increment type: ", typeof(increment));
+    if (bnbr > 0) {
+        x.value = bnbr;
+        //boardIx = bnbr - 1;
+        //dealerIx = boardIx % 4;
+        //vulIx = (Math.floor(boardIx / 4) + dealerIx) % 4;
+        //console.log("New Board Number ", x.value);
+        drawCompass("board-display");
+        //console.log("New Board Number ", boardIx + 1, dealerIx, vulIx);
+    }
+    //document.getElementById("btn2-play-board").innerHTML = "Show Board " + bnbr;
+    //console.log("board nr change", bnbr);
+}
+
+/**
+ * @description
+ * Respond to onClick of "Show" button on the Display Board Page
+ * Scan the boardsRec array and display the contents in the auction2 table
+ * @param{int} bIx Board Ix in boardsRec array
+ */
+function handleDisplayBoard(bIx){
+    var i = 0;
+    var j = 0;
+    var t; //tricks
+    var s; //suit
+    var a; //alert
+    var newEntry;
+
+    var passCount = 0;
+
+    while((passCount < 3) && (i < 12)){
+        t = boardsRec[bIx][i][j].tricks;
+        s = boardsRec[bIx][i][j].suit;
+        a = boardsRec[bIx][i][j].alert;
+        newEntry = makeBidTableEntry(t,s,s);
+        console.log("Display Board", newEntry, t, s, a);
+    } 
+}
+
+
 //////////////////////////////////////////////////////////////////////////////
-// After a bidding level (tricks) has been selected,
-// enable appropriate suit bid buttons
-//
+// Enable, disable, hilite, unhilite bid buttons /////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/**
+ * @description
+ * Enable a single bid button
+ * @param {string} idBid Any bid or call button selector id
+ */
+function enableBidButton(idBid) {
+    var targetDiv = document.getElementById(idBid);
+    if (targetDiv != null) {
+        targetDiv.classList.remove("disabled");
+    }
+}
+
+/**
+ * @description
+ * Disable a single bid button
+ * @param {string} idBid Any bid or call button selector id 
+ */
+function disableBidButton(idBid) {
+    var targetDiv = document.getElementById(idBid);
+    if (targetDiv != null) {
+        targetDiv.classList.add("disabled");
+    }
+}
+
+/**
+ * @description
+ * Select a single bid button <br>
+ * Select means highlight the provisional choice <br>
+ * @param {string} idBid Any bid or call button selector id 
+ */
+function selectBidButton(idBid) {
+    var targetDiv = document.getElementById(idBid);
+    if (targetDiv != null) {
+        targetDiv.classList.add("hiliteBid");
+    }
+}
+
+/**
+ * @description
+ * Unselect a single bid button <br>
+ * Unselect means un-hilite the provisional choice <br>
+ * @param {string} idBid Any bid or call button selector id
+ */
+function unselectBidButton(idBid) {
+    var targetDiv = document.getElementById(idBid);
+    if (targetDiv != null) {
+        targetDiv.classList.remove("hiliteBid");
+    }
+}
+
+/**
+ * @description
+ * Enable all suit bids higher than or equal to ixSuit by removing class "disabled" 
+ * @param {int} ixSuit Lowest suit enabled
+ */
+function enableHigherSuitBids(ixSuit) {
+    for (var i = ixSuit; i < 5; i++) {
+        var targetDiv = document.getElementById(suitNameOrder[i]);
+        targetDiv.classList.remove("disabled");
+    }
+}
+
+/**
+ * @description
+ * Unselect all 4 call buttons
+ */
+function unselectCallButtons() {
+    unselectBidButton("XX");
+    unselectBidButton("Pass");
+    unselectBidButton("X");
+    unselectBidButton("Alert");
+}
+
+/**
+ * @description
+ * After the bidding level (tricks) has been selected,
+ * enable the appropriate suit buttons and disable calls 
+ */
 function prepSuitBids() {
     var ixSuit = 0;
-    //console.log("prepSuits", bStat);
+    
     if (bStat.newTricks == bStat.tricks) {
         ixSuit = suitNameOrder.indexOf(bStat.suit) + 1;
     }

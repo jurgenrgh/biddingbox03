@@ -75,16 +75,16 @@ function sendMessage(sndCode, rcvCode, tag, msgText) {
     objContent.tag = tag;
     objContent.text = msgText;
 
-    console.log("sendMessage content", objContent);
-    console.log("sendMessage socket", senderSocketId);
+    //console.log("sendMessage content", objContent);
+    //console.log("sendMessage socket", senderSocketId);
 
     strContent = JSON.stringify(objContent);
     buf = arrayBufferFromString(strContent);
 
-    console.log("sendMessage call 4 ", senderSocketId, posIx, recipient, sndCode, rcvCode, tag, msgText);
+    //console.log("sendMessage call 4 ", senderSocketId, posIx, recipient, sndCode, rcvCode, tag, msgText);
     if (senderSocketId > 0) {
         networking.bluetooth.send(senderSocketId, buf, function (bytes_sent) {
-            console.log('Sent nbr of bytes: ', bytes_sent, 'Socket: ', senderSocketId);
+            //console.log('Sent nbr of bytes: ', bytes_sent, 'Socket: ', senderSocketId);
             console.log("Message: ", strContent);
         }, function (errorMessage) {
             console.log('Send failed: ', errorMessage, 'Message: ', strContent, 'Socket: ', senderSocketId);
@@ -171,9 +171,14 @@ function msgInterpreter(socketId, strMsg) {
     // and to set the BTname   
     if (objMsg.tag == "confirm-connection") {
         //Put the socketId in the right tablet[] object
+        rcvdTextObj = JSON.parse(objMsg.text);
+        var tabSeatIx = rcvdTextObj.seatIx;
+        var tabName = rcvdTextObj.btName;
         for (i = 0; i < tablet.length; i++) {
-            if (tablet[i].name == objMsg.text) {
+            //if (tablet[i].name == objMsg.text) {
+            if (tablet[i].name == tabName) {
                 tablet[i].socket = socketId;
+                tablet[i].seatIx = tabSeatIx;
                 clientIx = i;
                 console.log("socket set socketId, tabIx", socketId, i, tablet[i].name, tablet[i].type, objMsg.text, objMsg.from);
                 setBtConnectionState(tablet[i].type, "connected");
@@ -195,10 +200,29 @@ function msgInterpreter(socketId, strMsg) {
         return;
     }
 
+    // Message sent by pressing button on BT page
+    // to test connectivity
     if (objMsg.tag == "ping") {
         text = "from " + objMsg.from;
         console.log(objMsg);
         popupBox("Ping Received", text, "id", "OK", "", "");
+    }
+
+    // Message sent periodically by the server in order to
+    // test the connection
+    if (objMsg.tag == "ping-pong") {
+        text = "from " + objMsg.from;
+        console.log(objMsg);
+        //popupBox("Ping-Pong Received", text, "id", "OK", "", "");
+        sendMessage(objMsg.to, objMsg.from, "pong-ping", objMsg.Text);
+    }
+
+    //Response to ping-pong is pong-ping
+    // Can only br client to server
+    if (objMsg.tag == "pong-ping") {
+        text = "from " + objMsg.from;
+        console.log(objMsg);
+        popupBox("Pong-Ping Received", text, "id", "OK", "", "");
     }
 
     //Client receives its id number
@@ -207,6 +231,11 @@ function msgInterpreter(socketId, strMsg) {
         var el = document.getElementById("this-tablet-rank");
         el.innerHTML = objMsg.text;
         tablet[thisTabletIx].type = objMsg.text;
+
+        setBtConnectionState("client1", "unset");
+        setBtConnectionState("client2", "unset");
+        setBtConnectionState("client3", "unset");
+
         document.getElementById("client1-div").style.display = 'none';
         document.getElementById("client2-div").style.display = 'none';
         document.getElementById("client3-div").style.display = 'none';
@@ -214,23 +243,24 @@ function msgInterpreter(socketId, strMsg) {
 
     if (objMsg.tag == "new-bid") {
         rcvdTextObj = JSON.parse(objMsg.text);
-        console.log("new Bid received", rcvdTextObj);
-        var bidder = bidOrder[rcvdTextObj.bidder];
+        //console.log("new Bid received", rcvdTextObj);
+        var bidderSeatIx = (rcvdTextObj.bidder + 3) % 4;
+        var bidder = seatOrderWord[bidderSeatIx];
         var newCall = storeExternalBid(rcvdTextObj);
-        popupBox("New Bid: " + newCall + " " + bidder, "", "id", "OK", "", "");
+        popupBox(bidder + " bids " + newCall, "", "id", "OK", "", "");
         //Now update the bidding record visually and logically
-        console.log("TO PROMPT BIDDER", thisSeatIx, bidderIx);
+        //console.log("TO PROMPT BIDDER", thisSeatIx, bidderIx, roundIx);
         bidderIx = (bidderIx + 1) % 4;
-        if(bidderIx == 0){
+        if (bidderIx == 0) {
             roundIx++;
         }
-        
+
         if (bidderIx == ((thisSeatIx + 1) % 4)) {
             promptBidder(true);
-        }
-        else{
+        } else {
             promptNonBidder();
         }
+        //console.log("TO PROMPT BIDDER", thisSeatIx, bidderIx, roundIx);
     }
 
     if (objMsg.tag == "new-board") {
@@ -244,11 +274,11 @@ function msgInterpreter(socketId, strMsg) {
         console.log("new Board starts", rcvdTextObj);
         text1 = "New Board: #" + brdNbr;
         text2 = seatOrderWord[dIx] + " is the Dealer. Check Board Number and Orientation!";
-        if( thisSeatIx == (brdNbr - 1) % 4){
+        if (thisSeatIx == (brdNbr - 1) % 4) {
             text2 = "You are the Dealer. Please Bid";
         }
-        popupBox( text1, text2, "id", "OK", "", "");
-        setNewBoard(brdNbr);
+        popupBox(text1, text2, "id", "OK", "", "");
+        startNewBoard(brdNbr);
     }
 }
 
@@ -270,9 +300,9 @@ function pping(recipient) {
     sendMessage("this", recipient, "ping", txt);
 }
 
-//////////////////////////////////////////////////////
-// Bidding Messages
-//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+// Bidding Messages //////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
 /**
  * @description
  * Send a bid to another tablet <br>
@@ -325,7 +355,8 @@ function sendNewBoardNotice(nbr, ix) {
     var sndIx = seatOrderWord.indexOf(sndSeat);
     var msgObj = {};
     var msgText;
-    var i;var delay = 0;
+    var i;
+    var delay = 0;
 
     for (i = 0; i < 4; i++) {
         if (i != sndIx) {
@@ -337,8 +368,49 @@ function sendNewBoardNotice(nbr, ix) {
                 boardIx: ix
             };
             msgText = JSON.stringify(msgObj);
-            
-            setTimeout(sendMessage, 500*i, "this", rcvSeat, "new-board", msgText);
+
+            setTimeout(sendMessage, 500 * i, "this", rcvSeat, "new-board", msgText);
         }
     }
+}
+
+function pingPong(rcvCode) {
+    var d = new Date();
+    var t = d.toLocaleTimeString();
+
+    var msgObj = {
+        time: t,
+        to: rcvCode,
+        serial: testConnectionCount
+    };
+
+    var msgText = JSON.stringify(msgObj);
+    sendMessage("this", rcvCode, "ping-pong", msgText);
+
+    console.log("testMessage", t, rcvCode, testConnectionCount, msgObj, msgText);
+}
+/**
+ * @description
+ * Calling this function on the server causes test messages to be sent <br>
+ * to each client every deltaT seconds <br>
+ * The client responds by confirming receipt immediately <br>
+ * The message text consists of a serial number and the time.
+ * 
+ * @param {int} deltaT Time period between test messages in seconds 
+ */
+function startBtConnectionTest(deltaT) {
+    popupBox("Connection Test Started", "", "connection-test", "OK", "", "");
+    testConnectionRepeater = setInterval(function () {
+        testConnectionCount++;
+        var cIx = 1 + testConnectionCount % 3;
+        var rcvCode = "client" + cIx;
+        pingPong(rcvCode);
+    }, deltaT * 1000);
+}
+/**
+ * Stops the periodic connection test
+ */
+function stopBtConnectionTest() {
+    clearInterval(testConnectionRepeater);
+    popupBox("Connection Test Stopped", "", "connection-test", "OK", "", "");
 }

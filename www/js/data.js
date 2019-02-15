@@ -26,6 +26,16 @@ var suitSymbols = {
   NT: "NT"
 };
 
+var testConnectionCount = 0; //Used for messages that test BT connection
+var testConnectionTimeIncrement = 5; //Seconds between connection test messages
+var testConnectionRepeater; //Token used for stopping repetitions
+var popupTimeOutRunning;
+var fastPopupTimeout = 3;
+var slowPopupTimeout = 6;
+
+var notifyNonBidder = false; //when true a modal message pops up for nonbidder 
+var autoBtConnect = true; // if true BT connections are handled automatically upon startup
+var autoConnectDelay = 3000; //Wait 3ms before requesting the connection
 var previousPage = ""; //Save previous page when switching pages
 
 ////////////////////////////////////////////////////////////////////////////////// 
@@ -140,8 +150,7 @@ for (i = 0; i < maxBoards; i++) {
     }
   }
 }
-boardsRec[0] = [];
-boardsRec[0][0] = [];
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Call Object: The content of a table cell

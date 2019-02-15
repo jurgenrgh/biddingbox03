@@ -1,19 +1,7 @@
-//Variables
-
-//This Tablet
-// Controlled by getBtDevices()
-// name, rank: globals.js
-
-//Seat
-// Controlled by this setting, establishes the link
-// between tablet and player
-// If the tablet names and client assignments are known from getBtDevices,
-// the seats assignment is n-e-s-w : server, client1, client2, client3.
-// If the director reassigns the seat the other 3 tablets have to be notified.
-// Any change is taken to be an interchange of a pair; i.e. if
-// clienti becomes N and N was ckientj then clientj becomes whatever
-// clienti was before the switch.     
-
+/////////////////////////////////////////////////////////////////////////////
+// Director Settings ////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+//
 function initDirSettingsPage() {
     var el = document.getElementById("dir-this-tablet-name");
     el.innerHTML = tablet[thisTabletIx].name;
@@ -110,7 +98,7 @@ function doSeatChange(seat){
     thisSeatIx = seatOrder.indexOf(seat);
     tablet[thisTabletIx].seatIx = thisSeatIx;
     console.log("setting new seat = " + seat, thisSeatIx);
-    resetBiddingBox();
+    resetBiddingBoxPage();
 }
 
 document.getElementById("input-table-number").onchange = function () {
@@ -120,7 +108,7 @@ document.getElementById("input-table-number").onchange = function () {
 function handleTableNumberChange() {
     var x = document.getElementById("input-table-number");
     tableIx = x.value - 1;
-    resetBiddingBox();
+    resetBiddingBoxPage();
     console.log("New Table Number ", x.value);
 }
 
@@ -131,7 +119,7 @@ document.getElementById("input-section-letter").onchange = function () {
 function handleSectionLetterChange() {
     var x = document.getElementById("input-section-letter");
     sectionId = x.value;
-    resetBiddingBox();
+    resetBiddingBoxPage();
     console.log("Section Id ", x.value);
 }
 document.getElementById("input-first-board").onchange = function () {
@@ -141,7 +129,6 @@ document.getElementById("input-first-board").onchange = function () {
 function handleFirstBoardChange() {
     var x = document.getElementById("input-first-board");
     firstBoardNbr = x.value;
-    //resetBiddingBox();
     console.log("First Board ", x.value);
 }
 document.getElementById("input-last-board").onchange = function () {
@@ -151,7 +138,6 @@ document.getElementById("input-last-board").onchange = function () {
 function handleLastBoardChange() {
     var x = document.getElementById("input-last-board");
     lastBoardNbr = x.value;
-    //resetBiddingBox();
     console.log("Last Board ", x.value);
 }
 document.getElementById("input-hand-minutes").onchange = function () {
@@ -161,7 +147,6 @@ document.getElementById("input-hand-minutes").onchange = function () {
 function handleHandMinutesChange() {
     var x = document.getElementById("input-hand-minutes");
     minPerHand = x.value;
-    //resetBiddingBox();
     console.log("Minutes per Hand ", x.value);
 }
 document.getElementById("input-session-minutes").onchange = function () {
@@ -171,7 +156,6 @@ document.getElementById("input-session-minutes").onchange = function () {
 function handleSessionMinutesChange() {
     var x = document.getElementById("input-session-minutes");
     minPerSession = x.value;
-    //resetBiddingBox();
     console.log("Minutes per Session ", x.value);
 }
 document.getElementById("alert-own-bids").onchange = function () {
@@ -334,3 +318,18 @@ function stopClocks() {
     clearInterval(timerIdSession);
     console.log("Stop Clocks");
 }
+
+function backUpOneBid(){
+    popupBox("Backup 1 Bid", "Todo backing up", "backup-bid", "OK", "", ""); 
+}
+
+/**
+ * @description
+ * The boards display 
+ */
+function initBoardsDisplay(){
+    drawCompass("board-display");
+}
+
+
+

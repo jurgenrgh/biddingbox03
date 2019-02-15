@@ -11,7 +11,7 @@ function handleTricksBid(idTricks) {
     var oldTricks = bStat.newTricks;
     console.log("box open ", bStat.boxOpen);
     if (bStat.boxOpen == false) {
-        popupBox("It's not your turn", "", "", "OK", "", "");
+        popupBoxTimed("It's not your turn", "", "", "OK", fastPopupTimeout);
         return;
     }
 
@@ -44,7 +44,7 @@ function handleSuitBid(idSuit) {
     var oldSuit = bStat.newSuit;
     console.log("box open ", bStat.boxOpen);
     if (bStat.boxOpen == false) {
-        popupBox("It's not your turn", "", "", "OK", "", "");
+        popupBoxTimed("It's not your turn", "", "", "OK", fastPopupTimeout);
         return;
     }
 
@@ -77,7 +77,7 @@ function handleCalls(idCall) {
     console.log("handle call");
 
     if (bStat.boxOpen == false) {
-        popupBox("It's not your turn", 5);
+        popupBoxTimed("It's not your turn", "", "", "OK", fastPopupTimeout);
         return;
     }
 
@@ -145,28 +145,18 @@ function handleCalls(idCall) {
 //
 function handleSubmitCall() {
     if (bStat.boxOpen == false) {
-        popupBox("It's not your turn", 5);
+        popupBoxTimed("It's not your turn", "", "", "OK", fastPopupTimeout);
         return;
     }
-
     confirmSelectedBid();
-
-    //unhiliteBiddingRecordCell();
-    //var t = makeBidRecordEntry();
-    //recordNewBid();
-    //clearBidBox();
-
-    //getbStat();
-
-    //promptNextSeat(bStat.passCount);
-
-    //console.log("submit", t);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// Enables the submit button in the bidding box if
-// a valid bid is pending. Can be called anytime
-//
+/**
+ * @description
+ * Enables the submit button in the bidding box if <br>
+ * a valid bid is pending based on new entries in bStat. <br>
+ * Can be called anytime <br>
+ */
 function checkEnableSubmit() {
     var bCheck = false;
     if ((bStat.newTricks > 0) && (bStat.newSuit != "none")) {
@@ -215,17 +205,19 @@ function confirmSelectedBid() {
     //console.log("Nbr of passes", passCount);
     // Board being passed out
     if (passCount == 4) {
-        console.log("before passout popup"); 
+        //console.log("before passout popup");
         popupBox("Board passed out", "Confirm or Cancel your Pass", "confirm-passout", "", "Confirm", "Cancel");
-        console.log("after passout popup");   
+        //console.log("after passout popup");
     }
-     
+
     // Contract being set - end of bidding
     if ((passCount == 3) && (bStat.tricks != 0)) {
         var tricks = bStat.tricks;
         var suit = bStat.suit;
         var dbl = bStat.dbl;
         var rdbl = bStat.rdbl;
+        var declarer;
+        var dIx;
         var x = "";
         if (dbl)
             x = "X";
@@ -240,19 +232,22 @@ function confirmSelectedBid() {
             suit = "&diams;";
         if (suit == "Clubs")
             suit = "&clubs;";
+        dIx = getLastBidderIx();
+        declarer = seatOrderWord[dIx];    
 
-        var contract = tricks.toString(10) + suit + x;
-        popupBoxYesNo("Contract: " + contract, "Confirm", "Cancel Pass", "confirmContract", -1);
+        var contract = tricks.toString(10) + suit + x + " " + declarer;
+        //popupBox("Contract: " + contract, "", "final-contract", "OK", "", "");
+        popupBoxCallback("Contract: " + contract, "", "callback", "", "OK", "CANCEL", confirmContract, cancelContract);
     }
 
     // Bidding not finished: normal move to next bidder
     if ((passCount < 3) || ((bStat.tricks == 0) && (passCount == 3))) {
         var bid = makeBidRecordEntry();
-        console.log("before confirm bid", bid);
+        //console.log("before confirm bid", bid);
         popupBoxCallback("Your Bid is " + bid, "Confirm or Cancel your Bid", "callback", "", "Confirm", "Cancel", confirmBid, cancelBid);
-        console.log("after confirm bid");
+        //console.log("after confirm bid");
     }
-    console.log("Exit Bid Confirmation");
+    //console.log("Exit Bid Confirmation");
 }
 
 // The bidder has passed and agrees that the hand is to be passed out
@@ -269,12 +264,12 @@ function cancelPassout() {
 function confirmContract() {
     enableBBControlInput();
     unhiliteBiddingRecordCell();
-    var t = makeBidRecordEntry();
+    //var t = makeBidRecordEntry();
     recordNewBid();
     clearBidBox();
     getbStat();
     var contract = getContract();
-    popupBoxYesNo("Final Contract: " + contract + "<br/>Bid next board?", "Yes", "No", "finalContract", -1);
+    popupBox("Final Contract: " + contract, "final-contract", "OK", "", "");
 }
 
 function cancelContract() {
@@ -284,24 +279,84 @@ function cancelContract() {
 
 function confirmBid() {
     var delay = 1000;
-    console.log("confirmBid entry", bStat.passCount, bStat);
+    //console.log("confirmBid entry", bStat.passCount, bStat);
     unhiliteBiddingRecordCell();
-    var t = makeBidRecordEntry();
+    //var t = makeBidRecordEntry();
 
     recordNewBid();
     //send current bid to 3 other players
     //others will not necessarily display immediately
-    sendBid("R", boardIx, roundIx, bidderIx); 
+    sendBid("R", boardIx, roundIx, bidderIx);
     setTimeout(sendBid, delay, "P", boardIx, roundIx, bidderIx);
-    setTimeout(sendBid, 2*delay, "L", boardIx, roundIx, bidderIx);
-    
+    setTimeout(sendBid, 2 * delay, "L", boardIx, roundIx, bidderIx);
+
     clearBidBox();
     getbStat();
     bidderIx = (bidderIx + 1) % 4;
-    console.log("confirmBid exit", bidderIx, bStat);   
+    console.log("confirmBid exit", bidderIx, roundIx, bStat);
 }
 
 function cancelBid() {
     console.log("cancelBid");
     cancelCurrentBid();
+}
+
+/**
+ * @description
+ * Return seat index of the bidder, i.e. index of bStat.lastBidder
+ * @returns bIx Bidder index 
+ */
+function getLastBidderIx(){
+    var bIx = 0;
+    if(bStat.lastBidder == "ME"){
+        bIx = thisSeatIx;
+    } 
+    if(bStat.lastBidder == "PA"){
+        bIx = (thisSeatIx + 2) % 4;
+    } 
+    if(bStat.lastBidder == "LH"){
+        bIx = (thisSeatIx + 1) % 4;
+    } 
+    if(bStat.lastBidder == "RH"){
+        bIx = (thisSeatIx + 3) % 4;
+    } 
+    return bIx;
+}
+
+/**
+ * @description
+ * Get contract from bStat
+ * Passout: tricks = 0, not end of bidding: empty string returned 
+ * @returns {string} contract tricks + suit + x + declarer
+ */
+function getContract(){
+    
+    var contract = "";
+    if ((bStat.passCount == 3) && (bStat.tricks != 0)) {
+        var tricks = bStat.tricks;
+        var suit = bStat.suit;
+        var dbl = bStat.dbl;
+        var rdbl = bStat.rdbl;
+        var declarer;
+        var dIx;
+        var x = "";
+        if (dbl)
+            x = "X";
+        if (rdbl)
+            x = "XX";
+
+        if (suit == "Spades")
+            suit = "&spades;";
+        if (suit == "Hearts")
+            suit = "&hearts;";
+        if (suit == "Diams")
+            suit = "&diams;";
+        if (suit == "Clubs")
+            suit = "&clubs;";
+        dIx = getLastBidderIx();
+        declarer = seatOrderWord[dIx]; 
+
+        contract = tricks.toString(10) + suit + x + " " + declarer;
+    } 
+    return contract;
 }

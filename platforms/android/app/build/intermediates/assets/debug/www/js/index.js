@@ -41,9 +41,10 @@ var app = {
     getBtDevices();
 
     getCommonCssColors();
-    drawBiddingRecordTable(36);
-    //drawCompass();
-    initBiddingBoxSettings();
+    drawBiddingRecordTable(36, "bidding-box"); //Bidding Box Page
+    drawBiddingRecordTable(36, "board-display"); //Board Display Page
+    //drawCompass("bidding-box");
+    initBiddingBoxPageSettings();
     initClockScreen();
     //restoreAllBtGlobals(); //Initializes those not stored
   }
@@ -59,6 +60,7 @@ function showPage(pageName, originPage) {
   document.getElementById("playerSettings").style.display = 'none';
   document.getElementById("directorSettings").style.display = 'none';
   document.getElementById("bluetoothSettings").style.display = 'none';
+  document.getElementById("boardsDisplay").style.display = 'none';
   document.getElementById("clockScreen").style.display = 'none';
   document.getElementById(pageName).style.display = 'block';
 
@@ -70,6 +72,9 @@ function showPage(pageName, originPage) {
   }
   if (pageName == "playerSettings") {
     initDirSettingsPage();
+  }
+  if (pageName == "boardsDisplay") {
+    initBoardsDisplay();
   }
   if (pageName == "clockScreen") {
     //initClockScreen();

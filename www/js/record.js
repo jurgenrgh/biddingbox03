@@ -8,14 +8,21 @@
 /**
  * @description
  * Draw an empty table with header and nRows rows of 4 cells <br>
- * 
- * @param {int} nRows 
+ * @param {int} nRows Number of rows to be shown
+ * @param {string} page "biddng-box" or "board-display" for BB page or Board page
  */
-function drawBiddingRecordTable(nRows) {
+function drawBiddingRecordTable(nRows, page) {
     //popupBox("Draw Rows", nRows, "id", "OK", "", "");
     //console.log("Bidding Record Table Rows:", nRows);
+    var pgId;
     var cell;
-    var table = document.getElementById("auction");
+    if(page == "bidding-box"){
+        pgId = "auction";
+    }
+    if(page == "board-display"){
+        pgId = "auction2";
+    }
+    var table = document.getElementById(pgId);
     for (var i = 1; i <= nRows; i++) {
         var row = table.insertRow(i);
         for (var j = 0; j < 4; j++) {
@@ -27,15 +34,15 @@ function drawBiddingRecordTable(nRows) {
     }
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// Reset the bidding record (i.e. the array) and the table (visually) for a new board
-// The table cells are already empty but the dashes to the left of bidder are entered
-// argument = Board Number
-// Inserts &ndash; to left of bidder
-// Set up 4 callObj's for the first round of bidding
-// in boardsRec[boardIx][0][i], i = 0,...,3
-///////////////////////////////////////////////////////////////////////////////
-//
+/**
+ * @description
+ * Reset the bidding record (i.e. the boardsRec array) and the auction table (visually) for a new board <br>
+ * The table cells are already empty but the dashes to the left of bidder are entered <br>
+ * Inserts &ndash; to left of bidder <br>
+ * Set up 4 callObj's for the first round of bidding in boardsRec[boardIx][0][i], i = 0,...,3 <br>
+ * 
+ * @param {int} boardNbr Board Number
+ */
 function initBiddingRecord(boardNbr) {
     var i, j, m, n;
     var row;
@@ -87,6 +94,7 @@ function initBiddingRecord(boardNbr) {
         promptBidder(true);
     }
 }
+
 /**
  * @description
  * Adds the most recent bid to the table <br>
@@ -95,7 +103,7 @@ function initBiddingRecord(boardNbr) {
  */
 function updateBiddingRecord() {
     var newCall = makeBidRecordEntry();
-    setCurrentBiddingRecordCell(newCall);
+    setCurrentBiddingTableCell(newCall);
     //console.log("UpdateBiddingRec", newCall);
 }
 
@@ -116,12 +124,10 @@ function makeBidRecordEntry() {
     var newEntry = "";
 
     newEntry = makeBidTableEntry(newTricks, newSuit, newCall);
-    
+
     if (newAlert == true) {
         newEntry = newEntry + '<span class="record-alert">' + '!!' + '</span>';
-        //newEntry = newEntry + '<span class="record-alert">' + '&#x26a0;' + '</span>';
     }
-
     return (newEntry);
 }
 
@@ -135,7 +141,7 @@ function makeBidRecordEntry() {
  * 
  * @returns string newEntry for direct insertion into DOM
  */
-function makeBidTableEntry(nTricks, cSuit, nCall){
+function makeBidTableEntry(nTricks, cSuit, nCall) {
     console.log("makeBidTableEntry", nTricks, cSuit, bStat);
     if (nTricks > 0) {
         newEntry = '<span class="record-tricks">' + nTricks + '</span>';
@@ -175,36 +181,82 @@ function makeBidTableEntry(nTricks, cSuit, nCall){
         newEntry = newEntry + '<span>' + '' + '</span>';
     }
     return (newEntry);
-} 
-
-///////////////////////////////////////////////////////////////////////////////
-//  Finds cell coordinates and sets contents to newCall
-//
-function setCurrentBiddingRecordCell(newCall) {
-    var colIx = bidderIx;
-    var rowIx = roundIx + 1;
-    var table = document.getElementById("auction");
-    var cell = table.rows[rowIx].cells[colIx];
-
-    //cell.style.background = "yellow";
-    //cell.style.color = red;
-    table.rows[rowIx].cells[colIx].innerHTML = newCall;
-
-    //console.log("Set Cell: ", newCall);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-//  Sets specific bidding table cell with info from message
-//  msgObj = {from: senderSeat, to: receiverSeat, board: brdIx, round: rndIx, bidder: bidIx, tricks: nTricks, suit: cSuit};
+/**
+ * @description
+ * Find cell coordinates and sets auction cell contents to newCall <br>
+ * Set Current Bid on director's page <br>
+ * 
+ * @param {html} newCall  
+ */
+function setCurrentBiddingTableCell(newCall) {
+    console.log("setCurrentBiddingRecordCell", newCall);
+    var colIx = bidderIx;
+    var sIx = (bidderIx + 3) % 4;
+    var rowIx = roundIx + 1;
+    var bidder = seatOrderWord[sIx];
+
+    var table = document.getElementById("auction");
+    var lastBid = document.getElementById("last-bid");
+    var lastBidder = document.getElementById("last-bidder");
+    var lastRound = document.getElementById("last-round");
+
+    console.log("setCurrentBiddingTableCell", lastBid, lastRound, lastBidder, newCall, bidder, rowIx);
+    //Set last bid in Director's Table
+    if (newCall != "") {
+        lastBid.innerHTML = "Last Bid: " + newCall;
+        lastBidder.innerHTML = "Bidder: " + bidder;
+        lastRound.innerHTML = "Round: " + rowIx;
+    }
+    //Set current auction table entry
+    table.rows[rowIx].cells[colIx].innerHTML = newCall;
+    console.log("Set Cell: ", bidderIx, roundIx, newCall);
+}
+
+/**
+ * @description
+ * Set last bid, bidder and round on the director settings page
+ * Gets info directly from 
+ */
+function setDirectorPageLastBid() {
+    var lastBid = document.getElementById("last-bid");
+    var lastBidder = document.getElementById("last-bidder");
+    var lastRound = document.getElementById("last-round");
+}
+
+/**
+ * @description
+ * Sets a specific cell in the bidding table according to
+ * the bid specified in a message from another tablet
+ * 
+ * @param {obj} msgObj {from: senderSeat, to: receiverSeat, board: brdIx, round: rndIx, bidder: bidIx, tricks: nTricks, suit: cSuit};
+ */
 function setBiddingRecordCell(msgObj) {
+    console.log("setBiddingRecordCell", msgObj);
     var colIx = msgObj.bidder;
+    var sIx = (colIx + 3) % 4;
     var rowIx = msgObj.round + 1;
+    var bidder = seatOrderWord[sIx];
+
     var nTricks = msgObj.tricks;
     var cSuit = msgObj.suit;
+    var newCall = makeBidTableEntry(nTricks, cSuit, cSuit);
+
     var table = document.getElementById("auction");
-    var newCall = makeBidTableEntry(nTricks, cSuit);
+    var lastBid = document.getElementById("last-bid");
+    var lastBidder = document.getElementById("last-bidder");
+    var lastRound = document.getElementById("last-round");
+
+    console.log("setBiddingRecordCell", colIx, sIx, rowIx, bidder, lastBid, lastBidder, lastRound);
     console.log("setBiddingRecordCell", msgObj, colIx, rowIx, nTricks, cSuit, newCall);
+
     table.rows[rowIx].cells[colIx].innerHTML = newCall;
+
+    lastBid.innerHTML = "Last Bid: " + newCall;
+    lastBidder.innerHTML = "Bidder: " + bidder;
+    lastRound.innerHTML = "Round: " + rowIx;
+    console.log("setCurrent", newCall, bidder, rowIx);
     return newCall;
 }
 /**
@@ -215,12 +267,12 @@ function setBiddingRecordCell(msgObj) {
  * @param {obj} msgObj = {tricks: int, suit: int, alert: <not used>}
  * @returns newCall displayable format of the bid 
  */
-function storeExternalBid(msgObj){
+function storeExternalBid(msgObj) {
     // Display the bid in the bidding table
     var newCall = setBiddingRecordCell(msgObj);
     // Record the bid in the boardsRec array
     boardsRec[msgObj.board][msgObj.round][msgObj.bidder].tricks = msgObj.tricks;
-    boardsRec[msgObj.board][msgObj.round][msgObj.bidder].suit = msgObj.suit; 
+    boardsRec[msgObj.board][msgObj.round][msgObj.bidder].suit = msgObj.suit;
     //boardsRec[msgObj.board][msgObj.round][msgObj.bidder].alert = msgObj.suit;
     return newCall;
 }
@@ -231,7 +283,7 @@ function storeExternalBid(msgObj){
 //
 function hiliteBiddingRecordCell(row, col) {
     var colIx = bidderIx;
-    rowIx = roundIx + 1;
+    var rowIx = roundIx + 1;
     if ((row >= 0) && (col >= 0)) {
         colIx = col;
         rowIx = row;
@@ -239,6 +291,7 @@ function hiliteBiddingRecordCell(row, col) {
     var table = document.getElementById("auction");
     var cell = table.rows[rowIx].cells[colIx];
     cell.style.background = modalBgColor;
+    console.log("hilite", row, col, bidderIx, roundIx);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -247,7 +300,7 @@ function hiliteBiddingRecordCell(row, col) {
 //
 function unhiliteBiddingRecordCell(row, col) {
     var colIx = bidderIx;
-    rowIx = roundIx + 1;
+    var rowIx = roundIx + 1;
     if ((row >= 0) && (col >= 0)) {
         colIx = col;
         rowIx = row;
@@ -255,6 +308,7 @@ function unhiliteBiddingRecordCell(row, col) {
     var table = document.getElementById("auction");
     var cell = table.rows[rowIx].cells[colIx];
     cell.style.background = mainBgColor;
+    //console.log("unhilite", row, col, bidderIx, roundIx );
 }
 
 /**
@@ -352,20 +406,21 @@ function getbStat() {
 //New Board has been started 
 //Bidder is prompted by hiliting the entry in the auction record
 function promptBidder(popup) {
-    //console.log("prompt");
     getbStat();
     console.log("prompt status", bStat);
     prepBidBox();
     hiliteBiddingRecordCell();
     if (popup == true) {
-        popupBox("Your turn: Please bid", "",  "pls-bid", "OK", "", "");
+        popupBox("Your turn: Please bid", "", "pls-bid", "OK", "", "");
     }
     disableBBControlInput();
 }
 
-function promptNonBidder(){
-    console.log("NonBidder");
-    popupBox("Nonbidder", "",  "pls-bid", "OK", "", "");
+function promptNonBidder() {
+    //console.log("NonBidder");
+    if (notifyNonBidder == true) {
+        popupBox("Nonbidder", "", "pls-bid", "OK", "", "");
+    }
 }
 
 
@@ -375,9 +430,25 @@ function bidNextBoard() {
     document.getElementById("input-board-nbr").value = bnbr;
     handleNewBoardNumber();
 }
-
-function recordNewBid(){
+/**
+ * @description
+ * Fills a new entry in boardsRec when a new bid is received <br> 
+ * from another player
+ */
+function recordNewBid() {
+    var bl = boardsRec.length;
+    var rl = boardsRec[bl - 1].length;
+    var pl = boardsRec[bl - 1][rl - 1].length;
+    console.log("roundsRec length", bl, rl, pl);
+    console.log("recordNewBid", boardIx, roundIx, bidderIx, bStat);
+    console.log("boardsRec", boardsRec);
+    //boardsRec[boardIx][roundIx][bidderIx] = new callObj(0, "&nbsp;", ""); //space is code for none
     boardsRec[boardIx][roundIx][bidderIx].tricks = bStat.newTricks;
-    boardsRec[boardIx][roundIx][bidderIx].suit = bStat.newSuit;
+    if (bStat.newTricks == 0) {
+        boardsRec[boardIx][roundIx][bidderIx].suit = bStat.newCall;
+    } else {
+        boardsRec[boardIx][roundIx][bidderIx].suit = bStat.newSuit;
+    }
     boardsRec[boardIx][roundIx][bidderIx].alert = "";
+    console.log("recordNewBid", boardsRec);
 }

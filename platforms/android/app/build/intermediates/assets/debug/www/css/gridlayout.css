@@ -183,7 +183,7 @@ input[type="number"]::-webkit-outer-spin-button {
   height: 48px;
 }
 
-.input-disabled{
+.input-disabled {
   color: #666666;
   /*background-color: #CCCCCC;*/
   background: var(--main-bg-color);
@@ -199,22 +199,27 @@ input[type="number"]:disabled {
   opacity: 0.5;
 }
 
-#input-table-number:focus{
+#input-table-number:focus {
   border-bottom: 1px solid black;
 }
-#input-section-letter:focus{
+
+#input-section-letter:focus {
   border-bottom: 1px solid black;
 }
-#input-first-board:focus{
+
+#input-first-board:focus {
   border-bottom: 1px solid black;
 }
-#input-last-board:focus{
+
+#input-last-board:focus {
   border-bottom: 1px solid black;
 }
-#input-hand-minutes:focus{
+
+#input-hand-minutes:focus {
   border-bottom: 1px solid black;
 }
-#input-session-minutes:focus{
+
+#input-session-minutes:focus {
   border-bottom: 1px solid black;
 }
 
@@ -222,25 +227,31 @@ select option {
   direction: rtl;
 }
 
-#bt-bidbox{
+#bt-bidbox {
   vertical-align: middle;
   padding-right: 12px;
   padding-bottom: 24px;
 }
 
-#bt-director{
+#bt-director {
   vertical-align: middle;
   padding-right: 12px;
   padding-bottom: 24px;
 }
 
-#bt-player{
+#bt-player {
   vertical-align: middle;
   padding-right: 12px;
   padding-bottom: 24px;
 }
 
-#bt-clock{
+#bt-clock {
+  vertical-align: middle;
+  padding-right: 12px;
+  padding-bottom: 24px;
+}
+
+#bt-boards {
   vertical-align: middle;
   padding-right: 12px;
   padding-bottom: 24px;
@@ -260,6 +271,7 @@ select option {
 
 .dot-unset {
   color: var(--main-bg-color);
+  display: none;
 }
 
 .input-field input[type=text] {

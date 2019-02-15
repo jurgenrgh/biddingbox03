@@ -49,13 +49,17 @@
             <li><a href="#!" onclick="showPage('directorSettings', 'biddingBox')">Director Settings</a></li>
             <li><a href="#!" onclick="showPage('playerSettings', 'biddingBox')">Player Settings</a></li>
             <li><a href="#!" onclick="showPage('bluetoothSettings', 'biddingBox')">Bluetooth Settings</a></li>
+            <li><a href="#!" onclick="showPage('boardsDisplay', 'biddingBox')">Boards Played</a></li>
             <li><a href="#!" onclick="showPage('clockScreen', 'biddingBox')">Clock Screen</a></li>
         </ul>
 
         <nav>
             <div class="nav-wrapper navstyles">
                 <a href="#!" class="brand-logo black-text center" style="font-size:3.0rem;">Bidding Box</a>
-                <a href="#!"><i id="bt-bidbox" class="material-icons right dot-disconnected">brightness_1</i></a>
+                <a href="#!"><i id="bt-bidboxs" style="font-size:1.5rem" class="material-icons right dot-disconnected">brightness_1</i></a>
+                <a href="#!"><i id="bt-bidbox1" style="font-size:1.5rem" class="material-icons right dot-disconnected">brightness_1</i></a>
+                <a href="#!"><i id="bt-bidbox2" style="font-size:1.5rem" class="material-icons right dot-disconnected">brightness_1</i></a>
+                <a href="#!"><i id="bt-bidbox3" style="font-size:1.5rem" class="material-icons right dot-disconnected">brightness_1</i></a>
                 <a class="dropdown-trigger" href="#!" data-target="dropdown1"><i class="material-icons left black-text"
                         style="font-size:3.0rem;">menu</i></a>
             </div>
@@ -104,10 +108,9 @@
                     </g>
                 </svg>
 
-
                 <div row>
                     <div class="col s12">
-                        <div class="btn waves-effect large-btn" id="btn-play-board" onclick="promptNewBoard();">Play
+                        <div class="btn waves-effect large-btn" id="btn-play-board" onclick="handleNewBoard();">Play
                             Board 1</div>
                     </div>
                 </div>
@@ -242,18 +245,18 @@
             <li><a href="#!">Director Settings</a></li>
             <li><a href="#!" onclick="showPage('playerSettings', 'directorSettings')">Player Settings</a></li>
             <li><a href="#!" onclick="showPage('bluetoothSettings', 'directorSettings')">Bluetooth Settings</a></li>
+            <li><a href="#!" onclick="showPage('boardsDisplay', 'directorSettings')">Boards Played</a></li>
             <li><a href="#!" onclick="showPage('clockScreen', 'directorSettings')">Clock Screen</a></li>
         </ul>
 
         <nav>
             <div class="nav-wrapper navstyles">
                 <a href="#!" class="brand-logo black-text center" style="font-size:3.0rem;">Director Settings</a>
-                <a href="#!"><i id="bt-director" class="material-icons right dot-disconnected">brightness_1</i></a>
+                <a href="#!"><i id="bt-director" style="font-size:2.0rem" class="material-icons right dot-waiting">brightness_1</i></a>
                 <a class="dropdown-trigger" href="#!" data-target="dropdown2"><i class="material-icons left black-text"
                         style="font-size:3.0rem;">menu</i></a>
             </div>
         </nav>
-
 
         <div class="row">
             <div class="col s4 section-title">This Tablet</div>
@@ -298,16 +301,18 @@
             </div>
         </div>
 
+        <div class="divider black"></div>
+        <div class="row">
+            <div class="col s12"></div>
+        </div>
         <div class="row">
             <div class="col s4 section-title">Table Number</div>
             <div class="col s1">
                 <input class="console-number-input" type="number" id="input-table-number" name="input-table-number" min="1"
                     max="999">
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col s4 section-title">Section</div>
+            <div class="col s1"></div>
+            <div class="col s3 section-title">Section</div>
             <div class="col s1">
                 <input class="console-text-input" type="text" id="input-section-letter" name="input-section-letter">
             </div>
@@ -319,29 +324,35 @@
                 <input class="console-number-input" type="number" id="input-first-board" name="input-first-board" min="1"
                     max="36">
             </div>
-        </div>
-        <div class="row">
-            <div class="col s4 section-title">Last Board</div>
+            <div class="col s1"></div>
+            <div class="col s3 section-title">Last Board</div>
             <div class="col s1">
                 <input class="console-number-input" type="number" id="input-last-board" name="input-last-board" min="1"
                     max="36">
             </div>
         </div>
 
+        <div class="divider black"></div>
         <div class="row">
-            <div class="col s4 section-title">Minutes per Hand</div>
+            <div class="col s12"></div>
+        </div>
+
+        <div class="row">
+            <div class="col s4 section-title">Minutes/Hand</div>
 
             <div class="col s2 l1">
                 <input class="console-number-input" type="number" id="input-hand-minutes" name="input-hand-minutes" min="1"
                     max="20">
             </div>
-        </div>
-        <div class="row">
-            <div class="col s4 section-title">Minutes per Session</div>
+            <div class="col s3 section-title">Min/Session</div>
             <div class="col s2 l1">
                 <input class="console-number-input" type="number" id="input-session-minutes" name="input-session-minutes"
                     min="1" max="200">
             </div>
+        </div>
+        <div class="divider black"></div>
+        <div class="row">
+            <div class="col s12"></div>
         </div>
 
         <div class="row">
@@ -379,7 +390,10 @@
                 </div>
             </div>
         </div>
-
+        <div class="divider black"></div>
+        <div class="row">
+            <div class="col s12"></div>
+        </div>
         <div class="row">
             <div class="col s4 section-title">Tray Transfer</div>
             <div class="radio-buttons">
@@ -397,7 +411,10 @@
                 </div>
             </div>
         </div>
-
+        <div class="divider black"></div>
+        <div class="row">
+            <div class="col s12"></div>
+        </div>
         <div class="row">
             <div class="col s4 section-title">Rotate Board</div>
             <div class="radio-buttons">
@@ -409,13 +426,30 @@
                 </div>
             </div>
         </div>
-
+        <div class="divider black"></div>
         <div class="row">
-            <div class="col s4"></div>
+            <div class="col s12"></div>
+        </div>
+        <div class="row">
+            <div class="col s4 section-title" id="last-bid">Last Bid:</div>
+            <div class="col s4 section-title" id="last-bidder">Bidder:</div>
+            <div class="col s4 section-title" id="last-round">Round:</div>
+        </div>
+
+        <div class="divider black"></div>
+        <div class="row">
+            <div class="col s12"></div>
+        </div>
+        <div class="row">
+            <div class="col s4">
+                <a class="btn waves-effect black-text standard-btn" onclick="backUpOneBid();">Back up 1 Bid</a>
+            </div>
+            <div class="col s4">
+                <a class="btn waves-effect black-text standard-btn" onclick="handleBoxReset();">Reset Box</a>
+            </div>
             <div class="col s4">
                 <a class="btn waves-effect black-text standard-btn" onclick="showPage(previousPage, 'directorSettings')">Return</a>
             </div>
-            <div class="col s4"></div>
         </div>
     </div>
 
@@ -430,13 +464,14 @@
             <li><a href="#!" onclick="showPage('directorSettings', 'playerSettings')">Director Settings</a></li>
             <li><a href="#!">Player Settings</a></li>
             <li><a href="#!" onclick="showPage('bluetoothSettings', 'playerSettings')">Bluetooth Settings</a></li>
+            <li><a href="#!" onclick="showPage('boardsDisplay', 'playerSettings')">Boards Played</a></li>
             <li><a href="#!" onclick="showPage('clockScreen', 'playerSettings')">Clock Screen</a></li>
         </ul>
 
         <nav>
             <div class="nav-wrapper navstyles">
                 <a href="#!" class="brand-logo black-text center" style="font-size:3.0rem;">Player Settings</a>
-                <a href="#!"><i id="bt-player" class="material-icons right dot-disconnected">brightness_1</i></a>
+                <a href="#!"><i id="bt-player" style="font-size:2.0rem" class="material-icons right dot-waiting">brightness_1</i></a>
                 <a class="dropdown-trigger" href="#!" data-target="dropdown3"><i class="material-icons left black-text"
                         style="font-size:3.0rem;">menu</i></a>
             </div>
@@ -517,6 +552,7 @@
             <li><a href="#!" onclick="showPage('directorSettings', 'bluetoothSettings')">Director Settings</a></li>
             <li><a href="#!" onclick="showPage('playerSettings', 'bluetoothSettings')">Player Settings</a></li>
             <li><a href="#!">Bluetooth Settings</a></li>
+            <li><a href="#!" onclick="showPage('boardsDisplay', 'bluetoothSettings')">Boards Played</a></li>
             <li><a href="#!" onclick="showPage('clockScreen', 'bluetoothSettings')">Clock Screen</a></li>
         </ul>
 
@@ -538,25 +574,25 @@
             <div class="row">
                 <div class="col s4 section-title">Server Tablet</div>
                 <div class="col s3 item-blank" id="server-tablet-name"></div>
-                <div class="col s1"><i id="server-connection" class="material-icons dot-disconnected">brightness_1</i></div>
+                <div class="col s1"><i id="server-connection" style="font-size:2.0rem" class="material-icons dot-disconnected">brightness_1</i></div>
                 <div class="col s4 section-title"></div>
             </div>
             <div id="client1-div" class="row">
                 <div class="col s4 section-title">Client 1</div>
                 <div class="col s3 item-blank" id="client1-tablet-name"></div>
-                <div class="col s1"><i id="client1-connection" class="material-icons dot-disconnected">brightness_1</i></div>
+                <div class="col s1"><i id="client1-connection" style="font-size:2.0rem" class="material-icons dot-disconnected">brightness_1</i></div>
                 <div class="col s4 section-title"></div>
             </div>
             <div id="client2-div" class="row">
                 <div class="col s4 section-title">Client 2</div>
                 <div class="col s3 item-blank" id="client2-tablet-name"></div>
-                <div class="col s1"><i id="client2-connection" class="material-icons dot-disconnected">brightness_1</i></div>
+                <div class="col s1"><i id="client2-connection" style="font-size:2.0rem" class="material-icons dot-disconnected">brightness_1</i></div>
                 <div class="col s4 section-title"></div>
             </div>
             <div id="client3-div" class="row">
                 <div class="col s4 section-title">Client 3</div>
                 <div class="col s3 item-blank" id="client3-tablet-name"></div>
-                <div class="col s1"><i id="client3-connection" class="material-icons dot-disconnected">brightness_1</i></div>
+                <div class="col s1"><i id="client3-connection" style="font-size:2.0rem" class="material-icons dot-disconnected">brightness_1</i></div>
                 <div class="col s4 section-title"></div>
             </div>
 
@@ -646,21 +682,144 @@
                 </div>
                 <div class="col s4"></div>
             </div>
-            <!-- <div class="row">
+            <!-- -->
+            <div class="row">
                 <div class="col s3 section-title"></div>
                 <div class="col s4">
-                    <a class="btn waves-effect black-text standard-btn" onclick="testObject()">Test Visible</a>
+                    <a class="btn waves-effect black-text standard-btn" onclick="startBtConnectionTest(testConnectionTimeIncrement)">Test
+                        Connections</a>
                 </div>
+
                 <div class="col s4">
-                    <a class="btn waves-effect black-text standard-btn" onclick="testGlobals()">Test Globals</a>
+                    <a class="btn waves-effect black-text standard-btn" onclick="stopBtConnectionTest()">Stop Test</a>
                 </div>
                 <div class="col s1"></div>
-            </div> -->
+            </div>
+            <!-- -->
         </div>
     </div>
 
     </div>
     <!--End bluetoothSettings Page-->
+
+    <!-------------------------------------------------------------------->
+    <!--Boards ----------------------------------------------------------->
+    <!-------------------------------------------------------------------->
+    <div id="boardsDisplay" style="display:none;">
+        <ul id="dropdown6" class="dropdown-content">
+            <li><a href="#!" onclick="showPage('biddingBox', 'boardsDisplay')">Bidding Box</a></li>
+            <li><a href="#!" onclick="showPage('directorSettings', 'boardsDisplay')">Director Settings</a></li>
+            <li><a href="#!" onclick="showPage('playerSettings', 'boardsDisplay')">Player Settings</a></li>
+            <li><a href="#!" onclick="showPage('bluetoothSettings', 'boardsDisplay')">Bluetooth Settings</a></li>
+            <li><a href="#!">Boards Played</a></li>
+            <li><a href="#!" onclick="showPage('clockScreen', 'boardsDisplay')">Clock Screen</a></li>
+        </ul>
+
+        <nav>
+            <div class="nav-wrapper navstyles">
+                <a href="#!" class="brand-logo black-text center" style="font-size:3.0rem;">Boards Played</a>
+                <a href="#!"><i id="bt-boards" style="font-size:2.0rem" class="material-icons right dot-waiting">brightness_1</i></a>
+                <a class="dropdown-trigger" href="#!" data-target="dropdown6"><i class="material-icons left black-text"
+                        style="font-size:3.0rem;">menu</i></a>
+            </div>
+        </nav>
+
+        <div class="row">
+            <!--Compass SVG Construction ----------------------------------------------->
+            <div class="col s4 item-blank">
+                <svg viewbox="0 0 120 150">
+                    <g>
+                        <rect x="0" y="0" width="120" height="30" style="fill-opacity: 0; stroke-width:1;stroke:black"
+                            id="svg2RectTableNbr" />
+                        <text id="svg2TextTableNbr" x="50%" y="17.5" font-size="2.0rem" alignment-baseline="middle"
+                            text-anchor="middle">Table 1N</text>
+                    </g>
+                    <g transform="translate(0,30)">
+                        <g>
+                            <rect x="30" y="30" width="60" height="60" style="fill-opacity: 0; stroke-width:0;stroke:black"
+                                id="svg2RectBoardNbr" />
+                            <text id="svg2TextBoardNbr" x="50%" y="62.5" font-size="3rem" alignment-baseline="middle"
+                                text-anchor="middle">1</text>
+                        </g>
+                        <g>
+                            <polygon points="0,0 120,0 90,30 30,30" style="fill:#2e7d32;stroke:black;stroke-width:0" id="svg2RectNorth" />
+                            <text id="svg2TextNorth" x="50%" y="17.5" font-size="2.0rem" alignment-baseline="middle"
+                                text-anchor="middle">Dealer</text>
+                        </g>
+                        <g>
+                            <polygon points="120,0 120,120 90,90 90,30" style="fill:#2e7d32;stroke:black;stroke-width:0"
+                                id="svg2RectEast" />
+                            <text id="svg2TextEast" x="87.5%" y="68" font-size="2rem" alignment-baseline="middle"
+                                text-anchor="middle" style="writing-mode: vertical-lr;">East</text>
+
+                        </g>
+                        <g>
+                            <polygon points="0,120 120,120 90,90 30,90" style="fill:#2e7d32;stroke:black;stroke-width:0"
+                                id="svg2RectSouth" />
+                            <text id="svg2TextSouth" x="50%" y="107.5" font-size="2rem" alignment-baseline="middle"
+                                text-anchor="middle">South</text>
+                        </g>
+                        <g>
+                            <polygon points="0,0 30,30 30,90 0,120" style="fill:#2e7d32;stroke:black;stroke-width:0" id="svg2RectWest" />
+                            <text id="svg2TextWest" x="12.5%" y="68" font-size="2rem" alignment-baseline="middle"
+                                text-anchor="middle" style="writing-mode: vertical-lr;text-orientation: sideways;">West</text>
+                        </g>
+                    </g>
+                </svg>
+
+                <div row>
+                    <div class="col s12">
+                        <div class="btn waves-effect large-btn" id="btn2-play-board" onclick="handleDisplayBoard(0);">Show
+                            Board</div>
+                    </div>
+                </div>
+                <div row>
+                    <div class="col s4">
+                        <div class="btn waves-effect standard-btn" id="btn2-add" onclick="handleDisplayBoardNumberChange(1);"><i
+                                class="material-icons" style="font-size:1.5rem;">add</i></div>
+                    </div>
+                    <div class="col s4">
+                        <input class="console-number-input" type="number" id="input2-board-number" name="input2-board-number"
+                            min="1" max="36">
+                    </div>
+                    <div class="col s4">
+                        <div class="btn waves-effect standard-btn" id="btn2-subtract" onclick="handleDisplayBoardNumberChange(-1);"><i
+                                class="material-icons" style="font-size:1.5rem;">remove</i></div>
+                    </div>
+                    <div row>
+                        <div class="col s12">
+                            <a class="btn waves-effect black-text standard-btn" onclick="showPage(previousPage, 'boardsDisplay')">Return</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Bidding Record Table --------------------------------------------->
+            <div class="col s8 item-blank">
+                <table id="auction2">
+                    <thead>
+                        <tr>
+                            <th>W</th>
+                            <th>N</th>
+                            <th>E</th>
+                            <th>S</th>
+                        </tr>
+                    </thead>
+                    <tbody  class="tbody-full">
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!--End boards Display Page-->
+
 
     <!---------------------------------------------------------------->
     <!--Clock Screen: Timers and Contract-------------------------------->
@@ -671,13 +830,14 @@
             <li><a href="#!" onclick="showPage('directorSettings', 'clockScreen')">Director Settings</a></li>
             <li><a href="#!" onclick="showPage('playerSettings', 'clockScreen')">Player Settings</a></li>
             <li><a href="#!" onclick="showPage('bluetoothSettings', 'clockScreen')">Bluetooth Settings</a></li>
+            <li><a href="#!" onclick="showPage('boardsDisplay', 'clockScreen')">Boards Played</a></li>
             <li><a href="#!">Clock Screen</a></li>
         </ul>
 
         <nav>
             <div class="nav-wrapper navstyles">
                 <a href="#!" class="brand-logo black-text center" style="font-size:3.0rem;">Time Left</a>
-                <a href="#!"><i id="bt-clock" class="material-icons right dot-disconnected">brightness_1</i></a>
+                <a href="#!"><i id="bt-clock" style="font-size:2.0rem" class="material-icons right dot-disconnected">brightness_1</i></a>
                 <a class="dropdown-trigger" href="#!" data-target="dropdown5"><i class="material-icons left black-text"
                         style="font-size:3.0rem;">menu</i></a>
             </div>

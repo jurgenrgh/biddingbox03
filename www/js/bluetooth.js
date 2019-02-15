@@ -90,8 +90,15 @@ function getBtDevices() {
             pairedBtAddresses[i] = devices[i].address;
         }
         assignBtFunction(pairedBtNames, pairedBtAddresses);
-        drawCompass();
-        //makeBtConnection();
+        drawCompass("bidding-box");
+
+        if (autoBtConnect) {
+            if (tablet[thisTabletIx] == "server") {
+                makeBtConnection();
+            } else {
+                setTimeout(makeBtConnection, autoConnectDelay);
+            }
+        }
     });
 }
 
@@ -237,7 +244,7 @@ function makeBtConnection() {
     if (thisTabletIx == serverTabletIx) { //this is the server
         //console.log("Branch Connect Server", "Tablets: ", tablet);
         tabIx = findNextUnconnectedClient();
-        //console.log("Connect server next tabIx = ", tabIx, tablet[tabIx]);
+        console.log("Connect server next tabIx = ", tabIx, tablet[tabIx]);
         setBtConnectionState("server", "waiting");
         startBtListening(tabIx);
     } else { //this is a client
@@ -305,8 +312,8 @@ function startBtListening(tabIx) {
             console.log("Listening requested but already set");
         }
         //console.log("Exiting Listening for Connection", nbrConnectedClients);
-        if (nbrConnectedClients == 0) {
-            popupBox("Connect Client Tablet", "Press OK and then press 'Connect' on the " + seatOrderWord[tablet[tabIx].seatIx] + " tablet", "connect-first-client", "OK", "", "");
+        if ((nbrConnectedClients == 0) && (autoBtConnect == false)) {
+            popupBox("Connect Client Tablet", "Press OK and then press 'Connect' on any unconnected tablet", "connect-first-client", "OK", "", "");
         }
     }
 }
@@ -318,16 +325,16 @@ function startBtListening(tabIx) {
  * @param {obj} acceptInfo 
  */
 function onBtAcceptConnectionHandler(acceptInfo) {
-    var nextTabIx;
+    //var nextTabIx;
     var tabIx = findNextUnconnectedClient(); //this is current client
-    var seatName = seatOrderWord[tablet[tabIx].seatIx];
+    //var seatName = seatOrderWord[tablet[tabIx].seatIx];
 
     if (acceptInfo.socketId !== serverSocketId) {
         console.log('onAccept -- acceptInfo.socketId != serverSocketId');
         return;
     }
-    tablet[tabIx].socket = acceptInfo.clientSocketId;
-    console.log("socket set, socket, tabIx", acceptInfo.clientSocketId, tabIx, tablet);
+    //tablet[tabIx].socket = acceptInfo.clientSocketId;
+    //console.log("socket set, socket, tabIx", acceptInfo.clientSocketId, tabIx, tablet);
     nbrConnectedClients += 1;
     console.log("Nbr clients connected", nbrConnectedClients, tablet);
     if (nbrConnectedClients == 3) {
@@ -341,10 +348,17 @@ function onBtAcceptConnectionHandler(acceptInfo) {
     console.log("Accepted Connection: ", "Number: ", nbrConnectedClients, "Server Socket: ", serverSocketId);
     nextTabIx = findNextUnconnectedClient();
     console.log("next tabIx", nextTabIx, tablet);
-    if (nextTabIx > 0) {
-        popupBox(seatName + " Tablet Connected", "Press OK and then press 'Connect' on the " + seatOrderWord[tablet[nextTabIx].seatIx] + " tablet", "connect-next-client", "OK", "", "");
-    } else {
-        popupBox(seatName + " Tablet Connected", "All tablets communicate", "last-client-connected", "OK", "", "");
+    //if (nextTabIx > 0) {
+    if (nbrConnectedClients < 3) {
+        if (autoBtConnect) {
+            makeBtConnection();
+        } else {
+            popupBox("Client Tablet Connected", "Press OK and then press 'Connect' on any unconnected tablet", "connect-next-client", "OK", "", "");
+        }
+    }
+    if (nbrConnectedClients == 3) {
+        popupBox("Client Tablets Connected", "All tablets communicate", "last-client-connected", "OK", "", "");
+        //testConnections(10);
     }
 }
 
@@ -379,6 +393,8 @@ function chainBtClientConnection() {
  */
 function tryBtClientConnection(uuidIx) {
     var deviceAddress;
+    var sndObj;
+    var sndText;
 
     console.log("Async Client Retry Calling uuidx: ", uuidIx);
     if (tablet[thisTabletIx].socket < 0) { //if not connected
@@ -393,9 +409,16 @@ function tryBtClientConnection(uuidIx) {
                 setBtConnectionState("client1", "connected");
                 setBtConnectionState("server", "connected");
 
-                tabName = tablet[thisTabletIx].name;
+                var tabName = tablet[thisTabletIx].name;
+                var tabSeatIx = tablet[thisTabletIx].seatIx;
+                sndObj = {
+                    btName: tabName,
+                    seatIx: tabSeatIx
+                };
+                sndText = JSON.stringify(sndObj);
+                console.log("sending confirm", sndObj, sndText);
                 //Notify Server who the Client is.
-                sendMessage("this", "server", "confirm-connection", tablet[thisTabletIx].name); //Notify Server who the Client is.
+                sendMessage("this", "server", "confirm-connection", sndText); //Notify Server who the Client is.
                 resolve(uuidIx);
             }, function (errorMessage) {
                 console.log("error Calling", "server: ", tablet[serverTabletIx], "this: ", tablet[thisTabletIx], "socket: ", thisClientSocketId, "uuidIx: ", uuidIx);
@@ -418,43 +441,19 @@ function tryBtClientConnection(uuidIx) {
 
 /**
  * @description
- * The function changes the class of the corresponding element <br>
- * in order to display the  red, yellow or green symbol <br>
- * This affects the visuals only, i.e. the red, yellow, green dots on the BT page <br>
- * These indicators occur on each page in the urh corner and on the BT page <br>
- * 
- * @param {*} tab tablet: "this", "server", "client1", "client2", or "client3" 
- * @param {*} state "disconnected", "waiting", "connected", or "unset"
+ * On each page there is a connectivity indicator that changes <br>
+ * color according to the BT connection status <br>
+ * This routine sets that status <br>
+ * @param {string} state "disconnected", "waiting", "connected", or "unset"
  */
-function setBtConnectionState(tab, state) {
-    var el;
-    //console.log("setBtConnectionState", tab, state);
+function setPageBtConnectionState(state) {
+    var elDir = document.getElementById("bt-director");
+    var elPlayer = document.getElementById("bt-player");
+    var elBoards = document.getElementById("bt-boards");
+    var elClock = document.getElementById("bt-clock");
 
-    elBB = document.getElementById("bt-bidbox");
-    elDir = document.getElementById("bt-director");
-    elPlayer = document.getElementById("bt-player");
-    elClock = document.getElementById("bt-clock");
-    if (tab == "server") {
-        el = document.getElementById("server-connection");
-    }
-    if (tab == "client1") {
-        el = document.getElementById("client1-connection");
-    }
-    if (tab == "client2") {
-        el = document.getElementById("client2-connection");
-    }
-    if (tab == "client3") {
-        el = document.getElementById("client3-connection");
-    }
-    el.classList.remove("dot-disconnected");
-    el.classList.remove("dot-waiting");
-    el.classList.remove("dot-connected");
-    el.classList.remove("dot-unset");
-
-    elBB.classList.remove("dot-disconnected");
-    elBB.classList.remove("dot-waiting");
-    elBB.classList.remove("dot-connected");
-    elBB.classList.remove("dot-unset");
+    //console.log("Page Connection State", state);
+    //console.log("Page Connection state 1", elDir, elPlayer, elClock);
 
     elDir.classList.remove("dot-disconnected");
     elDir.classList.remove("dot-waiting");
@@ -466,35 +465,122 @@ function setBtConnectionState(tab, state) {
     elPlayer.classList.remove("dot-connected");
     elPlayer.classList.remove("dot-unset");
 
+    elBoards.classList.remove("dot-disconnected");
+    elBoards.classList.remove("dot-waiting");
+    elBoards.classList.remove("dot-connected");
+    elBoards.classList.remove("dot-unset");
+
     elClock.classList.remove("dot-disconnected");
     elClock.classList.remove("dot-waiting");
     elClock.classList.remove("dot-connected");
     elClock.classList.remove("dot-unset");
 
+    //console.log("Page Connection state 2", elDir, elPlayer, elClock);
+
+    if (state == "disconnected") {
+        elDir.classList.add("dot-disconnected");
+        elPlayer.classList.add("dot-disconnected");
+        elBoards.classList.add("dot-disconnected");
+        elClock.classList.add("dot-disconnected");
+        //console.log("Page Connection state 3 ", elDir, elPlayer, elClock);
+    }
+    if (state == "waiting") {
+        elDir.classList.add("dot-waiting");
+        elPlayer.classList.add("dot-waiting");
+        elBoards.classList.add("dot-waiting");
+        elClock.classList.add("dot-waiting");
+        //console.log("Page Connection state 4", elDir, elPlayer, elClock);
+    }
+    if (state == "connected") {
+        elDir.classList.add("dot-connected");
+        elPlayer.classList.add("dot-connected");
+        elBoards.classList.add("dot-connected");
+        elClock.classList.add("dot-connected");
+        //console.log("Page Connection state 5", elDir, elPlayer, elClock);
+    }
+    if (state == "unset") {
+        elDir.classList.add("dot-unset");
+        elPlayer.classList.add("dot-unset");
+        elBoards.classList.add("dot-unset");
+        elClock.classList.add("dot-unset");
+        //console.log("Page Connection state 6", elDir, elPlayer, elClock);
+    }
+    //console.log("Page Connection state 7", elDir, elPlayer, elClock);
+}
+
+/**
+ * @description
+ * The function changes the class of the corresponding element <br>
+ * in order to display the  red, yellow or green symbol <br>
+ * This affects the visuals only, i.e. the red, yellow, green dots on the BT page <br>
+ * These indicators occur on each page in the urh corner and on the BT page <br>
+ * 
+ * @param {*} tab tablet: "this", "server", "client1", "client2", or "client3" 
+ * @param {*} state "disconnected", "waiting", "connected", or "unset"
+ */
+function setBtConnectionState(tab, state) {
+    var el;
+    var elBB;
+
+    //console.log("setBtConnectionState1", tab, state, tablet);
+    //console.log("this check", tablet[thisTabletIx].type);
+
+    if (tab == "server") {
+        el = document.getElementById("server-connection");
+        elBB = document.getElementById("bt-bidboxs");
+        //console.log("branch server", el, elBB);
+    }
+    if (tab == "client1") {
+        el = document.getElementById("client1-connection");
+        elBB = document.getElementById("bt-bidbox1");
+        //console.log("branch client1", el, elBB);
+    }
+    if (tab == "client2") {
+        el = document.getElementById("client2-connection");
+        elBB = document.getElementById("bt-bidbox2");
+        //console.log("branch client2", el, elBB);
+    }
+    if (tab == "client3") {
+        el = document.getElementById("client3-connection");
+        elBB = document.getElementById("bt-bidbox3");
+        //console.log("branch client3", el, elBB);
+    }
+
+    el.classList.remove("dot-disconnected");
+    el.classList.remove("dot-waiting");
+    el.classList.remove("dot-connected");
+    el.classList.remove("dot-unset");
+
+    elBB.classList.remove("dot-disconnected");
+    elBB.classList.remove("dot-waiting");
+    elBB.classList.remove("dot-connected");
+    elBB.classList.remove("dot-unset");
+
+    //console.log("setBtConnectionState2", tab, state, el, elBB);
+
     if (state == "disconnected") {
         el.classList.add("dot-disconnected");
         elBB.classList.add("dot-disconnected");
-        elDir.classList.add("dot-disconnected");
-        elPlayer.classList.add("dot-disconnected");
-        elClock.classList.add("dot-disconnected");
+        //console.log("branch disconnected", tab, state, el, elBB);
     }
     if (state == "waiting") {
         el.classList.add("dot-waiting");
         elBB.classList.add("dot-waiting");
-        elDir.classList.add("dot-waiting");
-        elPlayer.classList.add("dot-waiting");
-        elClock.classList.add("dot-waiting");
     }
     if (state == "connected") {
         el.classList.add("dot-connected");
         elBB.classList.add("dot-connected");
-        elDir.classList.add("dot-connected");
-        elPlayer.classList.add("dot-connected");
-        elClock.classList.add("dot-connected");
     }
     if (state == "unset") {
+        //console.log("dot unset", el, elBB);
         el.classList.add("dot-unset");
+        elBB.classList.add("dot-unset");
+        //console.log("branch unset", tab, state, el, elBB);
     }
+    if (state != "unset") {
+        setPageBtConnectionState(state);
+    }
+    //console.log("setBtConnectionState4", tab, state, el, elBB);
 }
 
 /**
@@ -547,7 +633,7 @@ function doBtReset() {
  * have a socket assigned. The criterion is tablet[].socket = -1. <br>
  * This is used to start listening for the corresponding <br>
  * client connection using the appropriate uuid <br>
- */ 
+ */
 function findNextUnconnectedClient() {
     var i;
     var tabIx = 0;
@@ -559,6 +645,10 @@ function findNextUnconnectedClient() {
     //console.log("Find unconnected client tabIx ", tabIx);
     return tabIx;
 }
+
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Test Functions  /////////////////////////////////////////////////////////////
@@ -574,7 +664,7 @@ function testGlobals() {
 
 function testObject() {
     if (testFlag) {
-        document.getElementById("client3-div").style.display = 'none';
+        disableBidButton('XX');
         testFlag = false;
         return;
     }
