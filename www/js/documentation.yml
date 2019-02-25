@@ -1,0 +1,15 @@
+toc:
+  - name: record.js
+    children:
+      - Bid
+      - makeBidTableEntry
+      - drawBiddingRecordTable
+  - name: director.js
+    description: 
+      A seperate table for all of the director controls
+    children:
+      - initDirSettingsPage
+      - handleSeatChange
+      - doSeatChange
+
+      

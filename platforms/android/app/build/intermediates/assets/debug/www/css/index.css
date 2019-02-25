@@ -240,6 +240,16 @@ td {
 }
 
 /*Clock Page ************************/
+.div-contract {
+    position: relative;
+    height: 16vh;
+    margin: 10px auto;
+    background-color: var(--modal-bg-color);
+    color: black;
+    border-style: solid;
+    border-width: 1px;
+}
+
 .div-clock {
     position: relative;
     height: 16vh;
@@ -290,6 +300,31 @@ td {
     margin-top: 8rem;
     text-align: center;
     color: #BDBDBD;
+    font-size: 1.5rem;
+    padding: 3rem 10px 0rem;
+    z-index: 20;
+    line-height: 20%;
+}
+
+.bar-contract-overlay-text {
+    position: absolute;
+    width: 100%;
+    height: 80%;
+    text-align: center;
+    color: black;
+    font-size: 6rem;
+    padding: 3rem 10px 0rem;
+    z-index: 10;
+    line-height: 80%;
+}
+
+.bar-contract-overlay-label {
+    position: absolute;
+    width: 100%;
+    height: 20%;
+    margin-top: 8rem;
+    text-align: center;
+    color: black;
     font-size: 1.5rem;
     padding: 3rem 10px 0rem;
     z-index: 20;

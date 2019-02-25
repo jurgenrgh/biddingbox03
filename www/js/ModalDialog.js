@@ -137,6 +137,10 @@ function okModalClicked() {
     if (currentModalId == "connect-next-client") {
         makeBtConnection();
     }
+    //Alert own bid to the screenmate 
+    if(currentModalId == "alert-screen-mate"){
+        sendAlert();
+    }
 }
 /**
  * @description
@@ -162,11 +166,13 @@ function yesModalClicked() {
     if (currentModalId == "bt-reset") {
         doBtReset();
     }
-    if (currentModalId == "confirm-passout") {
-        console.log("modal to confirm passout");
-    }
+    
     if (currentModalId == "confirm-bid") {
         console.log("end modal to confirm bid");
+    }
+    //Alert partner's bid to the screenmate 
+    if(currentModalId == "alert-screen-mate"){
+        sendAlert();
     }
 }
 
@@ -185,9 +191,7 @@ function noModalClicked() {
     if (currentModalId == "bt-reset") {
         return;
     }
-    if (currentModalId == "confirm-passout") {
-        console.log("modal to cancel passout");
-    }
+    
     if (currentModalId == "confirm-bid") {
         console.log("end modal to cancel bid");
     }

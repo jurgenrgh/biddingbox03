@@ -240,34 +240,44 @@ function assignBtFunction(names, addresses) {
 function makeBtConnection() {
     var client = "";
     var tabIx; // tablet index for next connection
-    console.log("Enter makeBtConnection");
+    //console.log("Enter makeBtConnection");
     if (thisTabletIx == serverTabletIx) { //this is the server
         //console.log("Branch Connect Server", "Tablets: ", tablet);
         tabIx = findNextUnconnectedClient();
-        console.log("Connect server next tabIx = ", tabIx, tablet[tabIx]);
-        setBtConnectionState("server", "waiting");
-        startBtListening(tabIx);
+        if (tabIx > 0) { //the clients have index 1,2,3
+            console.log("Connect server next tabIx = ", tabIx, tablet[tabIx]);
+            setBtConnectionState("server", "waiting");
+            startBtListening(tabIx);
+        }
+        else{
+            popupBox("All the Clients are already Connected", "", "redundant-connect", "OK", "","");
+        }
     } else { //this is a client
         console.log("Branch Client Calling", thisTabletIx, tablet[thisTabletIx]);
-        if (thisTabletIx == 1) {
+        if ((thisTabletIx == 1) && (tablet[1].socket < 0)){
             client = "client1";
             setBtConnectionState("client1", "waiting");
             setBtConnectionState("client2", "unset");
             setBtConnectionState("client3", "unset");
         }
-        if (thisTabletIx == 2) {
+        if ((thisTabletIx == 2)&& (tablet[2].socket < 0)) {
             client = "client2";
             setBtConnectionState("client1", "unset");
             setBtConnectionState("client2", "waiting");
             setBtConnectionState("client3", "unset");
         }
-        if (thisTabletIx == 3) {
+        if ((thisTabletIx == 3) && (tablet[3].socket < 0)){
             client = "client3";
             setBtConnectionState("client1", "unset");
             setBtConnectionState("client2", "unset");
             setBtConnectionState("client3", "waiting");
         }
-        chainBtClientConnection();
+        if(client != "" ){
+            chainBtClientConnection();
+        }
+        else{
+            popupBox("This Tablet is already Connected", "", "redundant-connect", "OK", "","");
+        }
     }
 }
 
@@ -320,12 +330,12 @@ function startBtListening(tabIx) {
 /**
  * @description
  * Callback for networking.bluetooth.onAccept.addListener(callback) <br>
- * Handles incoming connection requests from client tablets <br>
+ * Handle incoming connection requests from client tablets <br>
  * 
  * @param {obj} acceptInfo 
  */
 function onBtAcceptConnectionHandler(acceptInfo) {
-    //var nextTabIx;
+    var nextTabIx;
     var tabIx = findNextUnconnectedClient(); //this is current client
     //var seatName = seatOrderWord[tablet[tabIx].seatIx];
 
@@ -636,7 +646,7 @@ function doBtReset() {
  */
 function findNextUnconnectedClient() {
     var i;
-    var tabIx = 0;
+    var tabIx = -1;
     for (i = 1; i < 4; i++) {
         if (tablet[i].socket < 0) {
             tabIx = i;

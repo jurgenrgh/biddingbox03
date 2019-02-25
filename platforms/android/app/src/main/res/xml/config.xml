@@ -32,6 +32,9 @@
     <feature name="NetworkingBluetooth">
         <param name="android-package" value="cordova.plugin.networking.bluetooth.NetworkingBluetooth" />
     </feature>
+    <feature name="CDVOrientation">
+        <param name="android-package" value="cordova.plugins.screenorientation.CDVOrientation" />
+    </feature>
     <name>BiddingBox03</name>
     <description>
         Project created from Base Template for Phonegap Bluetooth Communications.

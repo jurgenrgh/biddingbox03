@@ -36,11 +36,17 @@
     },
     "cordova-plugin-networking-bluetooth": {
       "PACKAGE_NAME": "com.phonegap.biddingbox03"
+    },
+    "cordova-plugin-screen-orientation": {
+      "PACKAGE_NAME": "com.phonegap.biddingbox03"
     }
   },
   "dependent_plugins": {
     "cordova-plugin-file": {
       "PACKAGE_NAME": "com.phonegap.basetemplate"
+    },
+    "es6-promise-plugin": {
+      "PACKAGE_NAME": "com.phonegap.biddingbox03"
     }
   }
 }

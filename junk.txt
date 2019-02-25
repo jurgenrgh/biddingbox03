@@ -422,3 +422,31 @@ function doBtClientConnection() {
         console.log("Connection Request while socket already assigned");
     }
 }
+
+// Contract being set - end of bidding
+    if ((passCount == 3) && (bStat.tricks != 0)) {
+        var tricks = bStat.tricks;
+        var suit = bStat.suit;
+        var dbl = bStat.dbl;
+        var rdbl = bStat.rdbl;
+        var declarer;
+        var dIx;
+        var x = "";
+        if (dbl)
+            x = "X";
+        if (rdbl)
+            x = "XX";
+
+        if (suit == "Spades")
+            suit = "&spades;";
+        if (suit == "Hearts")
+            suit = "&hearts;";
+        if (suit == "Diams")
+            suit = "&diams;";
+        if (suit == "Clubs")
+            suit = "&clubs;";
+        dIx = getLastBidderIx();
+        declarer = seatOrderWord[dIx];
+
+        var contract = tricks.toString(10) + suit + x + " " + declarer;
+        //popupBox("Contract: " + contract, "", "final-contract", "OK", "", "");

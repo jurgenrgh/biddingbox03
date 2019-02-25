@@ -16,7 +16,9 @@
     "displayName": "BiddingBox03",
     "dependencies": {
         "cordova-plugin-file-transfer": "^1.7.1",
-        "cordova-plugin-networking-bluetooth": "^1.0.3"
+        "cordova-plugin-networking-bluetooth": "^1.0.3",
+        "cordova-plugin-screen-orientation": "^3.0.1",
+        "es6-promise-plugin": "^4.2.2"
     },
     "cordova": {
         "plugins": {

@@ -34,8 +34,11 @@ var fastPopupTimeout = 3;
 var slowPopupTimeout = 6;
 
 var notifyNonBidder = false; //when true a modal message pops up for nonbidder 
+var notifyNewBid = false; //when true new bid message is sent, option on player page
 var autoBtConnect = true; // if true BT connections are handled automatically upon startup
-var autoConnectDelay = 3000; //Wait 3ms before requesting the connection
+var autoConnectDelay = 3000; //Wait before requesting the connection
+var sendBidDelay = 1000; //Wait before sending new bid message
+var sendNewBoardDelay = 1000; //Wait before sending new board message 
 var previousPage = ""; //Save previous page when switching pages
 
 ////////////////////////////////////////////////////////////////////////////////// 
@@ -57,6 +60,8 @@ var minPerSession = 100; // dito
 
 var timerIdBoard;
 var timerIdSession;
+var startTimeBoard;
+var startTimeSession;
 
 var alertOwn = true; // self-alert
 var alertPartner = true; // alert partner's bids 
@@ -72,7 +77,7 @@ var rotatedBoard = false; // change seats n<->s, e<->w for 1 round
 //////////////////////////////////////////////////////////////////////////////////
 // Variables set on Player Settings Page /////////////////////////////////////////
 //
-var reconfirmBidSubmission = true;
+var reconfirmBidSubmission = false; //Player option - confirmation popup  
 var newBoardControlSeat = "North"; //The player who triggers next board to be played 
 
 ///////////////////////////////////////////////////////////////////////////////////

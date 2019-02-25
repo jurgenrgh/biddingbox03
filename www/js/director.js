@@ -2,6 +2,10 @@
 // Director Settings ////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 //
+/**
+ * Called whenever the user switches to this page
+ * Initializes the page using current values of the settings
+ */
 function initDirSettingsPage() {
     var el = document.getElementById("dir-this-tablet-name");
     el.innerHTML = tablet[thisTabletIx].name;
@@ -79,21 +83,22 @@ function initDirSettingsPage() {
     }
 }
 
-// Called directly when the seat assignment is changed
-// Followed by confirmation popup. 
-// Actual change: doSeatChange called upon confitmation
-// newSeat = 'N','E','S', or 'W' 
-//
+/**
+ * Called directly when the seat assignment is changed
+ * Followed by confirmation popup. 
+ * Actual change: doSeatChange called upon confitmation
+ * @param {string} newSeat 'N','E','S', or 'W' 
+ */
 function handleSeatChange(newSeat) {
     currentModalId = "new-seat";
     currentModalData = newSeat;
     popupBox("New Seat Assignment", "This Tablet will be " + newSeat + ". Make sure that the seat assigment is consistent!", "new-seat", "", "OK", "CANCEL");
 }
 
-// Called by the modal box confirming intent to change the
-// seat assignment
-// seat =  'N','E','S', or 'W' 
-//
+/**
+ * Called by the modal box confirming intent to change the seat assignment
+ * @param {string} seat 'N','E','S', or 'W' 
+ */
 function doSeatChange(seat){
     thisSeatIx = seatOrder.indexOf(seat);
     tablet[thisTabletIx].seatIx = thisSeatIx;
@@ -217,9 +222,18 @@ function handleBidReconfirmChange(par) {
     reconfirmBidSubmission = par;
 }
 
+/**
+ * Set seat that controls start of new board
+ * 
+ * @param {string} seat "North", "East", "South", "West" 
+ */
 function handleNewBoardControlChange(seat) {
     //console.log("next board control", seat);
     newBoardControlSeat = seat;
+}
+
+function handleNewBidNotify(par){
+    notifyNewBid = par;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -230,6 +244,7 @@ function initClockScreen() {
     //console.log("Init Clock");
     var elb = document.getElementById("board-time");
     var els = document.getElementById("session-time");
+    var elc = document.getElementById("contract-display");
 
     var hours = Math.floor(minPerHand / 60);
     var minutes = Math.floor(minPerHand - (hours * 60));
@@ -257,6 +272,16 @@ function initClockScreen() {
     document.getElementById("bar-clock-board").style.width = "100%";
     document.getElementById("bar-clock-session").style.width = "100%";
     //console.log( elb.style.width, els.style.width);
+
+    var contract = getContract();
+    if( contract == ""){
+        contract = "No Contract";
+    }
+    //var suit = "&hearts;";
+    //var declarer = seatOrder[thisSeatIx];
+    //var x = "XX";
+    //contract = "7" + suit + x + " " + declarer;
+    elc.innerHTML = contract;
 }
 
 function startClocks() {
@@ -287,7 +312,7 @@ function startClocks() {
             clearInterval(timerIdBoard);
         } else {
             boardSeconds = boardSeconds - 1;
-            console.log(boardSeconds);
+            //console.log(boardSeconds);
             boardTimeString = getHMS(0, 0, boardSeconds, true, false);
             elBoardTime.innerHTML = boardTimeString;
 

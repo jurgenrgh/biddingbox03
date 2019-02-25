@@ -35,7 +35,8 @@ var app = {
     //Listener for bluetooth message
     networking.bluetooth.onReceive.addListener(onBtReceiveHandler);
     networking.bluetooth.onAccept.addListener(onBtAcceptConnectionHandler);
-
+    networking.bluetooth.onReceiveError.addListener(onBtReceiveError);
+         
     // Actual app Initialization /////////////////////////////////////////////
     //Get paired Bluetooth devices
     getBtDevices();
@@ -77,7 +78,7 @@ function showPage(pageName, originPage) {
     initBoardsDisplay();
   }
   if (pageName == "clockScreen") {
-    //initClockScreen();
+    initClockScreen();
   }
 }
 

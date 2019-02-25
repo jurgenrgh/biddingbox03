@@ -85,10 +85,10 @@ function sendMessage(sndCode, rcvCode, tag, msgText) {
     if (senderSocketId > 0) {
         networking.bluetooth.send(senderSocketId, buf, function (bytes_sent) {
             //console.log('Sent nbr of bytes: ', bytes_sent, 'Socket: ', senderSocketId);
-            console.log("Message: ", strContent);
+            //console.log("Message: ", strContent);
         }, function (errorMessage) {
             console.log('Send failed: ', errorMessage, 'Message: ', strContent, 'Socket: ', senderSocketId);
-            console.log(strContent);
+            //console.log(strContent);
             popupBox("Send Message Error " + senderSocketId, errorMessage, "id", "OK", "", "");
         });
     } else {
@@ -131,9 +131,9 @@ function onBtReceiveHandler(receiveInfo) {
     var textField = document.getElementById("msg-rcvd");
     textField.value = "";
 
-    console.log("Data received: ", strReceived);
+    //console.log("Data received: ", strReceived);
     objReceived = JSON.parse(strReceived);
-    console.log("Obj received: ", objReceived);
+    //console.log("Obj received: ", objReceived);
 
     // Message into Input field
     textField.value = "From " + objReceived.from + ": " + objReceived.text;
@@ -142,6 +142,21 @@ function onBtReceiveHandler(receiveInfo) {
     M.textareaAutoResize(textField);
     // Process the Message 
     msgInterpreter(socketId, strReceived);
+}
+
+/**
+ * @description
+ * Response to onReceiveError Listener
+ * 
+ * @param {string} errorInfo Raw Text Message
+ */
+function onBtReceiveError(errorInfo) {
+    console.log("BT Error from Listener", errorInfo.errorMessage, errorInfo.socketId, errorInfo);
+    popupBox("Bluetooth Receive Error (Listener)", errorInfo.errorMessage + " socket " + errorInfo.socketId, "bt-error", "OK", "", "");
+
+    // if (errorInfo.socketId !== socketId) {
+    //     return;
+    //}
 }
 
 /**
@@ -243,24 +258,11 @@ function msgInterpreter(socketId, strMsg) {
 
     if (objMsg.tag == "new-bid") {
         rcvdTextObj = JSON.parse(objMsg.text);
-        //console.log("new Bid received", rcvdTextObj);
-        var bidderSeatIx = (rcvdTextObj.bidder + 3) % 4;
-        var bidder = seatOrderWord[bidderSeatIx];
-        var newCall = storeExternalBid(rcvdTextObj);
-        popupBox(bidder + " bids " + newCall, "", "id", "OK", "", "");
-        //Now update the bidding record visually and logically
-        //console.log("TO PROMPT BIDDER", thisSeatIx, bidderIx, roundIx);
-        bidderIx = (bidderIx + 1) % 4;
-        if (bidderIx == 0) {
-            roundIx++;
+        // console.log("new Bid received", rcvdTextObj);
+        var newCall = acceptIncomingBid(rcvdTextObj);
+        if (notifyNewBid) {
+            popupBox(bidder + " bids " + newCall, "", "id", "OK", "", "");
         }
-
-        if (bidderIx == ((thisSeatIx + 1) % 4)) {
-            promptBidder(true);
-        } else {
-            promptNonBidder();
-        }
-        //console.log("TO PROMPT BIDDER", thisSeatIx, bidderIx, roundIx);
     }
 
     if (objMsg.tag == "new-board") {
@@ -279,6 +281,12 @@ function msgInterpreter(socketId, strMsg) {
         }
         popupBox(text1, text2, "id", "OK", "", "");
         startNewBoard(brdNbr);
+    }
+
+    if(objMsg.tag == "new-alert"){
+        rcvdTextObj = JSON.parse(objMsg.text);
+        console.log("Msg Interpreter", objMsg);
+        popupBox("New Alert", "", "id", "OK", "", "");
     }
 }
 
@@ -337,6 +345,73 @@ function sendBid(rcvCode, brdIx, rndIx, bidIx) {
     sendMessage("this", rcvSeat, "new-bid", msgText);
 }
 
+/*
+ * @description
+ * The player can alert either his screenmate(M) or both opponents (B)
+ * The alert refers to either her own bid or partner's last bid 
+ * An appropriate message is sent
+ * 
+ * @param {string} rcvCode 'M' or 'B' meaning screenmate or both opps  
+ * @param {int} bidRef "own" or "partner" 
+ */
+function sendAlert(rcvCode, bidRef) {
+    var bidIx;
+    var rndIx;
+    var sndSeat = seatOrderWord[thisSeatIx];
+    var rcvSeat1Ix = -1;
+    var rcvSeat2Ix = -1;
+    var rcvSeat1 = "";
+    var rcvSeat2 = "";
+    var msgObj1;
+    var msgObj2;
+    var msgText1;
+    var msgText2;
+
+    if (bidRef == "own") {
+        bidIx = (thisSeatIx + 1) % 4;
+        rndIx = roundIx;
+    }
+    if (bidRef == "partner") {
+        bidIx = (thisSeatIx + 3) % 4;
+        if ((bidIx == 2) || (bidIx == 3))
+            rndIx = roundIx - 1;
+    }
+    if (rcvCode == "M") {
+        rcvSeat1Ix = positionToSeatIx(rcvCode);
+        rcvSeat1 = seatOrderWord[rcvSeat1Ix];
+    } else {
+        rcvSeat1Ix = positionToSeatIx('L');
+        rcvSeat1 = seatOrderWord[rcvSeat1Ix];
+        rcvSeat2Ix = positionToSeatIx('R');
+        rcvSeat2 = seatOrderWord[rcvSeat2Ix];
+    }
+
+    msgObj1 = {
+        from: sndSeat,
+        to: rcvSeat1,
+        board: boardIx,
+        round: rndIx,
+        bidder: bidIx,
+        tricks: 0,
+        suit: "alert"
+    };
+    msgText1 = JSON.stringify(msgObj1);
+    sendMessage("this", rcvSeat1, "new-alert", msgText1);
+
+    msgObj2 = {
+        from: sndSeat,
+        to: rcvSeat2,
+        board: boardIx,
+        round: rndIx,
+        bidder: bidIx,
+        tricks: 0,
+        suit: "alert"
+    };
+    msgText2 = JSON.stringify(msgObj2);
+    
+    setTimeout(sendMessage, sendBidDelay, "this", rcvSeat2, "new-alert", msgText2);
+}
+
 /**
  * @description
  * When a new board is started the newBoardControlSeat sends <br>
@@ -369,7 +444,7 @@ function sendNewBoardNotice(nbr, ix) {
             };
             msgText = JSON.stringify(msgObj);
 
-            setTimeout(sendMessage, 500 * i, "this", rcvSeat, "new-board", msgText);
+            setTimeout(sendMessage, sendNewBoardDelay * i, "this", rcvSeat, "new-board", msgText);
         }
     }
 }
@@ -402,8 +477,8 @@ function startBtConnectionTest(deltaT) {
     popupBox("Connection Test Started", "", "connection-test", "OK", "", "");
     testConnectionRepeater = setInterval(function () {
         testConnectionCount++;
-        var cIx = 1 + testConnectionCount % 3;
-        var rcvCode = "client" + cIx;
+        var colIx = 1 + testConnectionCount % 3;
+        var rcvCode = "client" + colIx;
         pingPong(rcvCode);
     }, deltaT * 1000);
 }

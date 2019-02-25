@@ -28,7 +28,7 @@
     <div id="modalDialog" class="modal">
         <div class="modal-content">
             <h3 id="dialog-header" class="left-align">Modal Header</h3>
-            <p id="dialog-text" class="left-align flow-text">A bunch of text</p>
+            <h5 id="dialog-text" class="left-align">A bunch of text</h5>
             <a id="ok-button" href="javascript:void(0);" class="modal-close waves-effect waves-green btn-large" onclick="okModalClicked();"><span
                     id="ok-span">OK</span></a>
             <a id="yes-button" href="javascript:void(0);" class="modal-close waves-effect waves-green btn-large"
@@ -498,6 +498,25 @@
             </div>
 
             <div class="row">
+                <div class="col s5 section-title">New Bid Notification</div>
+                <div class="radio-buttons">
+                    <div class="col s3">
+                        <label>
+                            <input type="radio" name="radio-new-bid-notification" id="radio-new-bid-notify" onClick="handleNewBidNotify(true)">
+                            <span>YES</span>
+                        </label>
+                    </div>
+                    <div class="col s3">
+                        <label>
+                            <input type="radio" name="radio-new-bid-notification" id="radio-no-new-bid-notify" onClick="handleNewBidNotify(false)">
+                            <span>NO</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
                 <div class="col s5 section-title">New Board Control</div>
                 <div class="radio-buttons">
                     <div class="col s3">
@@ -538,6 +557,20 @@
                 </div>
                 <div class="col s4"></div>
             </div>
+
+            <!-- -->
+            <div class="row">
+                <div class="col s2 section-title"></div>
+                <div class="col s4">
+                    <a class="btn waves-effect black-text standard-btn" onclick="bidClassTest()">Test Bid Class</a>
+                </div>
+
+                <div class="col s4">
+                    <a class="btn waves-effect black-text standard-btn" onclick="recordClassTest()">Test Record Class</a>
+                </div>
+                <div class="col s1"></div>
+            </div>
+            <!-- -->
         </div>
 
     </div>
@@ -805,7 +838,7 @@
                             <th>S</th>
                         </tr>
                     </thead>
-                    <tbody  class="tbody-full">
+                    <tbody class="tbody-full">
                         <tr>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
@@ -864,6 +897,17 @@
                         <div id="bar-clock-session" style="width:50%;"></div>
                         <div class="bar-clock-overlay-time" id="session-time">10:10</div>
                         <div class="bar-clock-overlay-label">Session Timer</div>
+                    </div>
+                </div>
+                <div class="col s1 item-blank"></div>
+            </div>
+
+            <div class="row">
+                <div class="col s1 item-blank"></div>
+                <div class="col s10">
+                    <div class="div-contract">
+                        <div class="bar-contract-overlay-text" id="contract-display">3 NTX N</div>
+                        <div class="bar-contract-overlay-label">Contract</div>
                     </div>
                 </div>
                 <div class="col s1 item-blank"></div>
