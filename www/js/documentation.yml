@@ -1,9 +1,35 @@
 toc:
+  - name: index.js
+    description: App level initializations
+    children:
+      - app
+      - showPage
+      - hideKeyboard 
   - name: record.js
+    description: Module describing the bidding record 
     children:
       - Bid
-      - makeBidTableEntry
+      - makeBiddingRecordEntry
       - drawBiddingRecordTable
+      - initBiddingRecord
+      - updateBiddingRecord
+      - makeNewBiddingRecordEntry
+      - setCurrentBiddingRecordCell
+      - setDirectorPageLastBid
+      - setBiddingRecordCell
+      - acceptIncomingBid
+      - getbStat
+      - promptBidder
+      - promptNonBidder
+      - bidNextBoard
+      - recordNewBid
+      - hiliteBiddingRecordCell
+      - unhiliteBiddingRecordCell
+      - makeBiddingRecordEntry
+  - name: board.js
+    description: Class describing an element of the boards[] array
+    children:
+      - Board
   - name: director.js
     description: 
       A seperate table for all of the director controls
@@ -11,5 +37,25 @@ toc:
       - initDirSettingsPage
       - handleSeatChange
       - doSeatChange
+      - stopClocks
+      - backUpOneBid
+      - initBoardsDisplay
+  - name: ModalDialog.js
+    description:
+       This is a simple modal overlay containing a text message
+       and 0, 1 or 2 buttons (ok; yes/no).
+       There is a version with callbacks.
+    children:
+      - popupBox
+      - popupBoxTimed
+      - popupBoxCallback
+      - hidePopupBox
+      - okModalClicked
+      - yesModalClicked
+      - noModalClicked
+      
+
+
+  
 
       

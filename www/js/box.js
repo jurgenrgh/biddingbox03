@@ -212,7 +212,7 @@ function prepBidBox() {
     disableBidButton('Submit');
     bStat.boxOpen = true;
 
-    setCurrentBiddingTableCell("");
+    setCurrentBiddingRecordCell("");
 
     console.log("prepBidBox: Exit", bStat);
 }
@@ -293,7 +293,7 @@ function handleDisplayBoard(bIx){
         t = boardsRec[bIx][i][j].tricks;
         s = boardsRec[bIx][i][j].suit;
         a = boardsRec[bIx][i][j].alert;
-        newEntry = makeBidTableEntry(t,s,s);
+        newEntry = makeBiddingRecordEntry(t,s,s);
         console.log("Display Board", newEntry, t, s, a);
     } 
 }

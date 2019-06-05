@@ -309,12 +309,13 @@
             <div class="col s4 section-title">Table Number</div>
             <div class="col s1">
                 <input class="console-number-input" type="number" id="input-table-number" name="input-table-number" min="1"
-                    max="999">
+                    max="999" onchange="handleTableNumberChange()">
             </div>
             <div class="col s1"></div>
             <div class="col s3 section-title">Section</div>
             <div class="col s1">
-                <input class="console-text-input" type="text" id="input-section-letter" name="input-section-letter">
+                <input class="console-text-input" type="text" id="input-section-letter" name="input-section-letter"
+                    onchange="handleSectionLetterChange()">
             </div>
         </div>
 
@@ -322,7 +323,7 @@
             <div class="col s4 section-title">First Board</div>
             <div class="col s1">
                 <input class="console-number-input" type="number" id="input-first-board" name="input-first-board" min="1"
-                    max="36">
+                    max="36" onchange="handleFirstBoardChange()";>
             </div>
             <div class="col s1"></div>
             <div class="col s3 section-title">Last Board</div>
@@ -953,6 +954,7 @@
     <script type="text/javascript" src="js/bidding.js"></script>
     <script type="text/javascript" src="js/box.js"></script>
     <script type="text/javascript" src="js/compass.js"></script>
+    <script type="text/javascript" src="js/board.js"></script>
 
     <script>
         $(document).ready(function () {

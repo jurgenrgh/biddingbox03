@@ -4,20 +4,20 @@
 // 
 // This is a simple modal overlay containing a text message
 // and 0, 1 or 2 buttons (ok; yes/no).
+// There is a version with callbacks
 //
 // msgText: any string
 // id     : string identifier used to determine the action when the box is dismissed
 // okText : label for the button, if blank - no button
 // yesText: dito
 // noText : dito
-// 
+////////////////////////////////////////////////////////////////////////////////// 
 var currentModalId;
 var currentModalData;
 var currentYesCallback;
 var currentNoCallback;
 
 /**
- * @description
  * This is a simple modal overlay containing a text message <br>
  * and 0, 1 or 2 buttons (ok; yes/no). <br>
  * 
@@ -70,7 +70,6 @@ function popupBox(msgTitle, msgText, id, okText, yesText, noText) {
 }
 
 /**
- * @description
  * This is a simple modal overlay containing a text message <br>
  * and 0, 1 or 2 buttons (ok; yes/no). <br>
  * 
@@ -115,7 +114,6 @@ function popupBoxTimed(msgTitle, msgText, id, okText, timeout) {
 }
 
 /**
- * @description
  * Make popup disappear
  */
 function hidePopupBox() {
@@ -125,7 +123,6 @@ function hidePopupBox() {
 }
 
 /**
- * @description
  * Called after OK button clicked in a modal popupbox
  * Message id determines what happens next 
  */
@@ -143,7 +140,6 @@ function okModalClicked() {
     }
 }
 /**
- * @description
  * Called after YES button clicked in a modal popupbox
  * Message id determines what happens next 
  */
@@ -177,7 +173,6 @@ function yesModalClicked() {
 }
 
 /**
- * @description
  * Called after NO button clicked in a modal popupbox
  * Message id determines what happens next 
  */
@@ -198,7 +193,6 @@ function noModalClicked() {
 }
 
 /**
- * @description
  * This is a version of the modal box that accepts two callbacks,
  * one for YES or OK, one for CANCEL or NO
  * For this to work set id = "callback"; otherwise it works just like popupBox()

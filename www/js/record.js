@@ -7,7 +7,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
 //
-
 /**
  * Class Bid representing a bid
  *
@@ -52,7 +51,7 @@ class Bid {
         return this.suit;
     }
     /**
-     * Return ["Clubs", "Diams", "Hearts", "Spades", "NT"] if tricks != 0;
+     * Return ["Clubs", "Diams", "Hearts", "Spades", "NT"] if tricks != 0; <br>
      * Return  call: 'X', 'XX', 'Pass' if tricks = 0.
      */
     get suitWord() {
@@ -67,7 +66,7 @@ class Bid {
         }
     }
     /**
-     * @returns s ["&clubs;", "&diams;", "&hearts;", "&spades;", "NT"] when tricks != 0
+     * @returns s ["&clubs;", "&diams;", "&hearts;", "&spades;", "NT"] when tricks != 0 <br>
      * Return  lteral call: 'X', 'XX', 'Pass' if tricks = 0. 
      */
     get suitSymbol() {
@@ -80,6 +79,7 @@ class Bid {
         return s;
     }
     /**
+     * Same functionality as makeBiddingRecordEntry()
      * @returns {string} htmlSpan Current bid for direct insertion into DOM
      */
     makeHTMLSpan() {
@@ -90,16 +90,16 @@ class Bid {
             htmlSpan = '<span>' + '' + '</span>';
         }
 
-        if (this.suit == "Clubs") {
+        if (this.suit == "C") {
             htmlSpan = htmlSpan + '<span class="clubs">' + '&clubs;' + '</span>';
         }
-        if (this.suit == "Diams") {
+        if (this.suit == "D") {
             htmlSpan = htmlSpan + '<span class="diams">' + '&diams;' + '</span>';
         }
-        if (this.suit == "Hearts") {
+        if (this.suit == "H") {
             htmlSpan = htmlSpan + '<span class="hearts">' + '&hearts;' + '</span>';
         }
-        if (this.suit == "Spades") {
+        if (this.suit == "S") {
             htmlSpan = htmlSpan + '<span class="spades">' + '&spades;' + '</span>';
         }
         if (this.suit == "NT") {
@@ -123,121 +123,73 @@ class Bid {
         }
         return htmlSpan;
     }
+
+    /**
+     * The current bidding table cell is hilited <br>
+     * Color is modalBgColor <br>
+     * There is an external version of this function with arguments(row,col) <br>
+     */
+    hiliteBiddingRecordCell() {
+        var colIx = this.bidderIx;
+        var rowIx = this.roundIx + 1;
+        var table = document.getElementById("auction");
+        var cell = table.rows[rowIx].cells[colIx];
+        cell.style.background = modalBgColor;
+    }
+
+    /**
+     * The current bidding table cell is unhilited <br>
+     * Color is mainBgColor <br>
+     * There is an external version of this function with arguments(row,col) <br>
+     */
+    unhiliteBiddingRecordCell() {
+        var colIx = bidderIx;
+        var rowIx = roundIx + 1;
+        var table = document.getElementById("auction");
+        var cell = table.rows[rowIx].cells[colIx];
+        cell.style.background = mainBgColor;
+    }
 }
+
 /**
  * @description
  * Test Function for the Bid Class
  */
-function bidClassTest(){
+function bidClassTest() {
     //popupBox("Bid Class Test Function Call", "", "bid-class-test", "OK", "", "");
-    var testBid = new Bid(1, 0, 1, 3, 'D', 'S', 'M' );
+    //(boardNbr, roundIx, bidderIx, tricks, suit, alert_by, alert_to)
+    var testBid = new Bid(1, 0, 1, 3, 'D', 'S', 'M');
     console.log("Bid Class", testBid.boardNbr, testBid.roundIx, testBid.bidderIx, testBid.tricks, testBid.suit, testBid.alert_by, testBid.alert_to);
+    var rowIx = testBid.roundIx + 1;
+    var colIx = testBid.bidderIx;
     var bsa = testBid.bidderSeatAlpha;
     var bsw = testBid.bidderSeatWord;
-    var sa  = testBid.suitAlpha;
-    var sw  = testBid.suitWord;
-    var ss  = testBid.suitSymbol;
+    var sa = testBid.suitAlpha;
+    var sw = testBid.suitWord;
+    var ss = testBid.suitSymbol;
     var mhs = testBid.makeHTMLSpan();
     console.log("Bid Class Methods", bsa, bsw, sa, sw, ss, mhs);
+
+    //Set current auction table entry
+    var table = document.getElementById("auction");
+    var newEntry = makeBiddingRecordEntry(testBid.tricks, testBid.suit, testBid.suit);
+    console.log("NewEntry", newEntry, mhs);
+    table.rows[rowIx].cells[colIx].innerHTML = mhs;
+    testBid.hiliteBiddingRecordCell();
+    testBid.boardNbr = 27;
+    testBid.bidderIx = 2;
+    console.log("Set Test", testBid.boardNbr, testBid.bidderIx, testBid.bidderSeatWord);
 }
 /**
- * @description
  * Test Function for the Record Class
  */
-function recordClassTest(){
-    popupBox("Record Class Test Function Call", "", "record-class-test", "OK", "", "");
-}
-
-/**
- * @description
- * If both row and col >= 0 then that cell is hilited
- * If either arguent < 0 then the current cell is hilited
- * @param {int} row if < 0 current row index
- * @param {int} col if < 0 current column index
- */
-function hiliteBiddingRecordCell(row, col) {
-    var colIx = bidderIx;
-    var rowIx = roundIx + 1;
-    if ((row >= 0) && (col >= 0)) {
-        colIx = col;
-        rowIx = row;
-    }
+function recordClassTest() {
+    //popupBox("Record Class Test Function Call", "", "record-class-test", "OK", "", "");
+    var testBid = new Bid(1, 0, 1, 3, 'D', 'S', 'M');
     var table = document.getElementById("auction");
-    var cell = table.rows[rowIx].cells[colIx];
-    cell.style.background = modalBgColor;
-    console.log("hilite", rowIx, colIx, bidderIx, roundIx);
+    testBid.unhiliteBiddingRecordCell();
 }
 
-/**
- * @description
- * If both row and col >= 0 then that cell is unhilited
- * If either arguent < 0 then the current cell is unhilited
- * @param {int} row if < 0 current row 
- * @param {int} col if < 0 current column
- */
-function unhiliteBiddingRecordCell(row, col) {
-    var colIx = bidderIx;
-    var rowIx = roundIx + 1;
-    if ((row >= 0) && (col >= 0)) {
-        colIx = col;
-        rowIx = row;
-    }
-    var table = document.getElementById("auction");
-    var cell = table.rows[rowIx].cells[colIx];
-    cell.style.background = mainBgColor;
-    console.log("unhilite", row, col, rowIx, colIx, bidderIx, roundIx);
-}
-
-/**
- *  Makes the actual HTML for the bidding table cell <br>
- * 
- * @param {int} nTricks Bidding Level or 0 <br>
- * @param {string} cSuit Suit bid <br>
- * @param {string} nCall X, XX, Pass and then ntricks = 0 <br>
- * 
- * @returns string newEntry for direct insertion into DOM
- */
-function makeBidTableEntry(nTricks, cSuit, nCall) {
-    console.log("makeBidTableEntry", nTricks, cSuit, bStat);
-    if (nTricks > 0) {
-        newEntry = '<span class="record-tricks">' + nTricks + '</span>';
-    } else {
-        newEntry = '<span>' + '' + '</span>';
-    }
-
-    if (cSuit == "Clubs") {
-        newEntry = newEntry + '<span class="clubs">' + '&clubs;' + '</span>';
-    }
-    if (cSuit == "Diams") {
-        newEntry = newEntry + '<span class="diams">' + '&diams;' + '</span>';
-    }
-    if (cSuit == "Hearts") {
-        newEntry = newEntry + '<span class="hearts">' + '&hearts;' + '</span>';
-    }
-    if (cSuit == "Spades") {
-        newEntry = newEntry + '<span class="spades">' + '&spades;' + '</span>';
-    }
-    if (cSuit == "NT") {
-        newEntry = newEntry + '<span class="nt">' + 'NT' + '</span>';
-    }
-    if (cSuit == "none") {
-        newEntry = newEntry + '<span>' + '' + '</span>';
-    }
-
-    if (nCall == "X") {
-        newEntry = newEntry + '<span class="dbl">' + 'X' + '</span>';
-    }
-    if (nCall == "XX") {
-        newEntry = newEntry + '<span class="rdbl">' + 'XX' + '</span>';
-    }
-    if (nCall == "Pass") {
-        newEntry = newEntry + '<span class="pass">' + 'Pass' + '</span>';
-    }
-    if (nCall == "none") {
-        newEntry = newEntry + '<span>' + '' + '</span>';
-    }
-    return (newEntry);
-}
 /**
  * Draw an empty table with header and nRows rows of 4 cells <br>
  * @param {number} nRows Number of rows to be shown
@@ -267,12 +219,10 @@ function drawBiddingRecordTable(nRows, page) {
 }
 
 /**
- * @description
  * Reset the bidding record (i.e. the boardsRec array) and the auction table (visually) for a new board <br>
  * The table cells are already empty but the dashes to the left of bidder are entered <br>
  * Inserts &ndash; to left of bidder <br>
  * Set up 4 callObj's for the first round of bidding in boardsRec[boardIx][0][i], i = 0,...,3 <br>
- * 
  * @param {int} boardNbr Board Number
  */
 function initBiddingRecord(boardNbr) {
@@ -328,34 +278,31 @@ function initBiddingRecord(boardNbr) {
 }
 
 /**
- * @description
- * Adds the most recent bid to the table <br>
+ * Adds the most recent bid to the bidding record table <br>
  * Info comes from bStat; the table entry coordinates <br>
  * from the corresponding round and boardRounds <br>
  */
 function updateBiddingRecord() {
-    var newCall = makeBidRecordEntry();
-    setCurrentBiddingTableCell(newCall);
+    var newCall = makeNewBiddingRecordEntry();
+    setCurrentBiddingRecordCell(newCall);
     //console.log("UpdateBiddingRec", newCall);
 }
 
 /**
- * @description
  * Construct the text to be shown in the table cell <br>
  * The information comes from the "new" part of bStat <br>
- * 
- * @returns string newEntry <br>
+ * @returns string newEntry 
  * The string consists of 3 <span> elements and goes into the innerHTML <br>
  * of the current cell <br>
  */
-function makeBidRecordEntry() {
+function makeNewBiddingRecordEntry() {
     var newSuit = bStat.newSuit;
     var newTricks = bStat.newTricks;
     var newCall = bStat.newCall;
     var newAlert = bStat.newAlert;
     var newEntry = "";
 
-    newEntry = makeBidTableEntry(newTricks, newSuit, newCall);
+    newEntry = makeBiddingRecordEntry(newTricks, newSuit, newCall);
 
     if (newAlert == true) {
         newEntry = newEntry + '<span class="record-alert">' + '!!' + '</span>';
@@ -363,16 +310,12 @@ function makeBidRecordEntry() {
     return (newEntry);
 }
 
-
-
 /**
- * @description
  * Find cell coordinates and sets auction cell contents to newCall <br>
  * Set Current Bid on director's page <br>
- * 
  * @param {html} newCall  
  */
-function setCurrentBiddingTableCell(newCall) {
+function setCurrentBiddingRecordCell(newCall) {
     console.log("setCurrentBiddingRecordCell", newCall);
     var colIx = bidderIx;
     var sIx = (bidderIx + 3) % 4;
@@ -384,7 +327,7 @@ function setCurrentBiddingTableCell(newCall) {
     var lastBidder = document.getElementById("last-bidder");
     var lastRound = document.getElementById("last-round");
 
-    console.log("setCurrentBiddingTableCell", lastBid, lastRound, lastBidder, newCall, bidder, rowIx);
+    console.log("setCurrentBiddingRecordCell", lastBid, lastRound, lastBidder, newCall, bidder, rowIx);
     //Set last bid in Director's Table
     if (newCall != "") {
         lastBid.innerHTML = "Last Bid: " + newCall;
@@ -398,8 +341,7 @@ function setCurrentBiddingTableCell(newCall) {
 }
 
 /**
- * @description
- * Set last bid, bidder and round on the director settings page
+ * Set last bid, bidder and round on the director settings page <br>
  * Gets info directly from 
  */
 function setDirectorPageLastBid() {
@@ -409,10 +351,8 @@ function setDirectorPageLastBid() {
 }
 
 /**
- * @description
- * Sets a specific cell in the bidding table according to
- * the bid specified in a message from another tablet
- * 
+ * Sets a specific cell in the bidding table according to <br>
+ * the bid specified in a message from another tablet <br>
  * @param {obj} msgObj {from: senderSeat, to: receiverSeat, board: brdIx, round: rndIx, bidder: bidIx, tricks: nTricks, suit: cSuit};
  */
 function setBiddingRecordCell(msgObj) {
@@ -426,7 +366,7 @@ function setBiddingRecordCell(msgObj) {
 
     var nTricks = msgObj.tricks;
     var cSuit = msgObj.suit;
-    var newCall = makeBidTableEntry(nTricks, cSuit, cSuit);
+    var newCall = makeBiddingRecordEntry(nTricks, cSuit, cSuit);
 
     var table = document.getElementById("auction");
     var lastBid = document.getElementById("last-bid");
@@ -446,10 +386,8 @@ function setBiddingRecordCell(msgObj) {
     return newCall;
 }
 /**
- * @description
  * Called after "new-bid" external message received<br>
  * Calls setBiddingRecordCell(msgObj)<br>
- * 
  * @param {obj} msgObj = {tricks: int, suit: int, alert: <not used>}
  * @returns newCall displayable format of the bid 
  */
@@ -499,10 +437,7 @@ function acceptIncomingBid(msgObj) {
     return newCall;
 }
 
-
-
 /**
- * @description
  * Called when player is prompted to bid. <br>
  * The bidding status is a structure that contains all the information <br>
  * necessary to manage the bidding box. This initialization obtains the <br>
@@ -594,10 +529,9 @@ function getbStat() {
 }
 
 /**
- * @description
- * Prepare the bidding box and prompt the bidder by hiliting the auction cell
- * Optionally prompt with popup
- * @param {bool} popup Show popup if true, elese just hilite the auction cell 
+ * Prepare the bidding box and prompt the bidder by hiliting the auction cell <br>
+ * Optionally prompt with popup <br>
+ * @param {bool} popup Show popup if true, elese just hilite the auction cell <br>
  */
 function promptBidder(popup) {
     getbStat();
@@ -610,9 +544,8 @@ function promptBidder(popup) {
     disableBBControlInput();
 }
 /**
- * @description
- * Popup to notify the non-bidder when the bidder is prompted to bid
- * Controlled by flag - not useful
+ * Popup to notify the non-bidder when the bidder is prompted to bid <br>
+ * Controlled by flag - not useful <br>
  */
 function promptNonBidder() {
     //console.log("NonBidder");
@@ -620,7 +553,9 @@ function promptNonBidder() {
         popupBox("Nonbidder", "", "pls-bid", "OK", "", "");
     }
 }
-
+/**
+ * Not called from anywhere!!?? <br>
+ */
 function bidNextBoard() {
     boardIx += 1;
     var bnbr = boardIx + 1;
@@ -628,9 +563,8 @@ function bidNextBoard() {
     handleNewBoardNumber();
 }
 /**
- * @description
  * Fills a new entry in boardsRec when a new bid is received <br> 
- * from another player
+ * from another player <br>
  */
 function recordNewBid() {
     var bl = boardsRec.length;
@@ -649,4 +583,98 @@ function recordNewBid() {
     boardsRec[boardIx][roundIx][bidderIx].alert = "";
     //console.log("recordNewBid", boardsRec);
     //console.log("round", roundIx);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+// The following functions have equivalent versions in the Bid Class
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * If both row and col >= 0 then that cell is hilited <br>
+ * If either arguent < 0 then the current cell is hilited <br>
+ * There is a version of this function in the Bid class; it just hilites the this-bid  <br>
+ * @param {int} row if < 0 current row index <br>
+ * @param {int} col if < 0 current column index <br>
+ */
+function hiliteBiddingRecordCell(row, col) {
+    var colIx = bidderIx;
+    var rowIx = roundIx + 1;
+    if ((row >= 0) && (col >= 0)) {
+        colIx = col;
+        rowIx = row;
+    }
+    var table = document.getElementById("auction");
+    var cell = table.rows[rowIx].cells[colIx];
+    cell.style.background = modalBgColor;
+    console.log("hilite", rowIx, colIx, bidderIx, roundIx);
+}
+
+/**
+ * If both row and col >= 0 then that cell is unhilited <br>
+ * If either arguent < 0 then the current cell is unhilited <br>
+ * There is a version of this function in the Bid class; it just unhilites the this-bid  <br>
+ * @param {int} row if < 0 current row  <br>
+ * @param {int} col if < 0 current column  <br>
+ */
+function unhiliteBiddingRecordCell(row, col) {
+    var colIx = bidderIx;
+    var rowIx = roundIx + 1;
+    if ((row >= 0) && (col >= 0)) {
+        colIx = col;
+        rowIx = row;
+    }
+    var table = document.getElementById("auction");
+    var cell = table.rows[rowIx].cells[colIx];
+    cell.style.background = mainBgColor;
+    console.log("unhilite", row, col, rowIx, colIx, bidderIx, roundIx);
+}
+/**
+ * Makes the actual HTML for the bidding table cell <br>
+ * There is a version of this function in the Bid class <br> 
+ * 
+ * @param {int} nTricks Bidding Level or 0 <br>
+ * @param {string} cSuit Suit bid <br>
+ * @param {string} nCall X, XX, Pass and then ntricks = 0 <br>
+ * 
+ * @returns string newEntry for direct insertion into DOM <br>
+ */
+function makeBiddingRecordEntry(nTricks, cSuit, nCall) {
+    console.log("makeBiddingRecordEntry", nTricks, cSuit, bStat);
+    if (nTricks > 0) {
+        newEntry = '<span class="record-tricks">' + nTricks + '</span>';
+    } else {
+        newEntry = '<span>' + '' + '</span>';
+    }
+
+    if (cSuit == "Clubs") {
+        newEntry = newEntry + '<span class="clubs">' + '&clubs;' + '</span>';
+    }
+    if (cSuit == "Diams") {
+        newEntry = newEntry + '<span class="diams">' + '&diams;' + '</span>';
+    }
+    if (cSuit == "Hearts") {
+        newEntry = newEntry + '<span class="hearts">' + '&hearts;' + '</span>';
+    }
+    if (cSuit == "Spades") {
+        newEntry = newEntry + '<span class="spades">' + '&spades;' + '</span>';
+    }
+    if (cSuit == "NT") {
+        newEntry = newEntry + '<span class="nt">' + 'NT' + '</span>';
+    }
+    if (cSuit == "none") {
+        newEntry = newEntry + '<span>' + '' + '</span>';
+    }
+
+    if (nCall == "X") {
+        newEntry = newEntry + '<span class="dbl">' + 'X' + '</span>';
+    }
+    if (nCall == "XX") {
+        newEntry = newEntry + '<span class="rdbl">' + 'XX' + '</span>';
+    }
+    if (nCall == "Pass") {
+        newEntry = newEntry + '<span class="pass">' + 'Pass' + '</span>';
+    }
+    if (nCall == "none") {
+        newEntry = newEntry + '<span>' + '' + '</span>';
+    }
+    return (newEntry);
 }

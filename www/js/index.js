@@ -2,6 +2,14 @@
  * Licensed to the Apache Software Foundation (ASF)
  * http://www.apache.org/licenses/LICENSE-2.0
  */
+/**
+ * The app: a pure function representing the whole thing <br>
+ * Does a number of initializations, namely <br>
+ * - Waits for 'deviceready' signal <br>
+ * - Adds listeners  <br>
+ * - Calls getBtDevices for Bluetooth initialization <br>
+ * - Does initial setup of Bidding Box Page etc <br>
+ */
 var app = {
   // Application Constructor
   initialize: function () {
@@ -53,7 +61,12 @@ var app = {
 
 ////// End of Initializations ////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-//Show the selected page, hide the others
+/**
+ * Called from the main menu on any page <br>
+ * Display the selected page <br>
+ * @param {string} pageName The name of the new page
+ * @param {string} originPage The name of the page from which we came (for return)
+ */
 function showPage(pageName, originPage) {
   console.log(pageName);
   previousPage = originPage;
@@ -81,39 +94,17 @@ function showPage(pageName, originPage) {
     initClockScreen();
   }
 }
-
-///////////////////////////////////////////////////////////////////
-// Data sent and received on the bluetooth socket is an unstructured
-// binary "arrayBuffer". 
-// We send strings and need to convert from and to the buffer format   
-function arrayBufferFromString(str) {
-  var buf, bufView, i, j, ref, strLen;
-
-  strLen = str.length;
-  buf = new ArrayBuffer(strLen);
-  bufView = new Uint8Array(buf);
-  for (i = j = 0, ref = strLen; j < ref; i = j += 1) {
-    bufView[i] = str.charCodeAt(i);
-  }
-  return buf;
-}
-
-///////////////////////////////////////////////////////////////////
-// Data sent and received on the bluetooth socket is an unstructured
-// binary "arrayBuffer". 
-// We send strings and need to convert from and to the buffer format  
-function stringFromArrayBuffer(buf) {
-  return String.fromCharCode.apply(null, new Uint8Array(buf));
-}
-
-// Hide keyboard on Enter (key 13)
-//Takes focus from currently hilited element,
-//which causes the keyboard to hide
-// 
+/**
+ * @name hideKeyboard
+ * @function
+ * @description
+ * Hide the keyboard when Enter (key 13) is clicked <br>
+ * The mechanism used is that taking focus from the currently <br>
+ * hilited element causes the keyboard to hide <br>
+ * The focus removal is called "blur" 
+ */
 document.onkeypress = function (e) {
   if (e.keyCode == 13) {
-    //console.log("Enter pressed: ", e.keyCode);
     document.activeElement.blur();
   }
-  //console.log("Key pressed: ", e.keyCode);
 };

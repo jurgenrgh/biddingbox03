@@ -451,6 +451,33 @@ function checkMessageDestination( rcvCode, tag ){
     return newCode;
 }
 
+/**
+ * Data sent and received on the bluetooth socket is an unstructured <br>
+ * binary "arrayBuffer". <br>
+ * Here Output strings are converted to the buffer format <br> 
+ * @param {string} str 
+ */
+function arrayBufferFromString(str) {
+    var buf, bufView, i, j, ref, strLen;
+  
+    strLen = str.length;
+    buf = new ArrayBuffer(strLen);
+    bufView = new Uint8Array(buf);
+    for (i = j = 0, ref = strLen; j < ref; i = j += 1) {
+      bufView[i] = str.charCodeAt(i);
+    }
+    return buf;
+  }
+  /**
+   * Data sent and received on the bluetooth socket is an unstructured <br>
+   * binary "arrayBuffer". <br>
+   * Output strings are converted to the buffer format <br>
+   * Here we convert the buffer contents back into a string <br> 
+   * @param {arrayBuffer} buf 
+   */
+  function stringFromArrayBuffer(buf) {
+    return String.fromCharCode.apply(null, new Uint8Array(buf));
+  }
     
 
 

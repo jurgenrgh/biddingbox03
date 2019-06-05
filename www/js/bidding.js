@@ -1,10 +1,7 @@
 /**
- * @name handleTricksBid
- * @description
  * Called when the bidder selects a nbr of tricks. <br>
  * The selection is provisional until bidder confirms. <br>
  * Selecting a selected button will undo all current choices <br>
- * 
  * @param {int} idTricks Number of tricks, i.e. bidding level 
  */
 function handleTricksBid(idTricks) {
@@ -38,7 +35,6 @@ function handleTricksBid(idTricks) {
 }
 
 /**
- * @description
  * Called after Suit button clicked
  * @param {string} idSuit 
  */
@@ -71,11 +67,8 @@ function handleSuitBid(idSuit) {
 //
 
 /**
- *@description
- *Called when any "Call" button is clicked 
- * 
+ * Called when any "Call" button is clicked 
  * @param {string} idCall
- * 
  */
 function handleCalls(idCall) {
     console.log("handle call");
@@ -271,7 +264,7 @@ function handleFinalContract() {
     var contract = getContract();
     enableBBControlInput();
     unhiliteBiddingRecordCell(-1, -1);
-    //var t = makeBidRecordEntry();
+    //var t = makeNewBiddingRecordEntry();
     //recordNewBid();
     clearBidBox();
 }

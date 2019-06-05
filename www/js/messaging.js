@@ -1,6 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
 /**
- * @description
  * Sending a message requires <br>
  * - finding the socketId of the recipient <br>
  * - constructing the text to be transmissed <br>

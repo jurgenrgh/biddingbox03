@@ -106,9 +106,10 @@ function doSeatChange(seat){
     resetBiddingBoxPage();
 }
 
-document.getElementById("input-table-number").onchange = function () {
-    handleTableNumberChange();
-};
+// This now directly in index.html
+//document.getElementById("input-table-number").onchange = function () {
+//    handleTableNumberChange();
+//};
 
 function handleTableNumberChange() {
     var x = document.getElementById("input-table-number");
@@ -117,9 +118,10 @@ function handleTableNumberChange() {
     console.log("New Table Number ", x.value);
 }
 
-document.getElementById("input-section-letter").onchange = function () {
-    handleSectionLetterChange();
-};
+// This now directly in index.html
+//document.getElementById("input-section-letter").onchange = function () {
+//    handleSectionLetterChange();
+//};
 
 function handleSectionLetterChange() {
     var x = document.getElementById("input-section-letter");
@@ -127,15 +129,19 @@ function handleSectionLetterChange() {
     resetBiddingBoxPage();
     console.log("Section Id ", x.value);
 }
-document.getElementById("input-first-board").onchange = function () {
-    handleFirstBoardChange();
-};
+
+// This now directly in index.html
+//document.getElementById("input-first-board").onchange = function () {
+//    handleFirstBoardChange();
+//};
 
 function handleFirstBoardChange() {
     var x = document.getElementById("input-first-board");
     firstBoardNbr = x.value;
     console.log("First Board ", x.value);
 }
+
+// This now directly in index.html
 document.getElementById("input-last-board").onchange = function () {
     handleLastBoardChange();
 };
@@ -145,6 +151,8 @@ function handleLastBoardChange() {
     lastBoardNbr = x.value;
     console.log("Last Board ", x.value);
 }
+
+// This now directly in index.html
 document.getElementById("input-hand-minutes").onchange = function () {
     handleHandMinutesChange();
 };
@@ -154,6 +162,8 @@ function handleHandMinutesChange() {
     minPerHand = x.value;
     console.log("Minutes per Hand ", x.value);
 }
+
+// This now directly in index.html
 document.getElementById("input-session-minutes").onchange = function () {
     handleSessionMinutesChange();
 };
@@ -163,6 +173,8 @@ function handleSessionMinutesChange() {
     minPerSession = x.value;
     console.log("Minutes per Session ", x.value);
 }
+
+// This now directly in index.html
 document.getElementById("alert-own-bids").onchange = function () {
     handleAlertOwnChange();
 };
@@ -172,6 +184,8 @@ function handleAlertOwnChange() {
     alertOwn = x.checked;
     console.log("Alert Own ", x.checked);
 }
+
+// This now directly in index.html
 document.getElementById("alert-partner-bids").onchange = function () {
     handleAlertPartnerChange();
 };
@@ -181,6 +195,8 @@ function handleAlertPartnerChange() {
     alertPartner = x.checked;
     console.log("Alert Partner ", x.checked);
 }
+
+// This now directly in index.html
 document.getElementById("alert-screenmate").onchange = function () {
     handleAlertScreenmateChange();
 };
@@ -190,6 +206,8 @@ function handleAlertScreenmateChange() {
     alertScreenmate = x.checked;
     console.log("Alert Screenmate ", x.checked);
 }
+
+// This now directly in index.html
 document.getElementById("alert-both-opps").onchange = function () {
     handleAlertBothOppsChange();
 };
@@ -204,6 +222,8 @@ function handleTrayTransferChange(par) {
     trayTransfer = par;
     console.log("Tray Transfer", par);
 }
+
+// This now directly in index.html
 document.getElementById("rotate-board").onchange = function () {
     handleRotateBoardChange();
 };
@@ -224,7 +244,6 @@ function handleBidReconfirmChange(par) {
 
 /**
  * Set seat that controls start of new board
- * 
  * @param {string} seat "North", "East", "South", "West" 
  */
 function handleNewBoardControlChange(seat) {
@@ -232,14 +251,17 @@ function handleNewBoardControlChange(seat) {
     newBoardControlSeat = seat;
 }
 
+/**
+ * Set parameter to determine whether non-bidder is notified when a new bid is shown  
+ * @param {bool} par 
+ */
 function handleNewBidNotify(par){
     notifyNewBid = par;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// Board and Session Timers //////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
-//
+/**
+ * Initialize the Board and Session Timers
+ */
 function initClockScreen() {
     //console.log("Init Clock");
     var elb = document.getElementById("board-time");
@@ -277,16 +299,13 @@ function initClockScreen() {
     if( contract == ""){
         contract = "No Contract";
     }
-    //var suit = "&hearts;";
-    //var declarer = seatOrder[thisSeatIx];
-    //var x = "XX";
-    //contract = "7" + suit + x + " " + declarer;
     elc.innerHTML = contract;
 }
 
+/**
+ * Called from 'Start Clocks' button 
+ */
 function startClocks() {
-    console.log("Start Clocks");
-
     var elBoardTime = document.getElementById("board-time");
     var elSessionTime = document.getElementById("session-time");
     var elBoardBar = document.getElementById("bar-clock-board");
@@ -335,22 +354,28 @@ function startClocks() {
             elSessionBar.style.width = wTxt;
         }
     }
-
 }
 
+/**
+ * Stop the Clocks
+ */
 function stopClocks() {
     clearInterval(timerIdBoard);
     clearInterval(timerIdSession);
     console.log("Stop Clocks");
 }
 
+/**
+ * The director deletes the current bid <br>
+ * Needs a mechanism to restart bidding
+ */
 function backUpOneBid(){
     popupBox("Backup 1 Bid", "Todo backing up", "backup-bid", "OK", "", ""); 
 }
 
 /**
- * @description
- * The boards display 
+ * InitiThe boards display <br>
+ * Show the bid or an earlier bid chosen 
  */
 function initBoardsDisplay(){
     drawCompass("board-display");
